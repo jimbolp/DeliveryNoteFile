@@ -6,7 +6,7 @@ namespace DelNoteItems
     public class Header
     {
         //$$Header$$ Line properties
-        public int? DeliveryNoteNumber { get; set; }        //DelNoteNo
+        public long? DeliveryNoteNumber { get; set; }        //DelNoteNo
         public DateTime? DeliveryNoteDate { get; set; }     //DelNoteDate
         public bool? RebateInKindOrder { get; set; }        //RebateOrder
         public bool? isNZOK { get; set; }                   //isNZOKOrder
@@ -20,41 +20,92 @@ namespace DelNoteItems
         public Header(string line)
         {
             int intVal = 0;
+            long longVal = 0;
             DateTime dateVal;
             try
             {
-                if (Int32.TryParse(line.Substring(Settings.Default.DelNoteNoStart, Settings.Default.DelNoteNoLength), out intVal))
+                try
                 {
-                    DeliveryNoteNumber = intVal;
+                    if (Int64.TryParse(line.Substring(Settings.Default.DelNoteNoStart, Settings.Default.DelNoteNoLength), out longVal))
+                    {
+                        DeliveryNoteNumber = longVal;
+                    }
                 }
-                if(DateTime.TryParse(line.Substring(Settings.Default.DelNoteDateStart, Settings.Default.DelNoteDateLength), out dateVal))
+                catch (ArgumentOutOfRangeException)
                 {
-                    DeliveryNoteDate = dateVal;
+                    throw new ArgumentOutOfRangeException(
+                        $"You're searching for the " +
+                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
+                        $"{line.Length} chars long string! There is no such index! -> \"DeliveryNoteNumber\"");
                 }
-                if(Int32.TryParse(line.Substring(Settings.Default.RebateOrderStart, Settings.Default.RebateOrderLength), out intVal))
+                try
                 {
-                    RebateInKindOrder = IntToBool(intVal);
+                    if (DateTime.TryParse(line.Substring(Settings.Default.DelNoteDateStart, Settings.Default.DelNoteDateLength), out dateVal))
+                    {
+                        DeliveryNoteDate = dateVal;
+                    }
                 }
-                if (Int32.TryParse(line.Substring(Settings.Default.isNZOKOrderStart, Settings.Default.isNZOKOrderLength), out intVal))
+                catch (ArgumentOutOfRangeException)
                 {
-                    isNZOK = IntToBool(intVal);
+                    throw new ArgumentOutOfRangeException(
+                        $"You're searching for the " +
+                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
+                        $"{line.Length} chars long string! -> \"DeliveryNoteDate\"");
                 }
-                switch (line.Substring(Settings.Default.DiscountTypeStart, Settings.Default.DiscountTypeLength))
+                try
                 {
-                    case "J":
-                        DiscountType = true;
-                        break;
-                    case "N":
-                        DiscountType = false;
-                        break;
-                    default:
-                        DiscountType = null;
-                        break;
+                    if (Int32.TryParse(line.Substring(Settings.Default.RebateOrderStart, Settings.Default.RebateOrderLength), out intVal))
+                    {
+                        RebateInKindOrder = IntToBool(intVal);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        $"You're searching for the " +
+                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
+                        $"{line.Length} chars long string! -> \"RebateInKindOrder\"");
+                }
+                try
+                {
+                    if (Int32.TryParse(line.Substring(Settings.Default.isNZOKOrderStart, Settings.Default.isNZOKOrderLength), out intVal))
+                    {
+                        isNZOK = IntToBool(intVal);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        $"You're searching for the " +
+                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
+                        $"{line.Length} chars long string! -> \"isNZOKOrder\"");
+                }
+                try
+                {
+                    switch (line.Substring(Settings.Default.DiscountTypeStart, Settings.Default.DiscountTypeLength))
+                    {
+                        case "J":
+                            DiscountType = true;
+                            break;
+                        case "N":
+                            DiscountType = false;
+                            break;
+                        default:
+                            DiscountType = null;
+                            break;
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        $"You're searching for the " +
+                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
+                        $"{line.Length} chars long string! -> \"DiscountType\"");
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (Exception e)
             {
-
+                throw e;
             }
         }
         private bool? IntToBool(int i)
