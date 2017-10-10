@@ -1,0 +1,231 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DelNoteItems.Properties" GeneratedClassName="Settings1">
+  <Profiles />
+  <Settings>
+    <Setting Name="BranchNoStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">54</Value>
+    </Setting>
+    <Setting Name="BranchNoLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="DelNoteNoStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">18</Value>
+    </Setting>
+    <Setting Name="DelNoteNoLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="DelNoteDateStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="DelNoteDateLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="RebateOrderStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">36</Value>
+    </Setting>
+    <Setting Name="RebateOrderLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="isNZOKOrderStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">59</Value>
+    </Setting>
+    <Setting Name="isNZOKOrderLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="NarcoticsFormIDStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="NarcoticsFormIDLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="NarcoticsFormDateStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">70</Value>
+    </Setting>
+    <Setting Name="NarcoticsFormDateLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="DateOfDeliveryStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">76</Value>
+    </Setting>
+    <Setting Name="DateOfDeliveryLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="DiscountTypeStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">84</Value>
+    </Setting>
+    <Setting Name="DiscountTypeLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="ArticleNoStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="ArticleNoLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="EANStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="EANLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">13</Value>
+    </Setting>
+    <Setting Name="ArticleNameStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">27</Value>
+    </Setting>
+    <Setting Name="ArticleNameLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="ArticleUnitStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">57</Value>
+    </Setting>
+    <Setting Name="ArticleUnitLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="InvoicedQtyStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">71</Value>
+    </Setting>
+    <Setting Name="InvoicedQtyLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="InvoicedPriceStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">77</Value>
+    </Setting>
+    <Setting Name="InvoicedPriceLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="DiscountPercentageStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">95</Value>
+    </Setting>
+    <Setting Name="DiscountPercentageLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="ArticleVATPercentageStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">111</Value>
+    </Setting>
+    <Setting Name="ArticleVATPercentageLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="ReferenceStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="ReferenceLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="ArticleCertificationStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">16</Value>
+    </Setting>
+    <Setting Name="ArticleCertificationLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="isNZOKArticeStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">36</Value>
+    </Setting>
+    <Setting Name="isNZOKArticeLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="NZOKArticleCodeStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">37</Value>
+    </Setting>
+    <Setting Name="NZOKArticleCodeLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="OrderQtyStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">42</Value>
+    </Setting>
+    <Setting Name="OrderQtyLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="DeliveryQtyStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">48</Value>
+    </Setting>
+    <Setting Name="DeliveryQtyLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="BonusQtyStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">54</Value>
+    </Setting>
+    <Setting Name="BonusQtyLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="PharmacyPurchasePriceStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="PharmacyPurchasePriceLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="InvoicedPriceInclVATNoDiscountStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">69</Value>
+    </Setting>
+    <Setting Name="InvoicedPriceInclVATNoDiscountLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="InvoicedPriceExclVATStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">78</Value>
+    </Setting>
+    <Setting Name="InvoicedPriceExclVATLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="InvoicedPriceInclVATStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">87</Value>
+    </Setting>
+    <Setting Name="InvoicedPriceInclVATLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="ExpiryDateStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="ExpiryDateLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="BatchStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">17</Value>
+    </Setting>
+    <Setting Name="BatchLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">24</Value>
+    </Setting>
+    <Setting Name="ArticleLongNameStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="ArticleLongNameLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="OrderVATPercentageStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="OrderVATPercentageLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="OrderTotalVATStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">22</Value>
+    </Setting>
+    <Setting Name="OrderTotalVATLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="TotalDiscountsStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">22</Value>
+    </Setting>
+    <Setting Name="TotalDiscountsLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="TotalWithDiscountNoVATStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="TotalWithDiscountNoVATLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="InvoiceTotalStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">51</Value>
+    </Setting>
+    <Setting Name="InvoiceTotalLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="DueDateStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">63</Value>
+    </Setting>
+    <Setting Name="DueDateLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="DocTypeStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
