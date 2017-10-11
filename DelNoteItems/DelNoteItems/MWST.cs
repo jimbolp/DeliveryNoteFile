@@ -1,5 +1,6 @@
-﻿
+﻿using Settings = DelNoteItems.Properties.Settings1;
 using System.Collections.Generic;
+using System;
 
 namespace DelNoteItems
 {
@@ -8,8 +9,25 @@ namespace DelNoteItems
     /// </summary>
     public class MWST
     {
-        public decimal? VATPercentage { get; set; }
+        public decimal? VATPercentage { get; set; }     //OrderVATPercentage
         public decimal? TotalVAT { get; set; }
+
+        public MWST(string line)
+        {
+            decimal decVal = 0;
+
+            if((line.Length >= Settings.Default.OrderVATPercentageStart + Settings.Default.OrderVATPercentageLength)
+                && Decimal.TryParse(line.Substring(Settings.Default.OrderVATPercentageStart, Settings.Default.OrderVATPercentageLength).Trim().Replace(',','.'), out decVal))
+            {
+                VATPercentage = decVal;
+            }
+
+            if((line.Length >= Settings.Default.OrderTotalVATStart + Settings.Default.OrderTotalVATLength)
+                && Decimal.TryParse(line.Substring(Settings.Default.OrderTotalVATStart, Settings.Default.OrderTotalVATLength).Trim().Replace(',', '.'), out decVal))
+            {
+                TotalVAT = decVal;
+            }
+        }
     }
     public class VATTable
     {
@@ -33,7 +51,11 @@ namespace DelNoteItems
         public List<MWST> Table { get; set;}
         public VATTable(string line)
         {
-            Table = new List<MWST>();
+            if (Table == null)
+            {
+                Table = new List<MWST>();
+            }
+            Table.Add(new MWST(line));
         }
     }
 }

@@ -6,7 +6,7 @@ namespace DelNoteItems
     public class Header
     {
         //$$Header$$ Line properties
-        public long? DeliveryNoteNumber { get; set; }        //DelNoteNo
+        public long? DeliveryNoteNumber { get; set; }       //DelNoteNo
         public DateTime? DeliveryNoteDate { get; set; }     //DelNoteDate
         public bool? RebateInKindOrder { get; set; }        //RebateOrder
         public bool? isNZOK { get; set; }                   //isNZOKOrder
@@ -21,68 +21,64 @@ namespace DelNoteItems
         {
             int intVal = 0;
             long longVal = 0;
-            DateTime dateVal;
+            //DateTime dateVal;
             try
             {
-                try
+                if ((line.Length >= Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength) 
+                    && Int64.TryParse(line.Substring(Settings.Default.DelNoteNoStart, Settings.Default.DelNoteNoLength).Trim(), out longVal))
                 {
-                    if (Int64.TryParse(line.Substring(Settings.Default.DelNoteNoStart, Settings.Default.DelNoteNoLength), out longVal))
+                    DeliveryNoteNumber = longVal;
+                }
+                
+                if (line.Length >= Settings.Default.DelNoteDateStart + Settings.Default.DelNoteDateLength)
+                {
+                    DeliveryNoteDate = DateID.Convert(line.Substring(Settings.Default.DelNoteDateStart, Settings.Default.DelNoteDateLength).Trim());
+                }
+                
+                if ((line.Length >= Settings.Default.RebateOrderStart + Settings.Default.RebateOrderLength) 
+                    && Int32.TryParse(line.Substring(Settings.Default.RebateOrderStart, Settings.Default.RebateOrderLength).Trim(), out intVal))
+                {
+                    RebateInKindOrder = IntToBool(intVal);
+                }
+                
+                if (line.Length >= Settings.Default.isNZOKOrderStart + Settings.Default.isNZOKOrderLength)
+                {
+                    switch(line.Substring(Settings.Default.isNZOKOrderStart, Settings.Default.isNZOKOrderLength).Trim())
                     {
-                        DeliveryNoteNumber = longVal;
+                        case "J":
+                            isNZOK = true;
+                            break;
+                        case "N":
+                            isNZOK = false;
+                            break;
+                        default:
+                            isNZOK = null;
+                            break;
                     }
                 }
-                catch (ArgumentOutOfRangeException)
+
+                if(line.Length >= Settings.Default.NarcoticsFormIDStart + Settings.Default.NarcoticsFormIDLength)
                 {
-                    throw new ArgumentOutOfRangeException(
-                        $"You're searching for the " +
-                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
-                        $"{line.Length} chars long string! There is no such index! -> \"DeliveryNoteNumber\"");
-                }
-                try
-                {
-                    if (DateTime.TryParse(line.Substring(Settings.Default.DelNoteDateStart, Settings.Default.DelNoteDateLength), out dateVal))
+                    NarcoticsFormID = line.Substring(Settings.Default.NarcoticsFormIDStart, Settings.Default.NarcoticsFormIDLength);
+                    if (!string.IsNullOrEmpty(NarcoticsFormID))
                     {
-                        DeliveryNoteDate = dateVal;
+                        NarcoticsFormID = NarcoticsFormID.Trim();
                     }
                 }
-                catch (ArgumentOutOfRangeException)
+
+                if(line.Length >= Settings.Default.NarcoticsFormDateStart + Settings.Default.NarcoticsFormDateLength)
                 {
-                    throw new ArgumentOutOfRangeException(
-                        $"You're searching for the " +
-                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
-                        $"{line.Length} chars long string! -> \"DeliveryNoteDate\"");
+                    NarcoticsFormDate = DateID.Convert(line.Substring(Settings.Default.NarcoticsFormDateStart, Settings.Default.NarcoticsFormDateLength).Trim());
                 }
-                try
+
+                if(line.Length >= Settings.Default.DateOfDeliveryStart + Settings.Default.DateOfDeliveryLength)
                 {
-                    if (Int32.TryParse(line.Substring(Settings.Default.RebateOrderStart, Settings.Default.RebateOrderLength), out intVal))
-                    {
-                        RebateInKindOrder = IntToBool(intVal);
-                    }
+                    DateOfDelivery = DateID.Convert(line.Substring(Settings.Default.DateOfDeliveryStart, Settings.Default.DateOfDeliveryLength).Trim());
                 }
-                catch (ArgumentOutOfRangeException)
+
+                if (line.Length >= Settings.Default.DiscountTypeStart + Settings.Default.DiscountTypeLength)
                 {
-                    throw new ArgumentOutOfRangeException(
-                        $"You're searching for the " +
-                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
-                        $"{line.Length} chars long string! -> \"RebateInKindOrder\"");
-                }
-                try
-                {
-                    if (Int32.TryParse(line.Substring(Settings.Default.isNZOKOrderStart, Settings.Default.isNZOKOrderLength), out intVal))
-                    {
-                        isNZOK = IntToBool(intVal);
-                    }
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        $"You're searching for the " +
-                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
-                        $"{line.Length} chars long string! -> \"isNZOKOrder\"");
-                }
-                try
-                {
-                    switch (line.Substring(Settings.Default.DiscountTypeStart, Settings.Default.DiscountTypeLength))
+                    switch (line.Substring(Settings.Default.DiscountTypeStart, Settings.Default.DiscountTypeLength).Trim())
                     {
                         case "J":
                             DiscountType = true;
@@ -94,13 +90,6 @@ namespace DelNoteItems
                             DiscountType = null;
                             break;
                     }
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        $"You're searching for the " +
-                        $"{Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength}th index from a " +
-                        $"{line.Length} chars long string! -> \"DiscountType\"");
                 }
             }
             catch (Exception e)

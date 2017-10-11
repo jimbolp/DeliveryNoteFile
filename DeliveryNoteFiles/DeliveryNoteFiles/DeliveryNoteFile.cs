@@ -7,12 +7,14 @@ using Type = DelNoteItems.Type;
 namespace DeliveryNoteFiles
 {
     class DeliveryNoteFile
-    {
+    {        
         public Type DocType { get; set; }
         public Supplier Supplier { get; set; }
         public Header Header { get; set; }
         public Customer Customer { get; set; }
         public List<Position> Positions { get; set; }
+        public Footer Footer { get; set; }
+        public VATTable VATTable { get; set; }
 
         private List<string> Lines = new List<string>();
 
@@ -22,22 +24,22 @@ namespace DeliveryNoteFiles
         }
 
         /// <summary>
-        /// Reads each line of the file asynchronous and initialize a List of strings "Lines"
+        /// Reads each line of the file and initialize a List of strings "Lines"
         /// </summary>
         /// <param name="filePath"></param>
-        private async void ReadFile(string filePath)
+        private void ReadFile(string filePath)
         {
             try
             {
                 using (StreamReader file = new StreamReader(filePath))
                 {
                     string line;
-                    while ((line = await file.ReadLineAsync()) != null)
+                    while ((line = file.ReadLine()) != null)
                     {
                         Lines.Add(line);
                     }
                 }
-            }catch(Exception e)
+            }catch(Exception)
             {
                 //TODO...
             }
@@ -45,12 +47,16 @@ namespace DeliveryNoteFiles
         }
 
         /// <summary>
-        /// Initializes each Property according to the information from the file.. Duuhhh.. What COULD go wrong WILL go wrong!!!
+        /// Initializes each Property with the information from the file.
         /// </summary>
         /// <param name="lines"></param>
         private void InitializeComponents(string[] lines)
         {
-            //throw new NotImplementedException();
+            bool havePos1 = false;
+            bool havePos2 = false;
+            bool havePos3 = false;
+            bool havePos4 = false;
+
             foreach (var line in lines)
             {
                 if (line.StartsWith("$$TYPE$$"))
@@ -64,6 +70,21 @@ namespace DeliveryNoteFiles
                 else if (line.StartsWith("$$HEADER$$"))
                 {
                     Header = new Header(line);
+                }
+                else if (line.StartsWith("$$FOOTER$$"))
+                {
+                    Footer = new Footer(line);
+                }
+                else if (line.StartsWith("$$MWST$$"))
+                {
+                    if(VATTable == null)
+                    {
+                        VATTable = new VATTable(line);
+                    }
+                    else
+                    {
+                        VATTable.Table.Add(new MWST(line));
+                    }
                 }
             }
         }

@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Customer.cs" />
-    <Compile Include="DelNoteDate.cs" />
+    <Compile Include="DateID.cs" />
     <Compile Include="Footer.cs" />
     <Compile Include="Header.cs" />
     <Compile Include="MWST.cs" />

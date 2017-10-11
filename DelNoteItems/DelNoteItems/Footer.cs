@@ -5,30 +5,36 @@ namespace DelNoteItems
 {
     public class Footer
     {
-        public decimal? TotalDiscounts { get; set; }
-        public decimal? TotalWithDiscountNoVAT { get; set; }
-        public decimal? InvoiceTotal { get; set; }
-        public DateTime? DueDate { get; set; }
+        public decimal? TotalDiscounts { get; set; }            //TotalDiscounts
+        public decimal? TotalWithDiscountNoVAT { get; set; }    //TotalWithDiscountNoVAT
+        public decimal? InvoiceTotal { get; set; }              //InvoiceTotal
+        public DateTime? DueDate { get; set; }                  //DueDate
 
         public Footer(string line)
         {
             decimal decimalValue = 0;
-            DateTime dateValue;
-            if(Decimal.TryParse(line.Substring(Settings.Default.TotalDiscountsStart, Settings.Default.TotalDiscountsLength), out decimalValue))
+            //DateTime dateValue;
+
+            if((line.Length >= Settings.Default.TotalDiscountsStart + Settings.Default.TotalDiscountsLength) 
+                && Decimal.TryParse(line.Substring(Settings.Default.TotalDiscountsStart, Settings.Default.TotalDiscountsLength).Trim().Replace(',', '.'), out decimalValue))
             {
                 TotalDiscounts = decimalValue;
             }
-            if(Decimal.TryParse(line.Substring(Settings.Default.TotalWithDiscountNoVATStart, Settings.Default.TotalWithDiscountNoVATLength), out decimalValue))
+
+            if((line.Length >= Settings.Default.TotalWithDiscountNoVATStart + Settings.Default.TotalWithDiscountNoVATLength)
+                && Decimal.TryParse(line.Substring(Settings.Default.TotalWithDiscountNoVATStart, Settings.Default.TotalWithDiscountNoVATLength).Trim().Replace(',', '.'), out decimalValue))
             {
                 TotalWithDiscountNoVAT = decimalValue;
             }
-            if (Decimal.TryParse(line.Substring(Settings.Default.InvoiceTotalStart, Settings.Default.InvoiceTotalLength), out decimalValue))
+
+            if ((line.Length >= Settings.Default.InvoiceTotalStart + Settings.Default.InvoiceTotalLength)
+                && Decimal.TryParse(line.Substring(Settings.Default.InvoiceTotalStart, Settings.Default.InvoiceTotalLength).Trim().Replace(',', '.'), out decimalValue))
             {
                 InvoiceTotal = decimalValue;
             }
-            if(DateTime.TryParse(line.Substring(Settings.Default.DueDateStart, Settings.Default.DueDateLength), out dateValue))
+            if(line.Length >= Settings.Default.DueDateStart + Settings.Default.DueDateLength)
             {
-                DueDate = dateValue;
+                DueDate = DateID.Convert(line.Substring(Settings.Default.DueDateStart, Settings.Default.DueDateLength).Trim().Replace(',','.'));
             }
         }
     }
