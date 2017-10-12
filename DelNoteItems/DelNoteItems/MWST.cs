@@ -35,7 +35,7 @@ namespace DelNoteItems
         {
             get
             {
-                if (!(Table is null) && Table.Count > 0)
+                if (Table != null && Table.Count > 0)
                 {
                     decimal? val = 0;
                     foreach (var item in Table)
