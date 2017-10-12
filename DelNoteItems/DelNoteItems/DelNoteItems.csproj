@@ -46,6 +46,10 @@
     <Compile Include="Header.cs" />
     <Compile Include="MWST.cs" />
     <Compile Include="Position.cs" />
+    <Compile Include="Position.Pos1.cs" />
+    <Compile Include="Position.Pos2.cs" />
+    <Compile Include="Position.Pos4.cs" />
+    <Compile Include="Position.Pos3.cs" />
     <Compile Include="Properties\Settings1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -57,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Compile Include="Position.Pos.cs" />
     <None Include="Properties\Settings1.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
