@@ -36,11 +36,7 @@ namespace DelNoteItems
         public string ArticleLongName { get; set; }
 
         //$$POS4$$ Line - still no explanation about this one!
-
-        public Position(string line)
-        {
-
-        }
+        
         public Position(string[] lines)
         {
             foreach(string line in lines)
