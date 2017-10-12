@@ -7,7 +7,21 @@ namespace DelNoteItems
     {
         private void Pos3(string line)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if(line.Length >= Settings.Default.ArticleLongNameStart + Settings.Default.ArticleLongNameLength)
+                {
+                    ArticleLongName = line.Substring(Settings.Default.ArticleLongNameStart, Settings.Default.ArticleLongNameLength).Trim();
+                }
+                else if(!(line.Length < Settings.Default.ArticleLongNameStart))
+                {
+                    ArticleLongName = line.Substring(Settings.Default.ArticleLongNameStart).Trim();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ using Type = DelNoteItems.Type;
 namespace DeliveryNoteFiles
 {
     class DeliveryNoteFile
-    {        
+    {
         public Type DocType { get; set; }
         public Supplier Supplier { get; set; }
         public Header Header { get; set; }
@@ -135,9 +136,11 @@ namespace DeliveryNoteFiles
         public override string ToString()
         {
             string positions = "";
-            foreach(var pos in Positions)
+            foreach(Position pos in Positions)
             {
-                positions += pos.ArticleName + Environment.NewLine;
+                positions += pos.ArticleNo + " -> ";
+                positions += pos.ArticleName + " -> ";
+                positions += pos.ArticleLongName + Environment.NewLine;
             }
             return positions;
         }

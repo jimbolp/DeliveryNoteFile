@@ -7,7 +7,7 @@ namespace DelNoteItems
     {
         private void Pos4(string line)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
