@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using DelNoteItems;
@@ -31,7 +32,7 @@ namespace DeliveryNoteFiles
         {
             try
             {
-                using (StreamReader file = new StreamReader(filePath))
+                using (StreamReader file = new StreamReader(filePath, System.Text.Encoding.Default))
                 {
                     string line;
                     while ((line = file.ReadLine()) != null)
@@ -52,11 +53,10 @@ namespace DeliveryNoteFiles
         /// <param name="lines"></param>
         private void InitializeComponents(string[] lines)
         {
-            bool havePos1 = false;
-            bool havePos2 = false;
-            bool havePos3 = false;
-            bool havePos4 = false;
-
+            BitArray havePos = new BitArray(new bool[5]);
+            //Position lastPosition;
+            string[] posLines = new string[5];
+            
             foreach (var line in lines)
             {
                 if (line.StartsWith("$$TYPE$$"))
@@ -73,6 +73,10 @@ namespace DeliveryNoteFiles
                 }
                 else if (line.StartsWith("$$FOOTER$$"))
                 {
+                    if (!string.IsNullOrEmpty(posLines[0]))
+                    {
+                        ProcessPosition(posLines);
+                    }
                     Footer = new Footer(line);
                 }
                 else if (line.StartsWith("$$MWST$$"))
@@ -86,7 +90,68 @@ namespace DeliveryNoteFiles
                         VATTable.Table.Add(new MWST(line));
                     }
                 }
+                else if (line.StartsWith("$$POS$$"))
+                {
+                    if (!string.IsNullOrEmpty(posLines[0]))
+                    {
+                        ProcessPosition(posLines);
+                        havePos.SetAll(false);
+                    }
+                    posLines[0] = line;
+                    havePos[0] = true;
+                }
+                else if (line.StartsWith("$$POS1$"))
+                {
+                    posLines[1] = line;
+                    havePos[1] = true;
+                }
+                else if (line.StartsWith("$$POS2$$"))
+                {
+                    posLines[2] = line;
+                    havePos[2] = true;
+                }
+                else if (line.StartsWith("$$POS3$"))
+                {
+                    posLines[3] = line;
+                    havePos[3] = true;
+                }
+                else if (line.StartsWith("$$POS4$$"))
+                {
+                    posLines[4] = line;
+                    havePos[4] = true;
+                }
             }
         }
+
+        private void ProcessPosition(string[] lines)
+        {
+            if (Positions == null)
+            {
+                Positions = new List<Position>();
+            }
+            Positions.Add(new Position(lines));
+        }
+
+        public override string ToString()
+        {
+            string positions = "";
+            foreach(var pos in Positions)
+            {
+                positions += pos.ArticleName + Environment.NewLine;
+            }
+            return positions;
+        }
+        //private int BitCount(BitArray array)
+        //{
+        //    int count = 0;
+        //    foreach (bool bit in array)
+        //    {
+        //        if (bit)
+        //        {
+        //            count++;
+        //        }
+        //    }
+        //    return count;
+        //}
     }
 }

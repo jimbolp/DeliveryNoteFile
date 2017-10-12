@@ -5,10 +5,10 @@ namespace DelNoteItems
 {
     public class Footer
     {
-        public decimal? TotalDiscounts { get; set; }            //TotalDiscounts
-        public decimal? TotalWithDiscountNoVAT { get; set; }    //TotalWithDiscountNoVAT
-        public decimal? InvoiceTotal { get; set; }              //InvoiceTotal
-        public DateTime? DueDate { get; set; }                  //DueDate
+        public decimal? TotalDiscounts { get; set; }
+        public decimal? TotalWithDiscountNoVAT { get; set; }
+        public decimal? InvoiceTotal { get; set; }
+        public DateTime? DueDate { get; set; }
 
         public Footer(string line)
         {

@@ -9,7 +9,8 @@ namespace DelNoteItems
         public Supplier(string line)
         {
             int intVal = 0;
-            if(Int32.TryParse(line.Substring(Settings.Default.BranchNoStart, Settings.Default.BranchNoLength), out intVal))
+            if(line.Length >= Settings.Default.BranchNoStart + Settings.Default.BranchNoLength
+                && Int32.TryParse(line.Substring(Settings.Default.BranchNoStart, Settings.Default.BranchNoLength).Trim(), out intVal))
             {
                 BranchNumber = intVal;
             }

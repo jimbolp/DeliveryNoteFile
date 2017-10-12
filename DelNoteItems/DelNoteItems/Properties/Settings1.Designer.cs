@@ -44,54 +44,54 @@ namespace DelNoteItems.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("18")]
-        public int DelNoteNoStart {
+        public int DeliveryNoteNumberStart {
             get {
-                return ((int)(this["DelNoteNoStart"]));
+                return ((int)(this["DeliveryNoteNumberStart"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int DelNoteNoLength {
+        public int DeliveryNoteNumberLength {
             get {
-                return ((int)(this["DelNoteNoLength"]));
+                return ((int)(this["DeliveryNoteNumberLength"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int DelNoteDateStart {
+        public int DeliveryNoteDateStart {
             get {
-                return ((int)(this["DelNoteDateStart"]));
+                return ((int)(this["DeliveryNoteDateStart"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int DelNoteDateLength {
+        public int DeliveryNoteDateLength {
             get {
-                return ((int)(this["DelNoteDateLength"]));
+                return ((int)(this["DeliveryNoteDateLength"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("36")]
-        public int RebateOrderStart {
+        public int RebateInKindOrderStart {
             get {
-                return ((int)(this["RebateOrderStart"]));
+                return ((int)(this["RebateInKindOrderStart"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int RebateOrderLength {
+        public int RebateInKindOrderLength {
             get {
-                return ((int)(this["RebateOrderLength"]));
+                return ((int)(this["RebateInKindOrderLength"]));
             }
         }
         
@@ -368,18 +368,18 @@ namespace DelNoteItems.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("36")]
-        public int isNZOKArticeStart {
+        public int isNZOKArticleStart {
             get {
-                return ((int)(this["isNZOKArticeStart"]));
+                return ((int)(this["isNZOKArticleStart"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int isNZOKArticeLength {
+        public int isNZOKArticleLength {
             get {
-                return ((int)(this["isNZOKArticeLength"]));
+                return ((int)(this["isNZOKArticleLength"]));
             }
         }
         

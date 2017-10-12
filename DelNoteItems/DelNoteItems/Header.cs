@@ -6,14 +6,14 @@ namespace DelNoteItems
     public class Header
     {
         //$$Header$$ Line properties
-        public long? DeliveryNoteNumber { get; set; }       //DelNoteNo
-        public DateTime? DeliveryNoteDate { get; set; }     //DelNoteDate
-        public bool? RebateInKindOrder { get; set; }        //RebateOrder
-        public bool? isNZOK { get; set; }                   //isNZOKOrder
-        public string NarcoticsFormID { get; set; }         //NarcoticsFormID
-        public DateTime? NarcoticsFormDate { get; set; }    //NarcoticsFormDate
-        public DateTime? DateOfDelivery { get; set; }       //DateOfDelivery
-        public bool? DiscountType { get; set; }             //DiscountType
+        public long? DeliveryNoteNumber { get; set; }
+        public DateTime? DeliveryNoteDate { get; set; }
+        public bool? RebateInKindOrder { get; set; }
+        public bool? isNZOKOrder { get; set; }
+        public string NarcoticsFormID { get; set; }
+        public DateTime? NarcoticsFormDate { get; set; }
+        public DateTime? DateOfDelivery { get; set; }
+        public bool? DiscountType { get; set; }
 
         //$$Header2$$ Line properties still not known
 
@@ -24,19 +24,19 @@ namespace DelNoteItems
             //DateTime dateVal;
             try
             {
-                if ((line.Length >= Settings.Default.DelNoteNoStart + Settings.Default.DelNoteNoLength) 
-                    && Int64.TryParse(line.Substring(Settings.Default.DelNoteNoStart, Settings.Default.DelNoteNoLength).Trim(), out longVal))
+                if ((line.Length >= Settings.Default.DeliveryNoteNumberStart + Settings.Default.DeliveryNoteNumberLength) 
+                    && Int64.TryParse(line.Substring(Settings.Default.DeliveryNoteNumberStart, Settings.Default.DeliveryNoteNumberLength).Trim(), out longVal))
                 {
                     DeliveryNoteNumber = longVal;
                 }
                 
-                if (line.Length >= Settings.Default.DelNoteDateStart + Settings.Default.DelNoteDateLength)
+                if (line.Length >= Settings.Default.DeliveryNoteDateStart + Settings.Default.DeliveryNoteDateLength)
                 {
-                    DeliveryNoteDate = DateID.Convert(line.Substring(Settings.Default.DelNoteDateStart, Settings.Default.DelNoteDateLength).Trim());
+                    DeliveryNoteDate = DateID.Convert(line.Substring(Settings.Default.DeliveryNoteDateStart, Settings.Default.DeliveryNoteDateLength).Trim());
                 }
                 
-                if ((line.Length >= Settings.Default.RebateOrderStart + Settings.Default.RebateOrderLength) 
-                    && Int32.TryParse(line.Substring(Settings.Default.RebateOrderStart, Settings.Default.RebateOrderLength).Trim(), out intVal))
+                if ((line.Length >= Settings.Default.RebateInKindOrderStart + Settings.Default.RebateInKindOrderLength) 
+                    && Int32.TryParse(line.Substring(Settings.Default.RebateInKindOrderStart, Settings.Default.RebateInKindOrderLength).Trim(), out intVal))
                 {
                     RebateInKindOrder = IntToBool(intVal);
                 }
@@ -46,13 +46,13 @@ namespace DelNoteItems
                     switch(line.Substring(Settings.Default.isNZOKOrderStart, Settings.Default.isNZOKOrderLength).Trim())
                     {
                         case "J":
-                            isNZOK = true;
+                            isNZOKOrder = true;
                             break;
                         case "N":
-                            isNZOK = false;
+                            isNZOKOrder = false;
                             break;
                         default:
-                            isNZOK = null;
+                            isNZOKOrder = null;
                             break;
                     }
                 }

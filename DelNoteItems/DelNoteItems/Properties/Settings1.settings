@@ -8,22 +8,22 @@
     <Setting Name="BranchNoLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="DelNoteNoStart" Type="System.Int32" Scope="Application">
+    <Setting Name="DeliveryNoteNumberStart" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">18</Value>
     </Setting>
-    <Setting Name="DelNoteNoLength" Type="System.Int32" Scope="Application">
+    <Setting Name="DeliveryNoteNumberLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="DelNoteDateStart" Type="System.Int32" Scope="Application">
+    <Setting Name="DeliveryNoteDateStart" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="DelNoteDateLength" Type="System.Int32" Scope="Application">
+    <Setting Name="DeliveryNoteDateLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">8</Value>
     </Setting>
-    <Setting Name="RebateOrderStart" Type="System.Int32" Scope="Application">
+    <Setting Name="RebateInKindOrderStart" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">36</Value>
     </Setting>
-    <Setting Name="RebateOrderLength" Type="System.Int32" Scope="Application">
+    <Setting Name="RebateInKindOrderLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="isNZOKOrderStart" Type="System.Int32" Scope="Application">
@@ -116,10 +116,10 @@
     <Setting Name="ArticleCertificationLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">20</Value>
     </Setting>
-    <Setting Name="isNZOKArticeStart" Type="System.Int32" Scope="Application">
+    <Setting Name="isNZOKArticleStart" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">36</Value>
     </Setting>
-    <Setting Name="isNZOKArticeLength" Type="System.Int32" Scope="Application">
+    <Setting Name="isNZOKArticleLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="NZOKArticleCodeStart" Type="System.Int32" Scope="Application">
