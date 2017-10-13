@@ -1,4 +1,7 @@
-﻿using Settings = DelNoteItems.Properties.Settings1;
+﻿using System;
+using System.Collections;
+using System.Reflection;
+using Settings = DelNoteItems.Properties.Config;
 
 namespace DelNoteItems
 {
@@ -9,6 +12,24 @@ namespace DelNoteItems
         public Type(string line)
         {
             DocumentType = (line.Substring(Settings.Default.DocTypeStart)).Trim();
+        }
+        public override string ToString()
+        {
+            string toString = GetType().Name + ":" + Environment.NewLine;
+            foreach (PropertyInfo pi in GetType().GetProperties())
+            {
+                if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
+                {
+                    toString += pi.Name + " -> ";
+                    try
+                    {                        
+                        toString += pi.GetValue(this).ToString();                        
+                    }
+                    catch (Exception) { }
+                    toString += Environment.NewLine;
+                }
+            }
+            return toString;
         }
     }
 }

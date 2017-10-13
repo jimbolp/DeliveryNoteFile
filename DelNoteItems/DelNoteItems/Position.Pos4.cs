@@ -1,5 +1,5 @@
 ﻿using System;
-using Settings = DelNoteItems.Properties.Settings1;
+using Settings = DelNoteItems.Properties.Config;
 
 namespace DelNoteItems
 {
@@ -7,7 +7,7 @@ namespace DelNoteItems
     {
         private void Pos4(string line)
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

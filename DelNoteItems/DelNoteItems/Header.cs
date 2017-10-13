@@ -1,5 +1,7 @@
 ﻿using System;
-using Settings = DelNoteItems.Properties.Settings1;
+using System.Collections;
+using System.Reflection;
+using Settings = DelNoteItems.Properties.Config;
 
 namespace DelNoteItems
 {
@@ -24,72 +26,96 @@ namespace DelNoteItems
             //DateTime dateVal;
             try
             {
-                if ((line.Length >= Settings.Default.DeliveryNoteNumberStart + Settings.Default.DeliveryNoteNumberLength) 
-                    && Int64.TryParse(line.Substring(Settings.Default.DeliveryNoteNumberStart, Settings.Default.DeliveryNoteNumberLength).Trim(), out longVal))
+                //DeliveryNoteNumber
+                if (line.Length >= Settings.Default.DeliveryNoteNumberStart + Settings.Default.DeliveryNoteNumberLength)
                 {
-                    DeliveryNoteNumber = longVal;
+                    if(Int64.TryParse(line.Substring(Settings.Default.DeliveryNoteNumberStart, Settings.Default.DeliveryNoteNumberLength).Trim(), out longVal))
+                    {
+                        DeliveryNoteNumber = longVal;
+                    }
                 }
-                
+                else if (line.Length >= Settings.Default.DeliveryNoteNumberStart)
+                {
+                    if (Int64.TryParse(line.Substring(Settings.Default.DeliveryNoteNumberStart).Trim(), out longVal))
+                    {
+                        DeliveryNoteNumber = longVal;
+                    }
+                }
+
+                //DeliveryNoteDate
                 if (line.Length >= Settings.Default.DeliveryNoteDateStart + Settings.Default.DeliveryNoteDateLength)
                 {
-                    DeliveryNoteDate = DateID.Convert(line.Substring(Settings.Default.DeliveryNoteDateStart, Settings.Default.DeliveryNoteDateLength).Trim());
+                    DeliveryNoteDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.DeliveryNoteDateStart, Settings.Default.DeliveryNoteDateLength).Trim());
                 }
-                
-                if ((line.Length >= Settings.Default.RebateInKindOrderStart + Settings.Default.RebateInKindOrderLength) 
-                    && Int32.TryParse(line.Substring(Settings.Default.RebateInKindOrderStart, Settings.Default.RebateInKindOrderLength).Trim(), out intVal))
+                else if(line.Length >= Settings.Default.DeliveryNoteDateStart)
                 {
-                    RebateInKindOrder = IntToBool(intVal);
+                    DeliveryNoteDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.DeliveryNoteDateStart).Trim());
                 }
-                
+
+                //RebateInKindOrder
+                if (line.Length >= Settings.Default.RebateInKindOrderStart + Settings.Default.RebateInKindOrderLength)
+                {
+                    if(Int32.TryParse(line.Substring(Settings.Default.RebateInKindOrderStart, Settings.Default.RebateInKindOrderLength).Trim(), out intVal))
+                    {
+                        RebateInKindOrder = Parse.IntToBool(intVal);
+                    }
+                }
+                else if(line.Length >= Settings.Default.RebateInKindOrderStart)
+                {
+                    if (Int32.TryParse(line.Substring(Settings.Default.RebateInKindOrderStart).Trim(), out intVal))
+                    {
+                        RebateInKindOrder = Parse.IntToBool(intVal);
+                    }
+                }
+
+                //isNZOKOrder
                 if (line.Length >= Settings.Default.isNZOKOrderStart + Settings.Default.isNZOKOrderLength)
                 {
-                    switch(line.Substring(Settings.Default.isNZOKOrderStart, Settings.Default.isNZOKOrderLength).Trim())
-                    {
-                        case "J":
-                            isNZOKOrder = true;
-                            break;
-                        case "N":
-                            isNZOKOrder = false;
-                            break;
-                        default:
-                            isNZOKOrder = null;
-                            break;
-                    }
+                    isNZOKOrder = Parse.StringToBool(line.Substring(Settings.Default.isNZOKOrderStart, Settings.Default.isNZOKOrderLength));
                 }
-
-                if(line.Length >= Settings.Default.NarcoticsFormIDStart + Settings.Default.NarcoticsFormIDLength)
+                else if (line.Length >= Settings.Default.isNZOKOrderStart)
                 {
-                    NarcoticsFormID = line.Substring(Settings.Default.NarcoticsFormIDStart, Settings.Default.NarcoticsFormIDLength);
-                    if (!string.IsNullOrEmpty(NarcoticsFormID))
-                    {
-                        NarcoticsFormID = NarcoticsFormID.Trim();
-                    }
+                    isNZOKOrder = Parse.StringToBool(line.Substring(Settings.Default.isNZOKOrderStart));                    
                 }
 
-                if(line.Length >= Settings.Default.NarcoticsFormDateStart + Settings.Default.NarcoticsFormDateLength)
+                //NarcoticsFormID
+                if (line.Length >= Settings.Default.NarcoticsFormIDStart + Settings.Default.NarcoticsFormIDLength)
                 {
-                    NarcoticsFormDate = DateID.Convert(line.Substring(Settings.Default.NarcoticsFormDateStart, Settings.Default.NarcoticsFormDateLength).Trim());
+                    NarcoticsFormID = line.Substring(Settings.Default.NarcoticsFormIDStart, Settings.Default.NarcoticsFormIDLength).Trim();                    
                 }
-
-                if(line.Length >= Settings.Default.DateOfDeliveryStart + Settings.Default.DateOfDeliveryLength)
+                else if(line.Length >= Settings.Default.NarcoticsFormIDStart)
                 {
-                    DateOfDelivery = DateID.Convert(line.Substring(Settings.Default.DateOfDeliveryStart, Settings.Default.DateOfDeliveryLength).Trim());
+                    NarcoticsFormID = line.Substring(Settings.Default.NarcoticsFormIDStart).Trim();
                 }
 
+                //NarcoticsFormDate
+                if (line.Length >= Settings.Default.NarcoticsFormDateStart + Settings.Default.NarcoticsFormDateLength)
+                {
+                    NarcoticsFormDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.NarcoticsFormDateStart, Settings.Default.NarcoticsFormDateLength).Trim());
+                }
+                else if(line.Length >= Settings.Default.NarcoticsFormDateStart)
+                {
+                    NarcoticsFormDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.NarcoticsFormDateStart).Trim());
+                }
+
+                //DateOfDelivery
+                if (line.Length >= Settings.Default.DateOfDeliveryStart + Settings.Default.DateOfDeliveryLength)
+                {
+                    DateOfDelivery = Parse.ConvertToDateTime(line.Substring(Settings.Default.DateOfDeliveryStart, Settings.Default.DateOfDeliveryLength).Trim());
+                }
+                else if (line.Length >= Settings.Default.DateOfDeliveryStart)
+                {
+                    DateOfDelivery = Parse.ConvertToDateTime(line.Substring(Settings.Default.DateOfDeliveryStart).Trim());
+                }
+
+                //DiscountType
                 if (line.Length >= Settings.Default.DiscountTypeStart + Settings.Default.DiscountTypeLength)
                 {
-                    switch (line.Substring(Settings.Default.DiscountTypeStart, Settings.Default.DiscountTypeLength).Trim())
-                    {
-                        case "J":
-                            DiscountType = true;
-                            break;
-                        case "N":
-                            DiscountType = false;
-                            break;
-                        default:
-                            DiscountType = null;
-                            break;
-                    }
+                    DiscountType = Parse.StringToBool(line.Substring(Settings.Default.DiscountTypeStart, Settings.Default.DiscountTypeLength));                    
+                }
+                else if (line.Length >= Settings.Default.DiscountTypeStart)
+                {
+                    DiscountType = Parse.StringToBool(line.Substring(Settings.Default.DiscountTypeStart));                    
                 }
             }
             catch (Exception e)
@@ -97,17 +123,25 @@ namespace DelNoteItems
                 throw e;
             }
         }
-        private bool? IntToBool(int i)
+        public override string ToString()
         {
-            switch (i)
+            string toString = GetType().Name + ":" + Environment.NewLine;
+            foreach (PropertyInfo pi in GetType().GetProperties())
             {
-                case 1:
-                    return true;
-                case 0:
-                    return false;
-                default:
-                    return null;                
+                if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
+                {
+                    toString += pi.Name + " -> ";
+                    try
+                    {
+                        toString += pi.GetValue(this).ToString();
+                    }
+                    catch (Exception) { }
+                    toString += Environment.NewLine;
+                }
             }
+            return toString;
         }
+
+
     }
 }

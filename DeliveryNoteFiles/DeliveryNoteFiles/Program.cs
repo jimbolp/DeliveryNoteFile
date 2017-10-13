@@ -13,8 +13,9 @@ namespace DeliveryNoteFiles
         private static List<DeliveryNoteFile> DelNoteFiles = new List<DeliveryNoteFile>();
         static void Main(string[] args)
         {            
-            string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
-            
+            //string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+            string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171011");
+
             if (args != null && args.Length != 0)
             {
                 foreach (var s in args)
@@ -40,27 +41,33 @@ namespace DeliveryNoteFiles
                 {
                     if (!string.IsNullOrEmpty(s))
                     {
-                        Console.WriteLine(s);
-                        ProcessFile(s);
+                        //ProcessFile(s);
                         i++;
-                        if (i > 100)
+                        if (i >= 100)
                             break;
-                        /*Thread t = new Thread(() => ProcessFile(s));
-                        t.Start();//*/
+                        if (i % 20 == 0)
+                            Console.WriteLine(s);
+                        //    break;
+                        Thread t = new Thread(() => ProcessFile(s));
+                        t.Start();
+                        t.Join();//*/
                     }
                 }
             }
-            //DeliveryNoteFile checkInvoice = DelNoteFiles.FirstOrDefault();
-            //DeliveryNoteFile checkInvoice1 = DelNoteFiles.LastOrDefault();
-            File.WriteAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);
+                        
+            //Home
+            //File.WriteAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);
+            //foreach (var pos in DelNoteFiles)
+            //{
+            //    File.AppendAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", pos.ToString(), Encoding.Default);
+            //}
+
+            //Work
+            File.WriteAllText(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);
             foreach (var pos in DelNoteFiles)
             {
-                File.AppendAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", pos.ToString(), Encoding.Default);
+                File.AppendAllText(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", pos.ToString(), Encoding.Default);
             }
-            //Work
-            //File.AppendAllText(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests\test positions.txt", checkInvoice.ToString() + checkInvoice1.ToString(), System.Text.Encoding.Default);
-            //Home
-            //File.AppendAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests\test positions.txt", checkInvoice.ToString() + checkInvoice1.ToString(), System.Text.Encoding.Default);
             //Thread.Sleep(1000);
             Console.WriteLine("End");
             Console.ReadLine();

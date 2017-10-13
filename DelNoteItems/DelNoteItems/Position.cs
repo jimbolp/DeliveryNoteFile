@@ -1,5 +1,6 @@
 ﻿using System;
-using Settings = DelNoteItems.Properties.Settings1;
+using System.Collections;
+using System.Reflection;
 
 namespace DelNoteItems
 {
@@ -43,25 +44,63 @@ namespace DelNoteItems
             {
                 if (line.StartsWith("$$POS$$"))
                 {
-                    Pos(line);
+                    try
+                    {
+                        Pos(line);
+                    }
+                    catch (NotImplementedException) { }
                 }
                 else if (line.StartsWith("$$POS1$"))
                 {
-                    Pos1(line);
+                    try
+                    {
+                        Pos1(line);
+                    }
+                    catch (NotImplementedException) { }
                 }
                 else if (line.StartsWith("$$POS2$$"))
                 {
-                    Pos2(line);
+                    try
+                    {
+                        Pos2(line);
+                    }
+                    catch (NotImplementedException) { }
                 }
                 else if (line.StartsWith("$$POS3$"))
                 {
-                    Pos3(line);
+                    try
+                    {
+                        Pos3(line);
+                    }
+                    catch (NotImplementedException) { }
                 }
                 else if (line.StartsWith("$$POS4$$"))
                 {
-                    Pos4(line);
+                    try
+                    {
+                        Pos4(line);
+                    }
+                    catch (NotImplementedException) { }
                 }
             }
+        }
+        public override string ToString()
+        {
+            string toString = GetType().Name + ":" + Environment.NewLine;
+            foreach (PropertyInfo pi in GetType().GetProperties())
+            {
+                if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
+                {
+                    toString += pi.Name + " -> ";
+                    try
+                    {
+                        toString += pi.GetValue(this).ToString();
+                    }
+                    catch (Exception) { }
+                    toString += Environment.NewLine;
+                }
+            }
+            return toString;
         }
     }
 }

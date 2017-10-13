@@ -1,5 +1,5 @@
 ﻿using System;
-using Settings = DelNoteItems.Properties.Settings1;
+using Settings = DelNoteItems.Properties.Config;
 
 namespace DelNoteItems
 {
@@ -12,80 +12,157 @@ namespace DelNoteItems
                 int intVal = 0;
                 decimal decVal = 0;
 
+                //Reference
                 if (line.Length >= Settings.Default.ReferenceStart + Settings.Default.ReferenceLength)
                 {
                     Reference = line.Substring(Settings.Default.ReferenceStart, Settings.Default.ReferenceLength).Trim();
                 }
+                else if(line.Length >= Settings.Default.ReferenceStart)
+                {
+                    Reference = line.Substring(Settings.Default.ReferenceStart).Trim();
+                }
 
+                //ArticleCertification
                 if (line.Length >= Settings.Default.ArticleCertificationStart + Settings.Default.ArticleCertificationLength)
                 {
                     ArticleCertification = line.Substring(Settings.Default.ArticleCertificationStart, Settings.Default.ArticleCertificationLength).Trim();
                 }
-
-                if (line.Length >= Settings.Default.isNZOKArticleStart + Settings.Default.isNZOKArticleLength)
+                else if(line.Length >= Settings.Default.ArticleCertificationStart)
                 {
-                    switch (line.Substring(Settings.Default.isNZOKArticleStart, Settings.Default.isNZOKArticleLength).Trim())
-                    {
-                        case "J":
-                            isNZOKArticle = true;
-                            break;
-                        case "N":
-                            isNZOKArticle = false;
-                            break;
-                        default:
-                            isNZOKArticle = null;
-                            break;
-                    }
+                    ArticleCertification = line.Substring(Settings.Default.ArticleCertificationStart).Trim();
                 }
 
+                //isNZOKArticle
+                if (line.Length >= Settings.Default.isNZOKArticleStart + Settings.Default.isNZOKArticleLength)
+                {
+                    isNZOKArticle = Parse.StringToBool(line.Substring(Settings.Default.isNZOKArticleStart, Settings.Default.isNZOKArticleLength));                    
+                }
+                else if(line.Length >= Settings.Default.isNZOKArticleStart)
+                {
+                    isNZOKArticle = Parse.StringToBool(line.Substring(Settings.Default.isNZOKArticleStart));
+                }
+
+                //NZOKArticleCode
                 if (line.Length >= Settings.Default.NZOKArticleCodeStart + Settings.Default.NZOKArticleCodeLength)
                 {
                     NZOKArticleCode = line.Substring(Settings.Default.NZOKArticleCodeStart, Settings.Default.NZOKArticleCodeLength).Trim();
                 }
-
-                if (line.Length >= Settings.Default.OrderQtyStart + Settings.Default.OrderQtyLength
-                    && Int32.TryParse(line.Substring(Settings.Default.OrderQtyStart, Settings.Default.OrderQtyLength), out intVal))
+                else if(line.Length >= Settings.Default.NZOKArticleCodeStart)
                 {
-                    OrderQty = intVal;
+                    NZOKArticleCode = line.Substring(Settings.Default.NZOKArticleCodeStart).Trim();
                 }
 
-                if (line.Length >= Settings.Default.DeliveryQtyStart + Settings.Default.DeliveryQtyLength
-                    && Int32.TryParse(line.Substring(Settings.Default.DeliveryQtyStart, Settings.Default.DeliveryQtyLength), out intVal))
+                //OrderQty
+                if (line.Length >= Settings.Default.OrderQtyStart + Settings.Default.OrderQtyLength)
                 {
-                    DeliveryQty = intVal;
+                    if(Int32.TryParse(line.Substring(Settings.Default.OrderQtyStart, Settings.Default.OrderQtyLength), out intVal))
+                    {
+                        OrderQty = intVal;
+                    }
+                }
+                else if(line.Length >= Settings.Default.OrderQtyStart)
+                {
+                    if (Int32.TryParse(line.Substring(Settings.Default.OrderQtyStart), out intVal))
+                    {
+                        OrderQty = intVal;
+                    }
                 }
 
-                if (line.Length >= Settings.Default.BonusQtyStart + Settings.Default.BonusQtyLength
-                    && Int32.TryParse(line.Substring(Settings.Default.BonusQtyStart, Settings.Default.BonusQtyLength), out intVal))
+                //DeliveryQty
+                if (line.Length >= Settings.Default.DeliveryQtyStart + Settings.Default.DeliveryQtyLength)
                 {
-                    BonusQty = intVal;
+                    if(Int32.TryParse(line.Substring(Settings.Default.DeliveryQtyStart, Settings.Default.DeliveryQtyLength), out intVal))
+                    {
+                        DeliveryQty = intVal;
+                    }
+                }
+                else if (line.Length >= Settings.Default.DeliveryQtyStart)
+                {
+                    if (Int32.TryParse(line.Substring(Settings.Default.DeliveryQtyStart), out intVal))
+                    {
+                        DeliveryQty = intVal;
+                    }
                 }
 
-                if (line.Length >= Settings.Default.PharmacyPurchasePriceStart + Settings.Default.PharmacyPurchasePriceLength
-                    && Decimal.TryParse(line.Substring(Settings.Default.PharmacyPurchasePriceStart, Settings.Default.PharmacyPurchasePriceLength), out decVal))
+                //BonusQty
+                if (line.Length >= Settings.Default.BonusQtyStart + Settings.Default.BonusQtyLength)
                 {
-                    PharmacyPurchasePrice = decVal;
+                    if(Int32.TryParse(line.Substring(Settings.Default.BonusQtyStart, Settings.Default.BonusQtyLength), out intVal))
+                    {
+                        BonusQty = intVal;
+                    }
+                }
+                else if(line.Length >= Settings.Default.BonusQtyStart)
+                {
+                    if (Int32.TryParse(line.Substring(Settings.Default.BonusQtyStart), out intVal))
+                    {
+                        BonusQty = intVal;
+                    }
                 }
 
-                if (line.Length >= Settings.Default.InvoicedPriceInclVATNoDiscountStart + Settings.Default.InvoicedPriceInclVATNoDiscountLength
-                    && Decimal.TryParse(line.Substring(Settings.Default.InvoicedPriceInclVATNoDiscountStart, Settings.Default.InvoicedPriceInclVATNoDiscountLength), out decVal))
+                //PharmacyPurchasePrice
+                if (line.Length >= Settings.Default.PharmacyPurchasePriceStart + Settings.Default.PharmacyPurchasePriceLength)
                 {
-                    InvoicedPriceInclVATNoDiscount = decVal;
+                    if(Decimal.TryParse(line.Substring(Settings.Default.PharmacyPurchasePriceStart, Settings.Default.PharmacyPurchasePriceLength).Trim().Replace(',','.'), out decVal))
+                    {
+                        PharmacyPurchasePrice = decVal;
+                    }
+                }
+                else if (line.Length >= Settings.Default.PharmacyPurchasePriceStart)
+                {
+                    if (Decimal.TryParse(line.Substring(Settings.Default.PharmacyPurchasePriceStart).Trim().Replace(',', '.'), out decVal))
+                    {
+                        PharmacyPurchasePrice = decVal;
+                    }
                 }
 
-                if (line.Length >= Settings.Default.InvoicedPriceExclVATStart + Settings.Default.InvoicedPriceExclVATLength
-                    && Decimal.TryParse(line.Substring(Settings.Default.InvoicedPriceExclVATStart, Settings.Default.InvoicedPriceExclVATLength), out decVal))
+                //InvoicedPriceInclVATNoDiscount
+                if (line.Length >= Settings.Default.InvoicedPriceInclVATNoDiscountStart + Settings.Default.InvoicedPriceInclVATNoDiscountLength)
                 {
-                    InvoicedPriceExclVAT = decVal;
+                    if(Decimal.TryParse(line.Substring(Settings.Default.InvoicedPriceInclVATNoDiscountStart, Settings.Default.InvoicedPriceInclVATNoDiscountLength).Trim().Replace(',', '.'), out decVal))
+                    {
+                        InvoicedPriceInclVATNoDiscount = decVal;
+                    }
+                }
+                else if(line.Length >= Settings.Default.InvoicedPriceInclVATNoDiscountStart)
+                {
+                    if (Decimal.TryParse(line.Substring(Settings.Default.InvoicedPriceInclVATNoDiscountStart).Trim().Replace(',', '.'), out decVal))
+                    {
+                        InvoicedPriceInclVATNoDiscount = decVal;
+                    }
                 }
 
-                if (line.Length >= Settings.Default.InvoicedPriceInclVATStart + Settings.Default.InvoicedPriceInclVATLength
-                    && Decimal.TryParse(line.Substring(Settings.Default.InvoicedPriceInclVATStart, Settings.Default.InvoicedPriceInclVATLength), out decVal))
+                //InvoicedPriceExclVAT
+                if (line.Length >= Settings.Default.InvoicedPriceExclVATStart + Settings.Default.InvoicedPriceExclVATLength)
                 {
-                    InvoicedPriceInclVAT = decVal;
+                    if(Decimal.TryParse(line.Substring(Settings.Default.InvoicedPriceExclVATStart, Settings.Default.InvoicedPriceExclVATLength).Trim().Replace(',', '.'), out decVal))
+                    {
+                        InvoicedPriceExclVAT = decVal;
+                    }
+                }
+                else if(line.Length >= Settings.Default.InvoicedPriceExclVATStart)
+                {
+                    if (Decimal.TryParse(line.Substring(Settings.Default.InvoicedPriceExclVATStart).Trim().Replace(',', '.'), out decVal))
+                    {
+                        InvoicedPriceExclVAT = decVal;
+                    }
                 }
 
-
+                //InvoicedPriceInclVAT
+                if (line.Length >= Settings.Default.InvoicedPriceInclVATStart + Settings.Default.InvoicedPriceInclVATLength)
+                {
+                    if(Decimal.TryParse(line.Substring(Settings.Default.InvoicedPriceInclVATStart, Settings.Default.InvoicedPriceInclVATLength).Trim().Replace(',', '.'), out decVal))
+                    {
+                        InvoicedPriceInclVAT = decVal;
+                    }
+                }
+                else if(line.Length >= Settings.Default.InvoicedPriceInclVATStart)
+                {
+                    if (Decimal.TryParse(line.Substring(Settings.Default.InvoicedPriceInclVATStart).Trim().Replace(',', '.'), out decVal))
+                    {
+                        InvoicedPriceInclVAT = decVal;
+                    }
+                }
             }
             catch (Exception e)
             {

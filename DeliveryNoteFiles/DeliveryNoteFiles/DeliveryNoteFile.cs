@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using DelNoteItems;
 using Type = DelNoteItems.Type;
+using System.Reflection;
 
 namespace DeliveryNoteFiles
 {
@@ -128,21 +129,36 @@ namespace DeliveryNoteFiles
         {
             if (Positions == null)
             {
-                Positions = new List<Position>();
+                Positions = new List<Position>() { new Position(lines) };
+                return;
             }
+
             Positions.Add(new Position(lines));
         }
 
         public override string ToString()
         {
-            string positions = "";
-            foreach(Position pos in Positions)
+            string toString = GetType().Name + ":" + Environment.NewLine;
+            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance|BindingFlags.Public))
             {
-                positions += pos.ArticleNo + " -> ";
-                positions += pos.ArticleName + " -> ";
-                positions += pos.ArticleLongName + Environment.NewLine;
+                if (!typeof(IEnumerable).IsAssignableFrom(pi.PropertyType))
+                {
+                    try
+                    {
+                        toString += pi.GetValue(this).ToString();
+                        toString += Environment.NewLine;
+                    }
+                    catch (Exception) { }
+                }
+                else
+                {
+                    foreach(var val in pi.GetValue(this) as IEnumerable)
+                    {
+                        toString += val.ToString();
+                    }
+                }
             }
-            return positions;
+            return toString;
         }
         //private int BitCount(BitArray array)
         //{

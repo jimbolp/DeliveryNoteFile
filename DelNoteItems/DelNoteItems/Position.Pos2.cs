@@ -1,5 +1,5 @@
 ﻿using System;
-using Settings = DelNoteItems.Properties.Settings1;
+using Settings = DelNoteItems.Properties.Config;
 
 namespace DelNoteItems
 {
@@ -9,14 +9,24 @@ namespace DelNoteItems
         {
             try
             {
-                if(line.Length >= Settings.Default.ExpiryDateStart + Settings.Default.ExpiryDateLength)
+                //ExpiryDate
+                if (line.Length >= Settings.Default.ExpiryDateStart + Settings.Default.ExpiryDateLength)
                 {
-                    ExpiryDate = DateID.Convert(line.Substring(Settings.Default.ExpiryDateStart, Settings.Default.ExpiryDateLength));
+                    ExpiryDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.ExpiryDateStart, Settings.Default.ExpiryDateLength));
+                }
+                else if(line.Length >= Settings.Default.ExpiryDateStart)
+                {
+                    ExpiryDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.ExpiryDateStart));
                 }
 
-                if(line.Length >= Settings.Default.BatchStart + Settings.Default.BatchLength)
+                //Batch
+                if (line.Length >= Settings.Default.BatchStart + Settings.Default.BatchLength)
                 {
                     Batch = line.Substring(Settings.Default.BatchStart, Settings.Default.BatchLength).Trim();
+                }
+                else if(line.Length >= Settings.Default.BatchStart)
+                {
+                    Batch = line.Substring(Settings.Default.BatchStart).Trim();
                 }
             }
             catch (Exception)

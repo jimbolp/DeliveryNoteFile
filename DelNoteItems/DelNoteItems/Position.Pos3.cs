@@ -1,5 +1,5 @@
 ﻿using System;
-using Settings = DelNoteItems.Properties.Settings1;
+using Settings = DelNoteItems.Properties.Config;
 
 namespace DelNoteItems
 {
@@ -9,11 +9,12 @@ namespace DelNoteItems
         {
             try
             {
-                if(line.Length >= Settings.Default.ArticleLongNameStart + Settings.Default.ArticleLongNameLength)
+                //ArticleLongName
+                if (line.Length >= Settings.Default.ArticleLongNameStart + Settings.Default.ArticleLongNameLength)
                 {
                     ArticleLongName = line.Substring(Settings.Default.ArticleLongNameStart, Settings.Default.ArticleLongNameLength).Trim();
                 }
-                else if(!(line.Length < Settings.Default.ArticleLongNameStart))
+                else if(line.Length >= Settings.Default.ArticleLongNameStart)
                 {
                     ArticleLongName = line.Substring(Settings.Default.ArticleLongNameStart).Trim();
                 }
