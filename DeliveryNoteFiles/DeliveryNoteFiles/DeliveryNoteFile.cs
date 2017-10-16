@@ -55,10 +55,12 @@ namespace DeliveryNoteFiles
         /// <param name="lines"></param>
         private void InitializeComponents(string[] lines)
         {
-            BitArray havePos = new BitArray(new bool[5]);
-            //Position lastPosition;
-            string[] posLines = new string[5];
+            BitArray havePos = new BitArray(new bool[5]);       //Using Array for two reasons.. 1. Less variables(less memory :D) 2. The array indexes coincides with the "position's line numbers"
+                                                                //Example: POS == 0; POS1 == 1; etc.
             
+            string[] posLines = new string[5];                  //Same reason here..!
+            
+            //
             foreach (var line in lines)
             {
                 if (line.StartsWith("$$TYPE$$"))
@@ -133,30 +135,37 @@ namespace DeliveryNoteFiles
                 Positions = new List<Position>() { new Position(lines) };
                 return;
             }
-            Position current = new Position(lines);
+            Position current;
+            try
+            {
+               current = new Position(lines);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
             Position last;
             try
             {
                 last = Positions.LastOrDefault();
             }
-            catch (ArgumentNullException)
+            catch (Exception)
             {
                 last = null;
             }
 
             if(current.InvoicedQty == 0 || current.InvoicedQty == null)
             {
-                if(last != null)
-                {
-
-                }
+                if (current.DeliveryQty == null || current.DeliveryQty == 0)
+                    throw new ArgumentNullException("Position quantity should not be 0 or null!");
+                current.InvoicedQty = current.DeliveryQty;
             }
             Positions.Add(current);
         }
 
         private void FixRebatePosition()
         {
-
+            throw new NotImplementedException();
         }
 
 #if DEBUG
