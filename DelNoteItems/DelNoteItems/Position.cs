@@ -84,6 +84,8 @@ namespace DelNoteItems
                 }
             }
         }
+
+#if DEBUG
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
@@ -101,6 +103,7 @@ namespace DelNoteItems
                 }
             }
             return toString;
-        }
+        } 
+#endif
     }
 }

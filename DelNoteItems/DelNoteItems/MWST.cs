@@ -80,6 +80,8 @@ namespace DelNoteItems
             }
             Table.Add(new MWST(line));
         }
+
+#if DEBUG
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
@@ -97,7 +99,7 @@ namespace DelNoteItems
                 }
                 else
                 {
-                    foreach(var m in pi.GetValue(this) as IEnumerable)
+                    foreach (var m in pi.GetValue(this) as IEnumerable)
                     {
                         try
                         {
@@ -108,6 +110,7 @@ namespace DelNoteItems
                 }
             }
             return toString;
-        }
+        } 
+#endif
     }
 }

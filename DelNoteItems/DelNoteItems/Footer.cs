@@ -74,10 +74,12 @@ namespace DelNoteItems
                 DueDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.DueDateStart).Trim());
             }
         }
+
+#if DEBUG
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach(PropertyInfo pi in GetType().GetProperties())
+            foreach (PropertyInfo pi in GetType().GetProperties())
             {
                 if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
                 {
@@ -91,6 +93,7 @@ namespace DelNoteItems
                 }
             }
             return toString;
-        }
+        } 
+#endif
     }
 }

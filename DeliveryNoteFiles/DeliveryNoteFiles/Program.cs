@@ -43,7 +43,7 @@ namespace DeliveryNoteFiles
                     {
                         //ProcessFile(s);
                         i++;
-                        if (i >= 100)
+                        if (i >= 50)
                             break;
                         if (i % 20 == 0)
                             Console.WriteLine(s);

@@ -13,6 +13,7 @@ namespace DelNoteItems
         {
             DocumentType = (line.Substring(Settings.Default.DocTypeStart)).Trim();
         }
+#if DEBUG
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
@@ -31,5 +32,6 @@ namespace DelNoteItems
             }
             return toString;
         }
+#endif
     }
 }

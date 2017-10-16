@@ -78,6 +78,7 @@ namespace DeliveryNoteFiles
                     if (!string.IsNullOrEmpty(posLines[0]))
                     {
                         ProcessPosition(posLines);
+                        posLines = null;
                     }
                     Footer = new Footer(line);
                 }
@@ -132,14 +133,37 @@ namespace DeliveryNoteFiles
                 Positions = new List<Position>() { new Position(lines) };
                 return;
             }
+            Position current = new Position(lines);
+            Position last;
+            try
+            {
+                last = Positions.LastOrDefault();
+            }
+            catch (ArgumentNullException)
+            {
+                last = null;
+            }
 
-            Positions.Add(new Position(lines));
+            if(current.InvoicedQty == 0 || current.InvoicedQty == null)
+            {
+                if(last != null)
+                {
+
+                }
+            }
+            Positions.Add(current);
         }
 
+        private void FixRebatePosition()
+        {
+
+        }
+
+#if DEBUG
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance|BindingFlags.Public))
+            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(pi.PropertyType))
                 {
@@ -152,14 +176,15 @@ namespace DeliveryNoteFiles
                 }
                 else
                 {
-                    foreach(var val in pi.GetValue(this) as IEnumerable)
+                    foreach (var val in pi.GetValue(this) as IEnumerable)
                     {
                         toString += val.ToString();
                     }
                 }
             }
             return toString;
-        }
+        } 
+#endif
         //private int BitCount(BitArray array)
         //{
         //    int count = 0;
