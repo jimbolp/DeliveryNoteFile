@@ -38,9 +38,21 @@ namespace DelNoteItems
 
         //$$POS4$$ Line - still no explanation about this one!
         
-        public Position(string[] lines)
+        public Position(string[] lines, bool isCreditNote)
         {
-            foreach(string line in lines)
+            if (isCreditNote)
+            {
+                InitializeCreditNote(lines);
+            }
+            else
+            {
+                InitializeInvoice(lines);
+            }
+        }
+
+        private void InitializeInvoice(string[] lines)
+        {
+            foreach (string line in lines)
             {
                 if (line.StartsWith("$$POS$$"))
                 {
@@ -84,12 +96,66 @@ namespace DelNoteItems
                 }
             }
         }
+        private void InitializeCreditNote(string[] lines)
+        {
+            foreach (string line in lines)
+            {
+                if (line.StartsWith("$$POS$$"))
+                {
+                    try
+                    {
+                        Pos(line);
+                    }
+                    catch (NotImplementedException) { }
+                }
+                else if (line.StartsWith("$$POS1$$"))
+                {
+                    string fixedLine = RemoveSymbol(line); 
+                    try
+                    {
+                        Pos1(fixedLine);
+                    }
+                    catch (NotImplementedException) { }
+                }
+                else if (line.StartsWith("$$POS2$$"))
+                {
+                    try
+                    {
+                        Pos2(line);
+                    }
+                    catch (NotImplementedException) { }
+                }
+                else if (line.StartsWith("$$POS3$$"))
+                {
+                    string fixedLine = RemoveSymbol(line);
+                    try
+                    {
+                        Pos3(fixedLine);
+                    }
+                    catch (NotImplementedException) { }
+                }
+                else if (line.StartsWith("$$POS4$$"))
+                {
+                    try
+                    {
+                        Pos4(line);
+                    }
+                    catch (NotImplementedException) { }
+                }
+            }
+        }
+
+        private string RemoveSymbol(string line)
+        {
+            string str = line.Substring(0, 7) + line.Substring(8);
+            return str;
+        }
 
 #if DEBUG
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties())
+            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
                 {

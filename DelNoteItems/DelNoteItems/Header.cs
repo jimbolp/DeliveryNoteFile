@@ -19,7 +19,20 @@ namespace DelNoteItems
 
         //$$Header2$$ Line properties still not known
 
-        public Header(string line)
+        public Header(string line, bool isCreditNote)
+        {
+            if (isCreditNote)
+            {
+                InitializeCreditNote(line);
+            }
+            else
+            {
+                InitializeInvoice(line);
+            }
+            
+        }
+
+        private void InitializeInvoice(string line)
         {
             int intVal = 0;
             long longVal = 0;
@@ -29,7 +42,7 @@ namespace DelNoteItems
                 //DeliveryNoteNumber
                 if (line.Length >= Settings.Default.DeliveryNoteNumberStart + Settings.Default.DeliveryNoteNumberLength)
                 {
-                    if(Int64.TryParse(line.Substring(Settings.Default.DeliveryNoteNumberStart, Settings.Default.DeliveryNoteNumberLength).Trim(), out longVal))
+                    if (Int64.TryParse(line.Substring(Settings.Default.DeliveryNoteNumberStart, Settings.Default.DeliveryNoteNumberLength).Trim(), out longVal))
                     {
                         DeliveryNoteNumber = longVal;
                     }
@@ -47,7 +60,7 @@ namespace DelNoteItems
                 {
                     DeliveryNoteDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.DeliveryNoteDateStart, Settings.Default.DeliveryNoteDateLength).Trim());
                 }
-                else if(line.Length >= Settings.Default.DeliveryNoteDateStart)
+                else if (line.Length >= Settings.Default.DeliveryNoteDateStart)
                 {
                     DeliveryNoteDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.DeliveryNoteDateStart).Trim());
                 }
@@ -55,12 +68,12 @@ namespace DelNoteItems
                 //RebateInKindOrder
                 if (line.Length >= Settings.Default.RebateInKindOrderStart + Settings.Default.RebateInKindOrderLength)
                 {
-                    if(Int32.TryParse(line.Substring(Settings.Default.RebateInKindOrderStart, Settings.Default.RebateInKindOrderLength).Trim(), out intVal))
+                    if (Int32.TryParse(line.Substring(Settings.Default.RebateInKindOrderStart, Settings.Default.RebateInKindOrderLength).Trim(), out intVal))
                     {
                         RebateInKindOrder = Parse.IntToBool(intVal);
                     }
                 }
-                else if(line.Length >= Settings.Default.RebateInKindOrderStart)
+                else if (line.Length >= Settings.Default.RebateInKindOrderStart)
                 {
                     if (Int32.TryParse(line.Substring(Settings.Default.RebateInKindOrderStart).Trim(), out intVal))
                     {
@@ -75,15 +88,15 @@ namespace DelNoteItems
                 }
                 else if (line.Length >= Settings.Default.isNZOKOrderStart)
                 {
-                    isNZOKOrder = Parse.StringToBool(line.Substring(Settings.Default.isNZOKOrderStart));                    
+                    isNZOKOrder = Parse.StringToBool(line.Substring(Settings.Default.isNZOKOrderStart));
                 }
 
                 //NarcoticsFormID
                 if (line.Length >= Settings.Default.NarcoticsFormIDStart + Settings.Default.NarcoticsFormIDLength)
                 {
-                    NarcoticsFormID = line.Substring(Settings.Default.NarcoticsFormIDStart, Settings.Default.NarcoticsFormIDLength).Trim();                    
+                    NarcoticsFormID = line.Substring(Settings.Default.NarcoticsFormIDStart, Settings.Default.NarcoticsFormIDLength).Trim();
                 }
-                else if(line.Length >= Settings.Default.NarcoticsFormIDStart)
+                else if (line.Length >= Settings.Default.NarcoticsFormIDStart)
                 {
                     NarcoticsFormID = line.Substring(Settings.Default.NarcoticsFormIDStart).Trim();
                 }
@@ -93,7 +106,7 @@ namespace DelNoteItems
                 {
                     NarcoticsFormDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.NarcoticsFormDateStart, Settings.Default.NarcoticsFormDateLength).Trim());
                 }
-                else if(line.Length >= Settings.Default.NarcoticsFormDateStart)
+                else if (line.Length >= Settings.Default.NarcoticsFormDateStart)
                 {
                     NarcoticsFormDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.NarcoticsFormDateStart).Trim());
                 }
@@ -111,11 +124,11 @@ namespace DelNoteItems
                 //DiscountType
                 if (line.Length >= Settings.Default.DiscountTypeStart + Settings.Default.DiscountTypeLength)
                 {
-                    DiscountType = Parse.StringToBool(line.Substring(Settings.Default.DiscountTypeStart, Settings.Default.DiscountTypeLength));                    
+                    DiscountType = Parse.StringToBool(line.Substring(Settings.Default.DiscountTypeStart, Settings.Default.DiscountTypeLength));
                 }
                 else if (line.Length >= Settings.Default.DiscountTypeStart)
                 {
-                    DiscountType = Parse.StringToBool(line.Substring(Settings.Default.DiscountTypeStart));                    
+                    DiscountType = Parse.StringToBool(line.Substring(Settings.Default.DiscountTypeStart));
                 }
             }
             catch (Exception e)
@@ -123,12 +136,17 @@ namespace DelNoteItems
                 throw e;
             }
         }
+        private void InitializeCreditNote(string line)
+        {
+            //FixLine(line);
+            InitializeInvoice(line);
+        }
 
 #if DEBUG
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties())
+            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
                 {

@@ -16,8 +16,9 @@ namespace DeliveryNoteFiles
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+            //string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
             //string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171011");
+            string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
 
             if (args != null && args.Length != 0)
             {
@@ -46,10 +47,10 @@ namespace DeliveryNoteFiles
                     {
                         //ProcessFile(s);
                         i++;
-                        if (i >= 200)
+                        if (i >= 500)
                             break;
-                        if (i % 20 == 0)
-                            Console.WriteLine(s);
+                        if (i % 50 == 0)
+                            Console.WriteLine(i);
                         //    break;
                         Thread t = new Thread(() => ProcessFile(s));
                         t.Start();
@@ -60,14 +61,14 @@ namespace DeliveryNoteFiles
             sw.Stop();
             Console.WriteLine(sw.Elapsed.ToString());
             //Files containing positions with InvoicedQty == 0;
-            DeliveryNoteFile[] test = DelNoteFiles.Where(d => d.Positions.Where(p => p.InvoicedQty == 0).Any()).ToArray();
-            
+            DeliveryNoteFile[] test = DelNoteFiles.Where(d => d.Positions != null).Where(d => d.Positions.Where(p => p.InvoicedQty == 0).Any()).ToArray();
+
             //Home
-            File.WriteAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);
-            foreach (var pos in DelNoteFiles)
-            {
-                File.AppendAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", pos.ToString(), Encoding.Default);
-            }
+            //File.WriteAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);
+            //foreach (var pos in DelNoteFiles)
+            //{
+            //    File.AppendAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", pos.ToString(), Encoding.Default);
+            //}
 
             //Work
             //File.WriteAllText(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);
@@ -84,8 +85,9 @@ namespace DeliveryNoteFiles
         {
             if (!(file.Trim().EndsWith(".txt")))
                 return;
-            //DeliveryNoteFile DelNote = new DeliveryNoteFile(file);
+            
             DelNoteFiles.Add(new DeliveryNoteFile(file));
+            
         }
     }
 }

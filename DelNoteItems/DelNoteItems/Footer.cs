@@ -12,19 +12,31 @@ namespace DelNoteItems
         public decimal? InvoiceTotal { get; set; }
         public DateTime? DueDate { get; set; }
 
-        public Footer(string line)
+        public Footer(string line, bool isCreditNote)
+        {
+            if (isCreditNote)
+            {
+                InitializeCreditNote(line);
+            }
+            else
+            {
+                InitializeInvoice(line);
+            }
+        }
+
+        private void InitializeInvoice(string line)
         {
             decimal decimalValue = 0;
 
             //TotalDiscounts
             if (line.Length >= Settings.Default.TotalDiscountsStart + Settings.Default.TotalDiscountsLength)
             {
-                if(Decimal.TryParse(line.Substring(Settings.Default.TotalDiscountsStart, Settings.Default.TotalDiscountsLength).Trim().Replace(',', '.'), out decimalValue))
+                if (Decimal.TryParse(line.Substring(Settings.Default.TotalDiscountsStart, Settings.Default.TotalDiscountsLength).Trim().Replace(',', '.'), out decimalValue))
                 {
                     TotalDiscounts = decimalValue;
                 }
             }
-            else if(line.Length >= Settings.Default.TotalDiscountsStart)
+            else if (line.Length >= Settings.Default.TotalDiscountsStart)
             {
                 if (Decimal.TryParse(line.Substring(Settings.Default.TotalDiscountsStart).Trim().Replace(',', '.'), out decimalValue))
                 {
@@ -40,7 +52,7 @@ namespace DelNoteItems
                     TotalWithDiscountNoVAT = decimalValue;
                 }
             }
-            else if(line.Length >= Settings.Default.TotalWithDiscountNoVATStart)
+            else if (line.Length >= Settings.Default.TotalWithDiscountNoVATStart)
             {
                 if (Decimal.TryParse(line.Substring(Settings.Default.TotalWithDiscountNoVATStart).Trim().Replace(',', '.'), out decimalValue))
                 {
@@ -51,12 +63,12 @@ namespace DelNoteItems
             //InvoiceTotal
             if (line.Length >= Settings.Default.InvoiceTotalStart + Settings.Default.InvoiceTotalLength)
             {
-                if(Decimal.TryParse(line.Substring(Settings.Default.InvoiceTotalStart, Settings.Default.InvoiceTotalLength).Trim().Replace(',', '.'), out decimalValue))
+                if (Decimal.TryParse(line.Substring(Settings.Default.InvoiceTotalStart, Settings.Default.InvoiceTotalLength).Trim().Replace(',', '.'), out decimalValue))
                 {
                     InvoiceTotal = decimalValue;
                 }
             }
-            else if(line.Length >= Settings.Default.InvoiceTotalStart)
+            else if (line.Length >= Settings.Default.InvoiceTotalStart)
             {
                 if (Decimal.TryParse(line.Substring(Settings.Default.InvoiceTotalStart).Trim().Replace(',', '.'), out decimalValue))
                 {
@@ -69,17 +81,23 @@ namespace DelNoteItems
             {
                 DueDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.DueDateStart, Settings.Default.DueDateLength).Trim());
             }
-            else if(line.Length >= Settings.Default.DueDateStart)
+            else if (line.Length >= Settings.Default.DueDateStart)
             {
                 DueDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.DueDateStart).Trim());
             }
+        }
+
+        private void InitializeCreditNote(string line)
+        {
+            //FixLine(line);
+            InitializeInvoice(line);
         }
 
 #if DEBUG
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties())
+            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
                 {

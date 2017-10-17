@@ -8,19 +8,32 @@ namespace DelNoteItems
     {
         public int? BranchNumber { get; set; }
 
-        public Supplier(string line)
+        public Supplier(string line, bool isCreditNote)
+        {
+            if (isCreditNote)
+            {
+                InitializeCreditNote(line);
+            }
+            else
+            {
+                InitializeInvoice(line);
+            }
+            
+        }
+
+        private void InitializeInvoice(string line)
         {
             int intVal = 0;
 
             //BranchNumber
             if (line.Length >= Settings.Default.BranchNoStart + Settings.Default.BranchNoLength)
             {
-                if(Int32.TryParse(line.Substring(Settings.Default.BranchNoStart, Settings.Default.BranchNoLength).Trim(), out intVal))
+                if (Int32.TryParse(line.Substring(Settings.Default.BranchNoStart, Settings.Default.BranchNoLength).Trim(), out intVal))
                 {
                     BranchNumber = intVal;
                 }
             }
-            else if(line.Length >= Settings.Default.BranchNoStart)
+            else if (line.Length >= Settings.Default.BranchNoStart)
             {
                 if (Int32.TryParse(line.Substring(Settings.Default.BranchNoStart).Trim(), out intVal))
                 {
@@ -28,12 +41,17 @@ namespace DelNoteItems
                 }
             }
         }
+        private void InitializeCreditNote(string line)
+        {
+            //FixLine(line);
+            InitializeInvoice(line);
+        }
 
 #if DEBUG
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties())
+            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
                 {

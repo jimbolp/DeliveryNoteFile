@@ -15,7 +15,7 @@ namespace DeliveryNoteFiles
         public Supplier Supplier { get; set; }
         public Header Header { get; set; }
         public Customer Customer { get; set; }
-        public List<Position> Positions { get; set; }
+        public List<Position> Positions { get; set; } = new List<Position>();
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
 
@@ -42,12 +42,27 @@ namespace DeliveryNoteFiles
                         Lines.Add(line);
                     }
                 }
-            }catch(Exception)
-            {
-                //TODO...
+                InitializeComponents(Lines.ToArray());
             }
-            InitializeComponents(Lines.ToArray());
+            catch(Exception e)
+            {
+                throw;
+            }
+            string movedFilePath = null;
+            try
+            {
+                movedFilePath = MoveFile(filePath);
+                SendEmail(movedFilePath);
+            }
+            catch (Exception)
+            {
+                //throw;
+            }
+            
         }
+
+        private void SendEmail(string movedFilePath) => throw new NotImplementedException();
+        private string MoveFile(string filePath) => throw new NotImplementedException();
 
         /// <summary>
         /// Initializes each Property with the information from the file.
@@ -63,82 +78,89 @@ namespace DeliveryNoteFiles
             //
             foreach (var line in lines)
             {
-                if (line.StartsWith("$$TYPE$$"))
+                try
                 {
-                    DocType = new Type(line);
-                }
-                else if (line.StartsWith("$$SUPPLIER$$"))
-                {
-                    Supplier = new Supplier(line);
-                }
-                else if (line.StartsWith("$$HEADER$$"))
-                {
-                    Header = new Header(line);
-                }
-                else if (line.StartsWith("$$FOOTER$$"))
-                {
-                    if (!string.IsNullOrEmpty(posLines[0]))
+                    if (line.StartsWith("$$TYPE$$"))
                     {
-                        ProcessPosition(posLines);
-                        posLines = null;
+                        DocType = new Type(line);
                     }
-                    Footer = new Footer(line);
-                }
-                else if (line.StartsWith("$$MWST$$"))
-                {
-                    if(VATTable == null)
+                    else if (line.StartsWith("$$SUPPLIER$$"))
                     {
-                        VATTable = new VATTable(line);
+                        Supplier = new Supplier(line, DocType.isCreditNote);
                     }
-                    else
+                    else if (line.StartsWith("$$HEADER$$"))
                     {
-                        VATTable.Table.Add(new MWST(line));
+                        Header = new Header(line, DocType.isCreditNote);
                     }
-                }
-                else if (line.StartsWith("$$POS$$"))
-                {
-                    if (!string.IsNullOrEmpty(posLines[0]))
+                    else if (line.StartsWith("$$FOOTER$$"))
                     {
-                        ProcessPosition(posLines);
-                        havePos.SetAll(false);
+                        if (!string.IsNullOrEmpty(posLines[0]))
+                        {
+                            ProcessPosition(posLines, DocType.isCreditNote);
+                            posLines = null;
+                        }
+                        Footer = new Footer(line, DocType.isCreditNote);
                     }
-                    posLines[0] = line;
-                    havePos[0] = true;
+                    else if (line.StartsWith("$$MWST$$"))
+                    {
+                        if (VATTable == null)
+                        {
+                            VATTable = new VATTable(line, DocType.isCreditNote);
+                        }
+                        else
+                        {
+                            VATTable.Table.Add(new MWST(line, DocType.isCreditNote));
+                        }
+                    }
+                    else if (line.StartsWith("$$POS$$"))
+                    {
+                        if (!string.IsNullOrEmpty(posLines[0]))
+                        {
+                            ProcessPosition(posLines, DocType.isCreditNote);
+                            havePos.SetAll(false);
+                        }
+                        posLines[0] = line;
+                        havePos[0] = true;
+                    }
+                    else if (line.StartsWith("$$POS1$"))
+                    {
+                        posLines[1] = line;
+                        havePos[1] = true;
+                    }
+                    else if (line.StartsWith("$$POS2$$"))
+                    {
+                        posLines[2] = line;
+                        havePos[2] = true;
+                    }
+                    else if (line.StartsWith("$$POS3$"))
+                    {
+                        posLines[3] = line;
+                        havePos[3] = true;
+                    }
+                    else if (line.StartsWith("$$POS4$$"))
+                    {
+                        posLines[4] = line;
+                        havePos[4] = true;
+                    }
                 }
-                else if (line.StartsWith("$$POS1$"))
+                catch (NotImplementedException)
                 {
-                    posLines[1] = line;
-                    havePos[1] = true;
-                }
-                else if (line.StartsWith("$$POS2$$"))
-                {
-                    posLines[2] = line;
-                    havePos[2] = true;
-                }
-                else if (line.StartsWith("$$POS3$"))
-                {
-                    posLines[3] = line;
-                    havePos[3] = true;
-                }
-                else if (line.StartsWith("$$POS4$$"))
-                {
-                    posLines[4] = line;
-                    havePos[4] = true;
+
                 }
             }
         }
 
-        private void ProcessPosition(string[] lines)
+        private void ProcessPosition(string[] lines, bool isCreditNote)
         {
             if (Positions == null)
             {
-                Positions = new List<Position>() { new Position(lines) };
+                Positions = new List<Position>() { new Position(lines, DocType.isCreditNote) };
                 return;
             }
             Position current;
             try
             {
-               current = new Position(lines);
+               current = new Position(lines, DocType.isCreditNote);
             }
             catch (Exception)
             {
@@ -157,8 +179,13 @@ namespace DeliveryNoteFiles
             if(current.InvoicedQty == 0 || current.InvoicedQty == null)
             {
                 if (current.DeliveryQty == null || current.DeliveryQty == 0)
-                    throw new ArgumentNullException("Position quantity should not be 0 or null!");
-                current.InvoicedQty = current.DeliveryQty;
+                {
+                    current.InvoicedQty = current.BonusQty;
+                }
+                else
+                {
+                    current.InvoicedQty = current.DeliveryQty;
+                }
             }
             Positions.Add(current);
         }
