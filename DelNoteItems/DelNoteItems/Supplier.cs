@@ -4,7 +4,7 @@ using System.Reflection;
 using Settings = DelNoteItems.Properties.Settings;
 namespace DelNoteItems
 {
-    public class Supplier
+    public class Supplier : DelNoteItems
     {
         public int? BranchNumber { get; set; }
 
@@ -24,8 +24,7 @@ namespace DelNoteItems
             catch (Exception)
             {
                 throw;
-            }
-            
+            }            
         }
 
         private void InitializeInvoice(string line)
@@ -53,26 +52,5 @@ namespace DelNoteItems
             //FixLine(line);
             InitializeInvoice(line);
         }
-
-#if DEBUG
-        public override string ToString()
-        {
-            string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
-                {
-                    toString += pi.Name + " -> ";
-                    try
-                    {
-                        toString += pi.GetValue(this).ToString();
-                    }
-                    catch (Exception) { }
-                    toString += Environment.NewLine;
-                }
-            }
-            return toString;
-        } 
-#endif
     }
 }

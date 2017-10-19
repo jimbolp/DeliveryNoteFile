@@ -5,7 +5,7 @@ using Settings = DelNoteItems.Properties.Settings;
 
 namespace DelNoteItems
 {
-    public class Type
+    public class Type : DelNoteItems
     {
         public string DocumentType { get; set; }
         public bool isCreditNote { get; set; }
@@ -25,25 +25,5 @@ namespace DelNoteItems
                     throw new Exception($"The document type should be INVOICE or CREDITNOTE and not {DocumentType ?? "null"}!");
             }
         }
-#if DEBUG
-        public override string ToString()
-        {
-            string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
-                {
-                    toString += pi.Name + " -> ";
-                    try
-                    {                        
-                        toString += pi.GetValue(this).ToString();                        
-                    }
-                    catch (Exception) { }
-                    toString += Environment.NewLine;
-                }
-            }
-            return toString;
-        }
-#endif
     }
 }

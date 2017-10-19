@@ -5,7 +5,7 @@ using Settings = DelNoteItems.Properties.Settings;
 
 namespace DelNoteItems
 {
-    public class Header
+    public class Header : DelNoteItems
     {
         //$$Header$$ Line properties
         public long? DeliveryNoteNumber { get; set; }
@@ -154,7 +154,7 @@ namespace DelNoteItems
         }
 
 #if DEBUG
-        public override string ToString()
+        /*public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;
             foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
@@ -171,7 +171,7 @@ namespace DelNoteItems
                 }
             }
             return toString;
-        } 
+        }//*/ 
 #endif
 
 

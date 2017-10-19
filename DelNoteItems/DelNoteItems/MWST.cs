@@ -9,7 +9,7 @@ namespace DelNoteItems
     /// <summary>
     /// MwSt is the abbreviation for "Mehrwertsteuer", which is also known as "Umsatzsteuer" (USt). This is the equivalent to VAT in the UK.
     /// </summary>
-    public class MWST
+    public class MWST : DelNoteItems
     {
         public decimal? OrderVATPercentage { get; set; }
         public decimal? TotalVAT { get; set; }
@@ -49,27 +49,6 @@ namespace DelNoteItems
             //FixLine(line);
             InitializeInvoice(line);
         }
-
-#if DEBUG
-        public override string ToString()
-        {
-            string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
-                {
-                    try
-                    {
-                        toString += pi.Name + " -> ";
-                        toString += pi.GetValue(this).ToString();
-                        toString += Environment.NewLine;
-                    }
-                    catch (Exception) { }
-                }
-            }
-            return toString;
-        } 
-#endif
     }
     public class VATTable
     {

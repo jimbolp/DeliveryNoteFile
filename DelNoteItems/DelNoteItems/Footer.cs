@@ -5,7 +5,7 @@ using Settings = DelNoteItems.Properties.Settings;
 
 namespace DelNoteItems
 {
-    public class Footer
+    public class Footer : DelNoteItems
     {
         public decimal? TotalDiscounts { get; set; }
         public decimal? TotalWithDiscountNoVAT { get; set; }
@@ -92,26 +92,5 @@ namespace DelNoteItems
             //FixLine(line);
             InitializeInvoice(line);
         }
-
-#if DEBUG
-        public override string ToString()
-        {
-            string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
-                {
-                    toString += pi.Name + " -> ";
-                    try
-                    {
-                        toString += pi.GetValue(this).ToString();
-                    }
-                    catch (Exception) { }
-                    toString += Environment.NewLine;
-                }
-            }
-            return toString;
-        } 
-#endif
     }
 }
