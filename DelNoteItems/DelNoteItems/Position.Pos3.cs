@@ -1,5 +1,5 @@
 ﻿using System;
-using Settings = DelNoteItems.Properties.Config;
+using Settings = DelNoteItems.Properties.Settings;
 
 namespace DelNoteItems
 {

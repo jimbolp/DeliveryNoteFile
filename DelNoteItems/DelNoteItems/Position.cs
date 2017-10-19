@@ -40,13 +40,20 @@ namespace DelNoteItems
         
         public Position(string[] lines, bool isCreditNote)
         {
-            if (isCreditNote)
+            try
             {
-                InitializeCreditNote(lines);
+                if (isCreditNote)
+                {
+                    InitializeCreditNote(lines);
+                }
+                else
+                {
+                    InitializeInvoice(lines);
+                }
             }
-            else
+            catch (Exception)
             {
-                InitializeInvoice(lines);
+
             }
         }
 
@@ -110,10 +117,9 @@ namespace DelNoteItems
                 }
                 else if (line.StartsWith("$$POS1$$"))
                 {
-                    string fixedLine = RemoveSymbol(line); 
                     try
                     {
-                        Pos1(fixedLine);
+                        Pos1(RemoveSymbol(line));
                     }
                     catch (NotImplementedException) { }
                 }
@@ -127,10 +133,9 @@ namespace DelNoteItems
                 }
                 else if (line.StartsWith("$$POS3$$"))
                 {
-                    string fixedLine = RemoveSymbol(line);
                     try
                     {
-                        Pos3(fixedLine);
+                        Pos3(RemoveSymbol(line));
                     }
                     catch (NotImplementedException) { }
                 }

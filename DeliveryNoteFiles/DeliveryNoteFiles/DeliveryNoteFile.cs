@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using DelNoteItems;
 using Type = DelNoteItems.Type;
+using Settings = DelNoteItems.Properties.Settings;
 using System.Reflection;
 
 namespace DeliveryNoteFiles
@@ -19,7 +20,10 @@ namespace DeliveryNoteFiles
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
 
+        private BitArray havePos = new BitArray(new bool[5]);       //Using Array for two reasons.. 1. Less variables(less memory :D) 2. The array indexes coincides with the "position's line numbers"
+                                                                    //Example: POS == 0; POS1 == 1; etc.
         private List<string> Lines = new List<string>();
+        private string processedFilesPath = Settings.Default.SaveFilesPath;
 
         public DeliveryNoteFile(string filePath)
         {
@@ -51,18 +55,35 @@ namespace DeliveryNoteFiles
             string movedFilePath = null;
             try
             {
-                movedFilePath = MoveFile(filePath);
+                movedFilePath = MoveFile(filePath, processedFilesPath);
                 SendEmail(movedFilePath);
             }
             catch (Exception)
             {
-                //throw;
+                Console.WriteLine($"Problem moving file: {filePath}!");
+                Console.ReadLine();
             }
             
         }
 
-        private void SendEmail(string movedFilePath) { }
-        private string MoveFile(string filePath) { return null; }
+        private void SendEmail(string movedFilePath)
+        {
+            
+        }
+        private string MoveFile(string currentFilePath, string processedFilesPath)
+        {
+            processedFilesPath += "\\" + Path.GetFileName(currentFilePath);
+            try
+            {
+                //File.Copy(currentFilePath, processedFilesPath);
+                File.Move(currentFilePath, processedFilesPath);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return processedFilesPath;
+        }
 
         /// <summary>
         /// Initializes each Property with the information from the file.
@@ -70,11 +91,8 @@ namespace DeliveryNoteFiles
         /// <param name="lines"></param>
         private void InitializeComponents(string[] lines)
         {
-            BitArray havePos = new BitArray(new bool[5]);       //Using Array for two reasons.. 1. Less variables(less memory :D) 2. The array indexes coincides with the "position's line numbers"
-                                                                //Example: POS == 0; POS1 == 1; etc.
-            
-            string[] posLines = new string[5];                  //Same reason here..!
-            
+            string[] posLines = new string[5];                  //Reason to use array: The array indexes coincides with the "position's line numbers"
+
             //
             foreach (var line in lines)
             {
@@ -117,7 +135,6 @@ namespace DeliveryNoteFiles
                         if (!string.IsNullOrEmpty(posLines[0]))
                         {
                             ProcessPosition(posLines, DocType.isCreditNote);
-                            havePos.SetAll(false);
                         }
                         posLines[0] = line;
                         havePos[0] = true;
@@ -152,42 +169,58 @@ namespace DeliveryNoteFiles
 
         private void ProcessPosition(string[] lines, bool isCreditNote)
         {
+            //If the list of positions is NULL there is nothing to check.
+            //Initializing the List, and adding the first position in it.
             if (Positions == null)
             {
-                Positions = new List<Position>() { new Position(lines, DocType.isCreditNote) };
+                Positions = new List<Position>() { new Position(lines, isCreditNote) };
                 return;
             }
+            
             Position current;
             try
             {
-               current = new Position(lines, DocType.isCreditNote);
+               current = new Position(lines, isCreditNote);
             }
             catch (Exception)
             {
                 throw;
             }
-            Position last;
-            try
-            {
-                last = Positions.LastOrDefault();
-            }
-            catch (Exception)
-            {
-                last = null;
-            }
 
-            if(current.InvoicedQty == 0 || current.InvoicedQty == null)
+            Position last = Positions.LastOrDefault();
+            
+            if (havePos[1])
             {
-                if (current.DeliveryQty == null || current.DeliveryQty == 0)
+                if (current.InvoicedQty == 0 || current.InvoicedQty == null)
                 {
-                    current.InvoicedQty = current.BonusQty;
+                    if (current.DeliveryQty == 0 || current.DeliveryQty == null)
+                    {
+                        current.InvoicedQty = current.BonusQty ?? 0;
+                    }
+                    else
+                    {
+                        current.InvoicedQty = current.DeliveryQty;
+                    }
                 }
-                else
+            }
+            else
+            {
+                if (current.ArticleNo == last.ArticleNo)
                 {
-                    current.InvoicedQty = current.DeliveryQty;
+                    if (last.DeliveryQty == (last.InvoicedQty + current.InvoicedQty))
+                    {
+                        current.DeliveryQty -= last.InvoicedQty;
+                        last.DeliveryQty -= current.InvoicedQty;
+                    }
+                    if(last.BonusQty == (last.InvoicedQty + current.InvoicedQty))
+                    {
+                        current.BonusQty -= last.InvoicedQty;
+                        last.BonusQty -= current.InvoicedQty;
+                    }
                 }
             }
             Positions.Add(current);
+            havePos.SetAll(false);
         }
 
         private void FixRebatePosition()
@@ -221,17 +254,5 @@ namespace DeliveryNoteFiles
             return toString;
         } 
 #endif
-        //private int BitCount(BitArray array)
-        //{
-        //    int count = 0;
-        //    foreach (bool bit in array)
-        //    {
-        //        if (bit)
-        //        {
-        //            count++;
-        //        }
-        //    }
-        //    return count;
-        //}
     }
 }

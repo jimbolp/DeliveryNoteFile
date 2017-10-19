@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Reflection;
-using Settings = DelNoteItems.Properties.Config;
+using Settings = DelNoteItems.Properties.Settings;
 namespace DelNoteItems
 {
     public class Supplier
@@ -10,13 +10,20 @@ namespace DelNoteItems
 
         public Supplier(string line, bool isCreditNote)
         {
-            if (isCreditNote)
+            try
             {
-                InitializeCreditNote(line);
+                if (isCreditNote)
+                {
+                    InitializeCreditNote(line);
+                }
+                else
+                {
+                    InitializeInvoice(line);
+                }
             }
-            else
+            catch (Exception)
             {
-                InitializeInvoice(line);
+                throw;
             }
             
         }

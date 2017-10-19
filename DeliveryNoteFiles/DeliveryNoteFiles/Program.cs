@@ -18,24 +18,35 @@ namespace DeliveryNoteFiles
             sw.Start();
 
             //Home
-            string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+            //string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
 
             //Work - Server 22
             //string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171011");
 
             //Work - Special files for tests
-            //string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+            string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
 
             if (args != null && args.Length != 0)
             {
+                int i = 0;
                 foreach (var s in args)
                 {
                     if (!string.IsNullOrEmpty(s))
                     {
                         Console.WriteLine(s);
+                        i++;
+                        if (i >= 500)
+                            break;
+                        if (i % 50 == 0)
+                        {
+                            Console.WriteLine(i);
+                            Thread.Sleep(1);
+                        }
                         try
                         {
-                            ProcessFile(s);
+                            Thread t = new Thread(() => ProcessFile(s));
+                            t.Start();
+                            t.Join();//*/
                         }
                         catch (Exception e)
                         {
@@ -58,7 +69,7 @@ namespace DeliveryNoteFiles
                         if (i % 50 == 0)
                         {
                             Console.WriteLine(i);
-                            Thread.Sleep(2);
+                            Thread.Sleep(1);
                         }
                         //    break;
                         Thread t = new Thread(() => ProcessFile(s));
@@ -97,6 +108,7 @@ namespace DeliveryNoteFiles
                 return;
             
             DelNoteFiles.Add(new DeliveryNoteFile(file));
+
             
         }
     }

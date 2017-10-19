@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DelNoteItems.Properties" GeneratedClassName="Config">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DelNoteItems.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="BranchNoStart" Type="System.Int32" Scope="Application">
@@ -232,6 +232,9 @@
     </Setting>
     <Setting Name="OrderTypeLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="SaveFilesPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\MovedFiles"</Value>
     </Setting>
   </Settings>
 </SettingsFile>

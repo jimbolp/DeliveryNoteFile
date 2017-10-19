@@ -1,4 +1,4 @@
-﻿using Settings = DelNoteItems.Properties.Config;
+﻿using Settings = DelNoteItems.Properties.Settings;
 using System.Collections.Generic;
 using System;
 using System.Reflection;

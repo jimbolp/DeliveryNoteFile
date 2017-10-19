@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Reflection;
-using Settings = DelNoteItems.Properties.Config;
+using Settings = DelNoteItems.Properties.Settings;
 
 namespace DelNoteItems
 {

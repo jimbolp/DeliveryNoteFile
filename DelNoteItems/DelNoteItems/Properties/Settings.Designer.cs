@@ -12,12 +12,12 @@ namespace DelNoteItems.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
-    internal sealed partial class Config : global::System.Configuration.ApplicationSettingsBase {
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.3.0.0")]
+    public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static Config defaultInstance = ((Config)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Config())));
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
         
-        public static Config Default {
+        public static Settings Default {
             get {
                 return defaultInstance;
             }
@@ -713,6 +713,16 @@ namespace DelNoteItems.Properties {
         public int OrderTypeLength {
             get {
                 return ((int)(this["OrderTypeLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("@\"D:\\Documents\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFiles\\bin\\De" +
+            "bug\\MovedFiles\"")]
+        public string SaveFilesPath {
+            get {
+                return ((string)(this["SaveFilesPath"]));
             }
         }
     }

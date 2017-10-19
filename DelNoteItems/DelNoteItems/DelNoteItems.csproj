@@ -50,10 +50,10 @@
     <Compile Include="Position.Pos2.cs" />
     <Compile Include="Position.Pos4.cs" />
     <Compile Include="Position.Pos3.cs" />
-    <Compile Include="Properties\Config.Designer.cs">
+    <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Config.settings</DependentUpon>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Supplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,9 +62,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <Compile Include="Position.Pos.cs" />
-    <None Include="Properties\Config.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Config.Designer.cs</LastGenOutput>
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
