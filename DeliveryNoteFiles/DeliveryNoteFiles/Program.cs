@@ -16,9 +16,15 @@ namespace DeliveryNoteFiles
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            //string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+
+            //Home
+            string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+
+            //Work - Server 22
             //string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171011");
-            string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+
+            //Work - Special files for tests
+            //string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
 
             if (args != null && args.Length != 0)
             {
@@ -50,7 +56,10 @@ namespace DeliveryNoteFiles
                         if (i >= 500)
                             break;
                         if (i % 50 == 0)
+                        {
                             Console.WriteLine(i);
+                            Thread.Sleep(2);
+                        }
                         //    break;
                         Thread t = new Thread(() => ProcessFile(s));
                         t.Start();
@@ -62,6 +71,7 @@ namespace DeliveryNoteFiles
             Console.WriteLine(sw.Elapsed.ToString());
             //Files containing positions with InvoicedQty == 0;
             DeliveryNoteFile[] test = DelNoteFiles.Where(d => d.Positions != null).Where(d => d.Positions.Where(p => p.InvoicedQty == 0).Any()).ToArray();
+            DeliveryNoteFile[] test2 = DelNoteFiles.Where(d => d.Header.OrderType == "FC").ToArray();
 
             //Home
             //File.WriteAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);

@@ -11,6 +11,7 @@ namespace DelNoteItems
         public long? DeliveryNoteNumber { get; set; }
         public DateTime? DeliveryNoteDate { get; set; }
         public bool? RebateInKindOrder { get; set; }
+        public string OrderType { get; set; }
         public bool? isNZOKOrder { get; set; }
         public string NarcoticsFormID { get; set; }
         public DateTime? NarcoticsFormDate { get; set; }
@@ -79,6 +80,16 @@ namespace DelNoteItems
                     {
                         RebateInKindOrder = Parse.IntToBool(intVal);
                     }
+                }
+
+                //OrderType
+                if (line.Length >= Settings.Default.OrderTypeStart + Settings.Default.OrderTypeLength)
+                {
+                    OrderType = line.Substring(Settings.Default.OrderTypeStart, Settings.Default.OrderTypeLength).Trim();
+                }
+                else if (line.Length >= Settings.Default.OrderTypeStart)
+                {
+                    OrderType = line.Substring(Settings.Default.OrderTypeStart).Trim();
                 }
 
                 //isNZOKOrder

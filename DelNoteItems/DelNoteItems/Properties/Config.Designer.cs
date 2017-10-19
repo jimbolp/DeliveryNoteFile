@@ -697,5 +697,23 @@ namespace DelNoteItems.Properties {
                 return ((int)(this["DocTypeStart"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("57")]
+        public int OrderTypeStart {
+            get {
+                return ((int)(this["OrderTypeStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int OrderTypeLength {
+            get {
+                return ((int)(this["OrderTypeLength"]));
+            }
+        }
     }
 }

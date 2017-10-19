@@ -44,7 +44,7 @@ namespace DeliveryNoteFiles
                 }
                 InitializeComponents(Lines.ToArray());
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 throw;
             }
@@ -61,8 +61,8 @@ namespace DeliveryNoteFiles
             
         }
 
-        private void SendEmail(string movedFilePath) => throw new NotImplementedException();
-        private string MoveFile(string filePath) => throw new NotImplementedException();
+        private void SendEmail(string movedFilePath) { }
+        private string MoveFile(string filePath) { return null; }
 
         /// <summary>
         /// Initializes each Property with the information from the file.

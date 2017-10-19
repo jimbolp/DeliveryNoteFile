@@ -227,5 +227,11 @@
     <Setting Name="DocTypeStart" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">8</Value>
     </Setting>
+    <Setting Name="OrderTypeStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">57</Value>
+    </Setting>
+    <Setting Name="OrderTypeLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
