@@ -234,7 +234,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="SaveFilesPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\MovedFiles"</Value>
+      <Value Profile="(Default)">D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\MovedFiles</Value>
     </Setting>
   </Settings>
 </SettingsFile>

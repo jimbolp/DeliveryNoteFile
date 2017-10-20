@@ -58,9 +58,10 @@ namespace DeliveryNoteFiles
                 movedFilePath = MoveFile(filePath, processedFilesPath);
                 SendEmail(movedFilePath);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 Console.WriteLine($"Problem moving file: {filePath}!");
+                Console.WriteLine(e.ToString());
                 Console.ReadLine();
             }
             
