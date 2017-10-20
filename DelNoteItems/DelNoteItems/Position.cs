@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace DelNoteItems
 {
-    public partial class Position
+    public partial class Position : DelNoteItems
     {
         //$$POS$$ Line properties        
         public int? ArticleNo { get; set; }
@@ -155,26 +155,5 @@ namespace DelNoteItems
             string str = line.Substring(0, 7) + line.Substring(8);
             return str;
         }
-
-#if DEBUG
-        public override string ToString()
-        {
-            string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
-                {
-                    toString += pi.Name + " -> ";
-                    try
-                    {
-                        toString += pi.GetValue(this).ToString();
-                    }
-                    catch (Exception) { }
-                    toString += Environment.NewLine;
-                }
-            }
-            return toString;
-        } 
-#endif
     }
 }

@@ -16,14 +16,20 @@ namespace DeliveryNoteFiles
         public Supplier Supplier { get; set; }
         public Header Header { get; set; }
         public Customer Customer { get; set; }
-        public List<Position> Positions { get; set; } = new List<Position>();
+        public List<Position> Positions { get; set; }
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
 
         private BitArray havePos = new BitArray(new bool[5]);       //Using Array for two reasons.. 1. Less variables(less memory :D) 2. The array indexes coincides with the "position's line numbers"
                                                                     //Example: POS == 0; POS1 == 1; etc.
         private List<string> Lines = new List<string>();
-        private string processedFilesPath = Settings.Default.SaveFilesPath;
+        //debuging purposes...
+
+        //Work
+        //private string processedFilesPath = Settings.Default.SaveFilesPath;
+
+        //Home
+        private string processedFilesPath = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Moved Files";
 
         public DeliveryNoteFile(string filePath)
         {
@@ -38,7 +44,8 @@ namespace DeliveryNoteFiles
         {
             try
             {
-                using (StreamReader file = new StreamReader(filePath, System.Text.Encoding.Default))
+                FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using (StreamReader file = new StreamReader(fs, System.Text.Encoding.Default))
                 {
                     string line;
                     while ((line = file.ReadLine()) != null)
@@ -77,7 +84,7 @@ namespace DeliveryNoteFiles
             try
             {
                 //File.Copy(currentFilePath, processedFilesPath);
-                File.Move(currentFilePath, processedFilesPath);
+                //File.Move(currentFilePath, processedFilesPath);
             }
             catch (Exception)
             {
@@ -189,7 +196,12 @@ namespace DeliveryNoteFiles
             }
 
             Position last = Positions.LastOrDefault();
-            
+            if(last == null)
+            {
+                Console.ReadLine();
+            }
+
+            bool testWriteL = false;
             if (havePos[1])
             {
                 if (current.InvoicedQty == 0 || current.InvoicedQty == null)
@@ -206,6 +218,19 @@ namespace DeliveryNoteFiles
             }
             else
             {
+#if DEBUG
+                if (current.InvoicedQty != current.DeliveryQty)
+                {
+                    if (last.ArticleNo == current.ArticleNo)
+                    {
+                        testWriteL = true;
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString());
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, current.ToString());
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
+                    }
+                }
+#endif
                 if (current.ArticleNo == last.ArticleNo)
                 {
                     if (last.DeliveryQty == (last.InvoicedQty + current.InvoicedQty))
@@ -222,6 +247,15 @@ namespace DeliveryNoteFiles
             }
             Positions.Add(current);
             havePos.SetAll(false);
+#if DEBUG
+            if (testWriteL)
+            {
+                File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
+                File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString());
+                File.AppendAllText(Settings.Default.ChangedPosFilePath, current.ToString());
+                File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
+            }
+#endif
         }
 
         private void FixRebatePosition()
@@ -235,7 +269,7 @@ namespace DeliveryNoteFiles
             string toString = GetType().Name + ":" + Environment.NewLine;
             foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
-                if (!typeof(IEnumerable).IsAssignableFrom(pi.PropertyType))
+                if (!typeof(IEnumerable).IsAssignableFrom(pi.PropertyType) || pi.PropertyType == typeof(string))
                 {
                     try
                     {
@@ -246,9 +280,12 @@ namespace DeliveryNoteFiles
                 }
                 else
                 {
-                    foreach (var val in pi.GetValue(this) as IEnumerable)
+                    if (pi.GetValue(this) != null)
                     {
-                        toString += val.ToString();
+                        foreach (var val in pi.GetValue(this) as IEnumerable)
+                        {
+                            toString += val.ToString();
+                        }
                     }
                 }
             }

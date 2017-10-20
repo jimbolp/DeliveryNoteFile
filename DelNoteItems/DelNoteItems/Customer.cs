@@ -1,7 +1,7 @@
 ﻿
 namespace DelNoteItems
 {
-    public class Customer
+    public class Customer : DelNoteItems
     {
         //Still No Info...
     }

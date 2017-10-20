@@ -236,5 +236,8 @@
     <Setting Name="SaveFilesPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\MovedFiles</Value>
     </Setting>
+    <Setting Name="ChangedPosFilePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\ChangedPos\changed.txt</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
