@@ -12,7 +12,7 @@ namespace DelNoteItems.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.3.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -718,8 +718,8 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("@\"D:\\Documents\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFiles\\bin\\De" +
-            "bug\\MovedFiles\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Documents\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFiles\\bin\\Debu" +
+            "g\\MovedFiles")]
         public string SaveFilesPath {
             get {
                 return ((string)(this["SaveFilesPath"]));
@@ -728,11 +728,209 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\C# Projects\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFi" +
-            "les\\bin\\Debug\\ChangedPos\\changed.txt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Documents\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFiles\\bin\\Debu" +
+            "g\\Changed Pos\\changed.txt")]
         public string ChangedPosFilePath {
             get {
                 return ((string)(this["ChangedPosFilePath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        public int BranchNameStart {
+            get {
+                return ((int)(this["BranchNameStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int BranchNameLength {
+            get {
+                return ((int)(this["BranchNameLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("44")]
+        public int BranchAddressStart {
+            get {
+                return ((int)(this["BranchAddressStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int BranchAddressLength {
+            get {
+                return ((int)(this["BranchAddressLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("74")]
+        public int BranchCIPStart {
+            get {
+                return ((int)(this["BranchCIPStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int BranchCIPLength {
+            get {
+                return ((int)(this["BranchCIPLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("81")]
+        public int BranchCityStart {
+            get {
+                return ((int)(this["BranchCityStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int BranchCityLength {
+            get {
+                return ((int)(this["BranchCityLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("111")]
+        public int BranchUINStart {
+            get {
+                return ((int)(this["BranchUINStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int BranchUINLength {
+            get {
+                return ((int)(this["BranchUINLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        public int BranchLicenceNumberStart {
+            get {
+                return ((int)(this["BranchLicenceNumberStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int BranchLicenceNumberLength {
+            get {
+                return ((int)(this["BranchLicenceNumberLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("44")]
+        public int BranchNarcLicenceNumberStart {
+            get {
+                return ((int)(this["BranchNarcLicenceNumberStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int BranchNarcLicenceNumberLength {
+            get {
+                return ((int)(this["BranchNarcLicenceNumberLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("74")]
+        public int BranchResponsibleStart {
+            get {
+                return ((int)(this["BranchResponsibleStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int BranchResponsibleLength {
+            get {
+                return ((int)(this["BranchResponsibleLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
+        public int CustomerNameStart {
+            get {
+                return ((int)(this["CustomerNameStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int CustomerNameLength {
+            get {
+                return ((int)(this["CustomerNameLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("43")]
+        public int CustomerAddressStart {
+            get {
+                return ((int)(this["CustomerAddressStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int CustomerAddressLength {
+            get {
+                return ((int)(this["CustomerAddressLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("73")]
+        public int CustomerCIPStart {
+            get {
+                return ((int)(this["CustomerCIPStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int CustomerCIPLength {
+            get {
+                return ((int)(this["CustomerCIPLength"]));
             }
         }
     }

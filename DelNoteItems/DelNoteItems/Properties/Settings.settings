@@ -237,7 +237,73 @@
       <Value Profile="(Default)">D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\MovedFiles</Value>
     </Setting>
     <Setting Name="ChangedPosFilePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\ChangedPos\changed.txt</Value>
+      <Value Profile="(Default)">D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Changed Pos\changed.txt</Value>
+    </Setting>
+    <Setting Name="BranchNameStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="BranchNameLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="BranchAddressStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">44</Value>
+    </Setting>
+    <Setting Name="BranchAddressLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="BranchCIPStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">74</Value>
+    </Setting>
+    <Setting Name="BranchCIPLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="BranchCityStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">81</Value>
+    </Setting>
+    <Setting Name="BranchCityLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="BranchUINStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">111</Value>
+    </Setting>
+    <Setting Name="BranchUINLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="BranchLicenceNumberStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="BranchLicenceNumberLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="BranchNarcLicenceNumberStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">44</Value>
+    </Setting>
+    <Setting Name="BranchNarcLicenceNumberLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="BranchResponsibleStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">74</Value>
+    </Setting>
+    <Setting Name="BranchResponsibleLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="CustomerNameStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">13</Value>
+    </Setting>
+    <Setting Name="CustomerNameLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="CustomerAddressStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">43</Value>
+    </Setting>
+    <Setting Name="CustomerAddressLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="CustomerCIPStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">73</Value>
+    </Setting>
+    <Setting Name="CustomerCIPLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -44,13 +44,15 @@ namespace DeliveryNoteFiles
         {
             try
             {
-                FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using (StreamReader file = new StreamReader(fs, System.Text.Encoding.Default))
+                using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    string line;
-                    while ((line = file.ReadLine()) != null)
+                    using (StreamReader file = new StreamReader(fs, System.Text.Encoding.Default))
                     {
-                        Lines.Add(line);
+                        string line;
+                        while ((line = file.ReadLine()) != null)
+                        {
+                            Lines.Add(line);
+                        }
                     }
                 }
                 InitializeComponents(Lines.ToArray());
@@ -224,20 +226,31 @@ namespace DeliveryNoteFiles
                     if (last.ArticleNo == current.ArticleNo)
                     {
                         testWriteL = true;
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, "Before correction:" + Environment.NewLine);
                         File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString());
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, current.ToString());
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString() + Environment.NewLine);
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, current.ToString() + Environment.NewLine);
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50) + Environment.NewLine);
                     }
                 }
 #endif
                 if (current.ArticleNo == last.ArticleNo)
                 {
+#if DEBUG
+                    if (last.OrderQty != last.DeliveryQty)
+                    {
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, "Different DeliveryQty:" + Environment.NewLine);
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString() + Environment.NewLine);
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50) + Environment.NewLine);
+                    }
+#endif
                     if (last.DeliveryQty == (last.InvoicedQty + current.InvoicedQty))
                     {
                         current.DeliveryQty -= last.InvoicedQty;
                         last.DeliveryQty -= current.InvoicedQty;
                     }
+
                     if(last.BonusQty == (last.InvoicedQty + current.InvoicedQty))
                     {
                         current.BonusQty -= last.InvoicedQty;
@@ -250,10 +263,11 @@ namespace DeliveryNoteFiles
 #if DEBUG
             if (testWriteL)
             {
+                File.AppendAllText(Settings.Default.ChangedPosFilePath, "Corrected:" + Environment.NewLine);
                 File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
-                File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString());
-                File.AppendAllText(Settings.Default.ChangedPosFilePath, current.ToString());
-                File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
+                File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString() + Environment.NewLine);
+                File.AppendAllText(Settings.Default.ChangedPosFilePath, current.ToString() + Environment.NewLine);
+                File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50) + Environment.NewLine);
             }
 #endif
         }

@@ -2,11 +2,31 @@
 using System.Collections;
 using System.Reflection;
 using Settings = DelNoteItems.Properties.Settings;
+
 namespace DelNoteItems
 {
-    public class Supplier : DelNoteItems
+    public partial class Supplier : DelNoteItems
     {
+        //$$SUPPLIER$$ Line properties
+
+        //According to Mr. Rolf Raab, these are constant values and I don't know what they represent
+        private long? notKnownNumber { get; set; }          //100000266
+        private string notKnownString { get; set; }         //LIBRA AG
+        private long? notKnownLongerNumber { get; set; }    //8606004100001
+
         public int? BranchNumber { get; set; }
+
+        //$$SUPPLIER2$$ Line properties (Mask PA12, PA16 in PHARMOS)
+        public string BranchName { get; set; }          //PA12
+        public string BranchAddress { get; set; }       //PA12
+        public int? BranchCIP { get; set; }             //Post Code (PA12)
+        public string BranchCity { get; set; }          //PA12
+        public string BranchUIN { get; set; }           //Bulstat I guess (PA16)
+
+        //$$SUPPLIER3$$ Line properties (Mask PA96 in PHARMOS)
+        public string BranchLicenceNumber { get; set; }
+        public string BranchNarcLicenceNumber { get; set; }
+        public string BranchResponsible { get; set; }           //Branch Pharmacist 
 
         public Supplier(string line, bool isCreditNote)
         {
@@ -29,24 +49,20 @@ namespace DelNoteItems
 
         private void InitializeInvoice(string line)
         {
-            int intVal = 0;
-
-            //BranchNumber
-            if (line.Length >= Settings.Default.BranchNoStart + Settings.Default.BranchNoLength)
+            switch (line)
             {
-                if (Int32.TryParse(line.Substring(Settings.Default.BranchNoStart, Settings.Default.BranchNoLength).Trim(), out intVal))
-                {
-                    BranchNumber = intVal;
-                }
-            }
-            else if (line.Length >= Settings.Default.BranchNoStart)
-            {
-                if (Int32.TryParse(line.Substring(Settings.Default.BranchNoStart).Trim(), out intVal))
-                {
-                    BranchNumber = intVal;
-                }
+                case "$$SUPPLIER$$":
+                    Supp(line);
+                    break;
+                case "$$SUPPLIER2$$":
+                    Supp2(line);
+                    break;
+                case "$$SUPPLIER3$$":
+                    Supp3(line);
+                    break;
             }
         }
+
         private void InitializeCreditNote(string line)
         {
             //FixLine(line);

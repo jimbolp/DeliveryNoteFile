@@ -47,6 +47,9 @@
     <Compile Include="Header.cs" />
     <Compile Include="MWST.cs" />
     <Compile Include="Position.cs" />
+    <Compile Include="Supplier.Supp3.cs" />
+    <Compile Include="Supplier.Supp2.cs" />
+    <Compile Include="Supplier.Supp.cs" />
     <Compile Include="Position.Pos1.cs" />
     <Compile Include="Position.Pos2.cs" />
     <Compile Include="Position.Pos4.cs" />
