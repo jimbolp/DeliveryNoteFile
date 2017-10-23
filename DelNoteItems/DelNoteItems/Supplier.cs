@@ -52,13 +52,13 @@ namespace DelNoteItems
             switch (line)
             {
                 case "$$SUPPLIER$$":
-                    Supp(line);
+                    Line1(line);
                     break;
                 case "$$SUPPLIER2$$":
-                    Supp2(line);
+                    Line2(line);
                     break;
                 case "$$SUPPLIER3$$":
-                    Supp3(line);
+                    Line3(line);
                     break;
             }
         }

@@ -65,7 +65,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos(line);
+                        Line0(line);
                     }
                     catch (NotImplementedException) { }
                 }
@@ -73,7 +73,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos1(line);
+                        Line1(line);
                     }
                     catch (NotImplementedException) { }
                 }
@@ -81,7 +81,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos2(line);
+                        Line2(line);
                     }
                     catch (NotImplementedException) { }
                 }
@@ -89,7 +89,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos3(line);
+                        Line3(line);
                     }
                     catch (NotImplementedException) { }
                 }
@@ -97,7 +97,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos4(line);
+                        Line4(line);
                     }
                     catch (NotImplementedException) { }
                 }
@@ -111,7 +111,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos(line);
+                        Line0(line);
                     }
                     catch (NotImplementedException) { }
                 }
@@ -119,7 +119,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos1(RemoveSymbol(line));
+                        Line1(RemoveSymbol(line));
                     }
                     catch (NotImplementedException) { }
                 }
@@ -127,7 +127,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos2(line);
+                        Line2(line);
                     }
                     catch (NotImplementedException) { }
                 }
@@ -135,7 +135,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos3(RemoveSymbol(line));
+                        Line3(RemoveSymbol(line));
                     }
                     catch (NotImplementedException) { }
                 }
@@ -143,7 +143,7 @@ namespace DelNoteItems
                 {
                     try
                     {
-                        Pos4(line);
+                        Line4(line);
                     }
                     catch (NotImplementedException) { }
                 }

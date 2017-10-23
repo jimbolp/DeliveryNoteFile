@@ -5,7 +5,7 @@ namespace DelNoteItems
 {
     public partial class Position
     {
-        private void Pos4(string line)
+        private void Line4(string line)
         {
             throw new NotImplementedException();
         }

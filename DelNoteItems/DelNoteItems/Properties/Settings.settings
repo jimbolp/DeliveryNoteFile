@@ -305,5 +305,41 @@
     <Setting Name="CustomerCIPLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">7</Value>
     </Setting>
+    <Setting Name="CustomerCityStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="CustomerCityLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="CustomerUINStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">110</Value>
+    </Setting>
+    <Setting Name="CustomerUINLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="CustomerLicenceNumberStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="CustomerLicenceNumberLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="CustomerNarcLicenceNumberStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">34</Value>
+    </Setting>
+    <Setting Name="CustomerNarcLicenceNumberLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="CustomerAccountablePersonStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">54</Value>
+    </Setting>
+    <Setting Name="CustomerAccountablePersonLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="CustomerPhoneNoStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">84</Value>
+    </Setting>
+    <Setting Name="CustomerPhoneNoLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

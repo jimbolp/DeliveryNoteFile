@@ -5,7 +5,7 @@ namespace DelNoteItems
 {
     public partial class Position
     {
-        private void Pos3(string line)
+        private void Line3(string line)
         {
             try
             {

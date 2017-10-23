@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Customer.Line2.cs" />
+    <Compile Include="Customer.Line1.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="DelNoteItems.cs" />
     <Compile Include="Parse.cs" />
@@ -47,13 +49,13 @@
     <Compile Include="Header.cs" />
     <Compile Include="MWST.cs" />
     <Compile Include="Position.cs" />
-    <Compile Include="Supplier.Supp3.cs" />
-    <Compile Include="Supplier.Supp2.cs" />
-    <Compile Include="Supplier.Supp.cs" />
-    <Compile Include="Position.Pos1.cs" />
-    <Compile Include="Position.Pos2.cs" />
-    <Compile Include="Position.Pos4.cs" />
-    <Compile Include="Position.Pos3.cs" />
+    <Compile Include="Supplier.Line3.cs" />
+    <Compile Include="Supplier.Line2.cs" />
+    <Compile Include="Supplier.Line1.cs" />
+    <Compile Include="Position.Line1.cs" />
+    <Compile Include="Position.Line2.cs" />
+    <Compile Include="Position.Line4.cs" />
+    <Compile Include="Position.Line3.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -65,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Compile Include="Position.Pos.cs" />
+    <Compile Include="Position.Line0.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

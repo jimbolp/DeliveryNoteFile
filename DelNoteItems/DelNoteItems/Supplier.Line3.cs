@@ -5,7 +5,7 @@ namespace DelNoteItems
 {
     public partial class Supplier
     {
-        private void Supp3(string line)
+        private void Line3(string line)
         {
             try
             {

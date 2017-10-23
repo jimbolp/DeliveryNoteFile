@@ -4,12 +4,18 @@ using Settings = DelNoteItems.Properties.Settings;
 
 namespace DelNoteItems
 {
-    public class Customer : DelNoteItems
+    public partial class Customer : DelNoteItems
     {
         //$$CUSTOMER$$ Line properties
         public string CustomerName { get; set; }
         public string CustomerAddress { get; set; }
-        public int CustomerCIP { get; set; }            //Post Code
+        public int CustomerCIP { get; set; }                    //Post Code
+        public string CustomerCity { get; set; }
+        public string CustomerUIN { get; set; }                 //Bulstat
+        public string CustomerLicenceNumber { get; set; }
+        public string CustomerNarcLicenceNumber { get; set; }
+        public string CustomerAccountablePerson { get; set; }   //МОЛ
+        public long CustomerPhoneNo { get; set; }
 
         public Customer(string line, bool isCreditNote)
         {
@@ -32,50 +38,19 @@ namespace DelNoteItems
 
         private void InitializeInvoice(string line)
         {
-            try
+            switch (line)
             {
-                int intVal;
-                //CustomerName
-                if (line.Length >= Settings.Default.CustomerNameStart + Settings.Default.CustomerNameLength)
-                {
-                    CustomerName = line.Substring(Settings.Default.CustomerNameStart, Settings.Default.CustomerNameLength).Trim();
-                }
-                else if (line.Length >= Settings.Default.CustomerNameStart)
-                {
-                    CustomerName = line.Substring(Settings.Default.CustomerNameStart).Trim();
-                }
-
-                //CustomerAddress
-                if (line.Length >= Settings.Default.CustomerAddressStart + Settings.Default.CustomerAddressLength)
-                {
-                    CustomerAddress = line.Substring(Settings.Default.CustomerAddressStart, Settings.Default.CustomerAddressLength).Trim();
-                }
-                else if (line.Length >= Settings.Default.CustomerAddressStart)
-                {
-                    CustomerAddress = line.Substring(Settings.Default.CustomerAddressStart).Trim();
-                }
-
-                //CustomerCIP
-                if (line.Length >= Settings.Default.CustomerCIPStart + Settings.Default.CustomerCIPLength)
-                {
-                    if (Int32.TryParse(line.Substring(Settings.Default.CustomerCIPStart, Settings.Default.CustomerCIPLength).Trim(), out intVal))
-                    {
-                        CustomerCIP = intVal;
-                    }
-                    else if (line.Length >= Settings.Default.CustomerCIPStart)
-                    {
-                        if (Int32.TryParse(line.Substring(Settings.Default.CustomerCIPStart).Trim(), out intVal))
-                        {
-                            CustomerCIP = intVal;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+                case "$$CUSTOMER$$":
+                    Line1(line);
+                    break;
+                case "$$CUSTOMER2$$":
+                    Line2(line);
+                    break;
+            }            
         }
+
+        
+
         private void InitializeCreditNote(string line)
         {
             //FixLine();

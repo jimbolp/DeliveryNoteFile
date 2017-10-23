@@ -14,6 +14,19 @@ namespace DeliveryNoteFiles
     {
         public Type DocType { get; set; }
         public Supplier Supplier { get; set; }
+
+        //will try to fire an event here!
+        public bool isSupplierReady {
+            get
+            {
+                return isSupplierReady;
+            }
+            set
+            {
+                isSupplierReady = value;
+
+            }
+        }
         public Header Header { get; set; }
         public Customer Customer { get; set; }
         public List<Position> Positions { get; set; }
@@ -26,10 +39,10 @@ namespace DeliveryNoteFiles
         //debuging purposes...
 
         //Work
-        //private string processedFilesPath = Settings.Default.SaveFilesPath;
+        private string processedFilesPath = Settings.Default.SaveFilesPath;
 
         //Home
-        private string processedFilesPath = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Moved Files";
+        //private string processedFilesPath = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Moved Files";
 
         public DeliveryNoteFile(string filePath)
         {
@@ -116,6 +129,10 @@ namespace DeliveryNoteFiles
                     {
                         Supplier = new Supplier(line, DocType.isCreditNote);
                     }
+                    else if (line.StartsWith("$$SUPPLIER2$$"))
+                    {
+                        
+                    }
                     else if (line.StartsWith("$$HEADER$$"))
                     {
                         Header = new Header(line, DocType.isCreditNote);
@@ -178,13 +195,10 @@ namespace DeliveryNoteFiles
         }
 
         private void ProcessPosition(string[] lines, bool isCreditNote)
-        {
-            //If the list of positions is NULL there is nothing to check.
-            //Initializing the List, and adding the first position in it.
+        {            
             if (Positions == null)
             {
-                Positions = new List<Position>() { new Position(lines, isCreditNote) };
-                return;
+                Positions = new List<Position>();
             }
             
             Position current;
@@ -197,10 +211,13 @@ namespace DeliveryNoteFiles
                 throw;
             }
 
-            Position last = Positions.LastOrDefault();
+            Position last = null;
+            if(Positions.Count != 0)
+                last = Positions.LastOrDefault();
             if(last == null)
             {
-                Console.ReadLine();
+                //Console.WriteLine("Все още няма въведена позиция!");
+                //Console.ReadLine();
             }
 
             bool testWriteL = false;
