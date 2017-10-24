@@ -13,6 +13,8 @@ namespace DeliveryNoteFiles
         private static List<DeliveryNoteFile> DelNoteFiles = new List<DeliveryNoteFile>();
         static void Main(string[] args)
         {
+
+            Settings.Default.Save();
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
@@ -82,8 +84,8 @@ namespace DeliveryNoteFiles
             //Files containing positions with InvoicedQty == 0;
             DeliveryNoteFile[] test = DelNoteFiles.Where(d => d.Positions != null).Where(d => d.Positions.Where(p => p.InvoicedQty == 0).Any()).ToArray();
             DeliveryNoteFile[] test2 = DelNoteFiles.Where(d => d.Header.OrderType == "FC").ToArray();
-            //DeliveryNoteFile[] test3 = DelNoteFiles.Where(d => d.Positions.Any(p => p.ArticleNo == 285830 || p.ArticleNo == 273844)) != null ? DelNoteFiles.Where(d => d.Positions.Any(p => p.ArticleNo == 285830 || p.ArticleNo == 273844)).ToArray():null;
-
+            
+            
 
             //Home
             //File.WriteAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);

@@ -700,7 +700,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
         public int OrderTypeStart {
             get {
                 return ((int)(this["OrderTypeStart"]));
@@ -738,7 +738,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
         public int BranchNameStart {
             get {
                 return ((int)(this["BranchNameStart"]));
@@ -756,7 +756,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("44")]
+        [global::System.Configuration.DefaultSettingValueAttribute("43")]
         public int BranchAddressStart {
             get {
                 return ((int)(this["BranchAddressStart"]));
@@ -774,7 +774,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("74")]
+        [global::System.Configuration.DefaultSettingValueAttribute("73")]
         public int BranchCIPStart {
             get {
                 return ((int)(this["BranchCIPStart"]));
@@ -792,7 +792,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("81")]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
         public int BranchCityStart {
             get {
                 return ((int)(this["BranchCityStart"]));
@@ -810,7 +810,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("111")]
+        [global::System.Configuration.DefaultSettingValueAttribute("110")]
         public int BranchUINStart {
             get {
                 return ((int)(this["BranchUINStart"]));
@@ -828,7 +828,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
         public int BranchLicenceNumberStart {
             get {
                 return ((int)(this["BranchLicenceNumberStart"]));
@@ -846,7 +846,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("44")]
+        [global::System.Configuration.DefaultSettingValueAttribute("43")]
         public int BranchNarcLicenceNumberStart {
             get {
                 return ((int)(this["BranchNarcLicenceNumberStart"]));
@@ -864,7 +864,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("74")]
+        [global::System.Configuration.DefaultSettingValueAttribute("73")]
         public int BranchResponsibleStart {
             get {
                 return ((int)(this["BranchResponsibleStart"]));
@@ -882,7 +882,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("13")]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
         public int CustomerNameStart {
             get {
                 return ((int)(this["CustomerNameStart"]));
@@ -900,7 +900,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("43")]
+        [global::System.Configuration.DefaultSettingValueAttribute("42")]
         public int CustomerAddressStart {
             get {
                 return ((int)(this["CustomerAddressStart"]));
@@ -918,7 +918,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("73")]
+        [global::System.Configuration.DefaultSettingValueAttribute("72")]
         public int CustomerCIPStart {
             get {
                 return ((int)(this["CustomerCIPStart"]));
@@ -936,7 +936,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        [global::System.Configuration.DefaultSettingValueAttribute("79")]
         public int CustomerCityStart {
             get {
                 return ((int)(this["CustomerCityStart"]));
@@ -954,7 +954,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("110")]
+        [global::System.Configuration.DefaultSettingValueAttribute("109")]
         public int CustomerUINStart {
             get {
                 return ((int)(this["CustomerUINStart"]));
@@ -972,7 +972,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
         public int CustomerLicenceNumberStart {
             get {
                 return ((int)(this["CustomerLicenceNumberStart"]));
@@ -990,7 +990,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("34")]
+        [global::System.Configuration.DefaultSettingValueAttribute("33")]
         public int CustomerNarcLicenceNumberStart {
             get {
                 return ((int)(this["CustomerNarcLicenceNumberStart"]));
@@ -1008,7 +1008,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("54")]
+        [global::System.Configuration.DefaultSettingValueAttribute("53")]
         public int CustomerAccountablePersonStart {
             get {
                 return ((int)(this["CustomerAccountablePersonStart"]));
@@ -1026,7 +1026,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("84")]
+        [global::System.Configuration.DefaultSettingValueAttribute("83")]
         public int CustomerPhoneNoStart {
             get {
                 return ((int)(this["CustomerPhoneNoStart"]));
@@ -1039,6 +1039,24 @@ namespace DelNoteItems.Properties {
         public int CustomerPhoneNoLength {
             get {
                 return ((int)(this["CustomerPhoneNoLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
+        public int UserInitialsStart {
+            get {
+                return ((int)(this["UserInitialsStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int UserInitialsLength {
+            get {
+                return ((int)(this["UserInitialsLength"]));
             }
         }
     }

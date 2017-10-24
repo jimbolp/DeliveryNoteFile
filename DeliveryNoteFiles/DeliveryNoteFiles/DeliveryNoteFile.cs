@@ -193,6 +193,13 @@ namespace DeliveryNoteFiles
                         IsSupplierProcessing = true;
                         suppLines.Add(line);
                     }
+                    else if (line.StartsWith("$$SUPPLIER3$$"))
+                    {
+                        IsCustomerProcessing = false;
+                        IsHeaderProcessing = false;
+                        IsSupplierProcessing = true;
+                        suppLines.Add(line);
+                    }
                     else if (line.StartsWith("$$HEADER$$"))
                     {
                         IsCustomerProcessing = false;

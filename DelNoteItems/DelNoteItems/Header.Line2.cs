@@ -20,6 +20,16 @@ namespace DelNoteItems
                 {
                     OrderType = line.Substring(Settings.Default.OrderTypeStart).Trim();
                 }
+
+                //UserInitials
+                if (line.Length >= Settings.Default.UserInitialsStart + Settings.Default.UserInitialsLength)
+                {
+                    UserInitials = line.Substring(Settings.Default.UserInitialsStart, Settings.Default.UserInitialsLength).Trim();
+                }
+                else if (line.Length >= Settings.Default.UserInitialsStart)
+                {
+                    UserInitials = line.Substring(Settings.Default.UserInitialsStart).Trim();
+                }
             }
             catch (Exception e)
             {

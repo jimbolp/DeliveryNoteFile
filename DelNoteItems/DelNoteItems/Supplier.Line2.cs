@@ -13,11 +13,11 @@ namespace DelNoteItems
                 //BranchName
                 if (line.Length >= Settings.Default.BranchNameStart + Settings.Default.BranchNameLength)
                 {
-                    BranchName = line.Substring(Settings.Default.BranchNoStart, Settings.Default.BranchNoLength).Trim();
+                    BranchName = line.Substring(Settings.Default.BranchNameStart, Settings.Default.BranchNameLength).Trim();
                 }
                 else if (line.Length >= Settings.Default.BranchNameStart)
                 {
-                    BranchName = line.Substring(Settings.Default.BranchNoStart).Trim();
+                    BranchName = line.Substring(Settings.Default.BranchNameStart).Trim();
                 }
 
                 //BranchAddress

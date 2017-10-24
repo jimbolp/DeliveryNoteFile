@@ -18,6 +18,7 @@ namespace DelNoteItems
 
         //$$Header2$$ Line properties
         public string OrderType { get; set; }
+        public string UserInitials { get; set; }            //Pharmos initials of the user created the document (usualy this is only for Credit Notes)
 
         public Header(string[] lines, bool isCreditNote)
         {
