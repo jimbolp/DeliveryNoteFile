@@ -44,11 +44,14 @@
     <Compile Include="Customer.Line1.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="DelNoteItems.cs" />
+    <Compile Include="Header.Line2.cs" />
+    <Compile Include="Header.Line1.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="Footer.cs" />
     <Compile Include="Header.cs" />
     <Compile Include="MWST.cs" />
     <Compile Include="Position.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Supplier.Line3.cs" />
     <Compile Include="Supplier.Line2.cs" />
     <Compile Include="Supplier.Line1.cs" />

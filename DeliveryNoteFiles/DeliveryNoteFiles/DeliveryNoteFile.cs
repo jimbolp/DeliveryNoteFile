@@ -14,30 +14,84 @@ namespace DeliveryNoteFiles
     {
         public Type DocType { get; set; }
         public Supplier Supplier { get; set; }
-
-        //will try to fire an event here!
-        public bool isSupplierReady {
-            get
-            {
-                return isSupplierReady;
-            }
-            set
-            {
-                isSupplierReady = value;
-
-            }
-        }
         public Header Header { get; set; }
         public Customer Customer { get; set; }
         public List<Position> Positions { get; set; }
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
 
+        private List<string> suppLines = new List<string>();
+        private List<string> custLines = new List<string>();
+        private List<string> headLines = new List<string>();
+
+        private bool _isSupplierProcessing = false;
+        private bool _isHeaderProcessing = false;
+        private bool _isCustomerProcessing = false;
+
+        //will try to fire an event here!
+        public bool IsSupplierProcessing {
+            get
+            {
+                return _isSupplierProcessing;
+            }
+            set
+            {
+                if (_isSupplierProcessing && !value)
+                {
+                    _isSupplierProcessing = value;
+                    ProcessSupplier(suppLines);
+                }
+                else
+                {
+                    _isSupplierProcessing = value;
+                }
+            }
+        }        
+
+        public bool IsHeaderProcessing
+        {
+            get
+            {
+                return _isHeaderProcessing;
+            }
+            set
+            {
+                if(_isHeaderProcessing && !value)
+                {
+                    _isHeaderProcessing = value;
+                    ProcessHeader(headLines);
+                }
+                else
+                {
+                    _isHeaderProcessing = value;
+                }
+            }
+        }
+        public bool IsCustomerProcessing
+        {
+            get
+            {
+                return _isCustomerProcessing;
+            }
+            set
+            {
+                if (_isCustomerProcessing && !value)
+                {
+                    _isCustomerProcessing = value;
+                    ProcessCustomer(custLines);
+                }
+                else
+                {
+                    _isCustomerProcessing = value;
+                }
+            }
+        }
+
         private BitArray havePos = new BitArray(new bool[5]);       //Using Array for two reasons.. 1. Less variables(less memory :D) 2. The array indexes coincides with the "position's line numbers"
                                                                     //Example: POS == 0; POS1 == 1; etc.
         private List<string> Lines = new List<string>();
-        //debuging purposes...
 
+        //debuging purposes...
         //Work
         private string processedFilesPath = Settings.Default.SaveFilesPath;
 
@@ -127,18 +181,51 @@ namespace DeliveryNoteFiles
                     }
                     else if (line.StartsWith("$$SUPPLIER$$"))
                     {
-                        Supplier = new Supplier(line, DocType.isCreditNote);
+                        IsCustomerProcessing = false;
+                        IsHeaderProcessing = false;
+                        IsSupplierProcessing = true;
+                        suppLines.Add(line);
                     }
                     else if (line.StartsWith("$$SUPPLIER2$$"))
                     {
-                        
+                        IsCustomerProcessing = false;
+                        IsHeaderProcessing = false;
+                        IsSupplierProcessing = true;
+                        suppLines.Add(line);
                     }
                     else if (line.StartsWith("$$HEADER$$"))
                     {
-                        Header = new Header(line, DocType.isCreditNote);
+                        IsCustomerProcessing = false;
+                        IsHeaderProcessing = true;
+                        IsSupplierProcessing = false;
+                        headLines.Add(line);
+                    }
+                    else if (line.StartsWith("$$HEADER2$$"))
+                    {
+                        IsCustomerProcessing = false;
+                        IsHeaderProcessing = true;
+                        IsSupplierProcessing = false;
+                        headLines.Add(line);
+                    }
+                    else if (line.StartsWith("$$CUSTOMER$$"))
+                    {
+                        IsCustomerProcessing = true;
+                        IsHeaderProcessing = false;
+                        IsSupplierProcessing = false;
+                        custLines.Add(line);
+                    }
+                    else if (line.StartsWith("$$CUSTOMER2$$"))
+                    {
+                        IsCustomerProcessing = true;
+                        IsHeaderProcessing = false;
+                        IsSupplierProcessing = false;
+                        custLines.Add(line);
                     }
                     else if (line.StartsWith("$$FOOTER$$"))
                     {
+                        IsCustomerProcessing = false;
+                        IsHeaderProcessing = false;
+                        IsSupplierProcessing = false;
                         if (!string.IsNullOrEmpty(posLines[0]))
                         {
                             ProcessPosition(posLines, DocType.isCreditNote);
@@ -162,6 +249,12 @@ namespace DeliveryNoteFiles
                         if (!string.IsNullOrEmpty(posLines[0]))
                         {
                             ProcessPosition(posLines, DocType.isCreditNote);
+                        }
+                        else
+                        {
+                            IsCustomerProcessing = false;
+                            IsHeaderProcessing = false;
+                            IsSupplierProcessing = false;
                         }
                         posLines[0] = line;
                         havePos[0] = true;
@@ -293,6 +386,22 @@ namespace DeliveryNoteFiles
         {
             throw new NotImplementedException();
         }
+
+        private void ProcessSupplier(List<string> lines)
+        {
+            Supplier = new Supplier(lines.ToArray(), DocType.isCreditNote);
+        }
+
+        private void ProcessCustomer(List<string> custLines)
+        {
+            Customer = new Customer(custLines.ToArray(), DocType.isCreditNote);
+        }
+
+        private void ProcessHeader(List<string> headLines)
+        {
+            Header = new Header(headLines.ToArray(), DocType.isCreditNote);
+        }
+
 
 #if DEBUG
         public override string ToString()

@@ -17,17 +17,23 @@ namespace DelNoteItems
         public string CustomerAccountablePerson { get; set; }   //МОЛ
         public long CustomerPhoneNo { get; set; }
 
-        public Customer(string line, bool isCreditNote)
+        public Customer(string[] lines, bool isCreditNote)
         {
             try
             {
                 if (isCreditNote)
                 {
-                    InitializeCreditNote(line);
+                    foreach (string line in lines)
+                    {
+                        InitializeCreditNote(line);
+                    }
                 }
                 else
                 {
-                    InitializeInvoice(line);
+                    foreach (string line in lines)
+                    {
+                        InitializeInvoice(line);
+                    }
                 }
             }
             catch (Exception)
@@ -38,18 +44,16 @@ namespace DelNoteItems
 
         private void InitializeInvoice(string line)
         {
-            switch (line)
+            if (line.StartsWith("$$CUSTOMER$$"))
             {
-                case "$$CUSTOMER$$":
-                    Line1(line);
-                    break;
-                case "$$CUSTOMER2$$":
-                    Line2(line);
-                    break;
-            }            
+                Line1(line);
+            }
+            if (line.StartsWith("$$CUSTOMER2$$"))
+            {
+                Line2(line);
+            }
         }
-
-        
+    
 
         private void InitializeCreditNote(string line)
         {

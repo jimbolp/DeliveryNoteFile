@@ -28,17 +28,23 @@ namespace DelNoteItems
         public string BranchNarcLicenceNumber { get; set; }
         public string BranchResponsible { get; set; }           //Branch Pharmacist 
 
-        public Supplier(string line, bool isCreditNote)
+        public Supplier(string[] lines, bool isCreditNote)
         {
             try
             {
                 if (isCreditNote)
                 {
-                    InitializeCreditNote(line);
+                    foreach (string line in lines)
+                    {
+                        InitializeCreditNote(line);
+                    }
                 }
                 else
                 {
-                    InitializeInvoice(line);
+                    foreach (string line in lines)
+                    {
+                        InitializeInvoice(line);
+                    }
                 }
             }
             catch (Exception)
@@ -49,20 +55,21 @@ namespace DelNoteItems
 
         private void InitializeInvoice(string line)
         {
-            switch (line)
+            if (line.StartsWith("$$SUPPLIER$$"))
             {
-                case "$$SUPPLIER$$":
-                    Line1(line);
-                    break;
-                case "$$SUPPLIER2$$":
-                    Line2(line);
-                    break;
-                case "$$SUPPLIER3$$":
-                    Line3(line);
-                    break;
+                Line1(line);
             }
+            else if (line.StartsWith("$$SUPPLIER2$$"))
+            {
+                Line2(line);
+            }
+            else if (line.StartsWith("$$SUPPLIER3$$"))
+            {
+                Line3(line);
+            }
+            
         }
-
+    
         private void InitializeCreditNote(string line)
         {
             //FixLine(line);

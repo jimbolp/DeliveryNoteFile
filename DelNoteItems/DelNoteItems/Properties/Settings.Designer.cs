@@ -700,7 +700,7 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("57")]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
         public int OrderTypeStart {
             get {
                 return ((int)(this["OrderTypeStart"]));
