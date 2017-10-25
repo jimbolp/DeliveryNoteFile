@@ -20,10 +20,6 @@ namespace DeliveryNoteFiles
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
 
-#if DEBUG
-        public bool hasPos5 { get; set; }
-#endif
-
         private List<string> suppLines = new List<string>();
         private List<string> custLines = new List<string>();
         private List<string> headLines = new List<string>();
@@ -91,7 +87,7 @@ namespace DeliveryNoteFiles
             }
         }
 
-        private BitArray havePos = new BitArray(new bool[5]);       //Using Array for two reasons.. 1. Less variables(less memory :D) 2. The array indexes coincides with the "position's line numbers"
+        private BitArray havePos = new BitArray(new bool[6]);       //Using Array for two reasons.. 1. Less variables(less memory :D) 2. The array indexes coincides with the "position's line numbers"
                                                                     //Example: POS == 0; POS1 == 1; etc.
         private List<string> Lines = new List<string>();
 
@@ -172,7 +168,7 @@ namespace DeliveryNoteFiles
         /// <param name="lines"></param>
         private void InitializeComponents(string[] lines)
         {
-            string[] posLines = new string[5];                  //Reason to use array: The array indexes coincides with the "position's line numbers"
+            string[] posLines = new string[6];                  //Reason to use array: The array indexes coincides with the "position's line numbers"
 
             //
             foreach (var line in lines)
@@ -185,58 +181,48 @@ namespace DeliveryNoteFiles
                     }
                     else if (line.StartsWith("$$SUPPLIER$$"))
                     {
-                        IsCustomerProcessing = false;
-                        IsHeaderProcessing = false;
-                        IsSupplierProcessing = true;
+                        if (!IsSupplierProcessing)
+                            IsSupplierProcessing = true;
                         suppLines.Add(line);
                     }
                     else if (line.StartsWith("$$SUPPLIER2$$"))
                     {
-                        IsCustomerProcessing = false;
-                        IsHeaderProcessing = false;
-                        IsSupplierProcessing = true;
+                        if (!IsSupplierProcessing)
+                            IsSupplierProcessing = true;
                         suppLines.Add(line);
                     }
                     else if (line.StartsWith("$$SUPPLIER3$$"))
                     {
-                        IsCustomerProcessing = false;
-                        IsHeaderProcessing = false;
-                        IsSupplierProcessing = true;
+                        if (!IsSupplierProcessing)
+                            IsSupplierProcessing = true;
                         suppLines.Add(line);
                     }
                     else if (line.StartsWith("$$HEADER$$"))
                     {
-                        IsCustomerProcessing = false;
-                        IsHeaderProcessing = true;
-                        IsSupplierProcessing = false;
+                        if (!IsHeaderProcessing)
+                            IsHeaderProcessing = true;
                         headLines.Add(line);
                     }
                     else if (line.StartsWith("$$HEADER2$$"))
                     {
-                        IsCustomerProcessing = false;
-                        IsHeaderProcessing = true;
-                        IsSupplierProcessing = false;
+                        if (!IsHeaderProcessing)
+                            IsHeaderProcessing = true;                        
                         headLines.Add(line);
                     }
                     else if (line.StartsWith("$$CUSTOMER$$"))
                     {
-                        IsCustomerProcessing = true;
-                        IsHeaderProcessing = false;
-                        IsSupplierProcessing = false;
+                        if (!IsCustomerProcessing)
+                            IsCustomerProcessing = true;
                         custLines.Add(line);
                     }
                     else if (line.StartsWith("$$CUSTOMER2$$"))
                     {
-                        IsCustomerProcessing = true;
-                        IsHeaderProcessing = false;
-                        IsSupplierProcessing = false;
+                        if(!IsCustomerProcessing)
+                            IsCustomerProcessing = true;                        
                         custLines.Add(line);
                     }
                     else if (line.StartsWith("$$FOOTER$$"))
-                    {
-                        IsCustomerProcessing = false;
-                        IsHeaderProcessing = false;
-                        IsSupplierProcessing = false;
+                    {                        
                         if (!string.IsNullOrEmpty(posLines[0]))
                         {
                             ProcessPosition(posLines, DocType.isCreditNote);
@@ -292,16 +278,20 @@ namespace DeliveryNoteFiles
                     }
                     else if (line.StartsWith("$$POS5$$"))
                     {
-                        hasPos5 = true;
+                        posLines[5] = line;
+                        havePos[5] = true;
                     }
 
                     else
                     {
                         if(!(string.IsNullOrEmpty(line.Trim()) || string.IsNullOrWhiteSpace(line.Trim())))
                         {
-                            Console.WriteLine(line);
+                            //Console.WriteLine(line);
                         }
                     }
+                    IsCustomerProcessing = false;
+                    IsHeaderProcessing = false;
+                    IsSupplierProcessing = false;
                 }
                 catch (NotImplementedException)
                 {

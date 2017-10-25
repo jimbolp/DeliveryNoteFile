@@ -36,8 +36,11 @@ namespace DelNoteItems
         //$$POS3$$ Line properties
         public string ArticleLongName { get; set; }
 
-        //$$POS4$$ Line - still no explanation about this one!
-        
+        //$$POS4$$ Line properties - still no explanation about this one!
+
+        //$$POS5$$ Line properties
+        public string ArticleRemark { get; set; }
+
         public Position(string[] lines, bool isCreditNote)
         {
             try
@@ -101,6 +104,14 @@ namespace DelNoteItems
                     }
                     catch (NotImplementedException) { }
                 }
+                else if (line.StartsWith("$$POS5$$"))
+                {
+                    try
+                    {
+                        Line5(line);
+                    }
+                    catch (NotImplementedException) { }
+                }
             }
         }
         private void InitializeCreditNote(string[] lines)
@@ -144,6 +155,14 @@ namespace DelNoteItems
                     try
                     {
                         Line4(line);
+                    }
+                    catch (NotImplementedException) { }
+                }
+                else if (line.StartsWith("$$POS5$$"))
+                {
+                    try
+                    {
+                        Line5(line);
                     }
                     catch (NotImplementedException) { }
                 }

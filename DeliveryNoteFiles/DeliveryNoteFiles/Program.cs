@@ -19,13 +19,14 @@ namespace DeliveryNoteFiles
             sw.Start();
 
             //Home
-            string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+            //string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
 
             //Work - Server 22
-            //string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171011");
+            //string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171022");
 
             //Work - Special files for tests
-            //string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+            string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+
             File.WriteAllText(Settings.Default.ChangedPosFilePath, "");
             if (args != null && args.Length != 0)
             {
@@ -65,7 +66,7 @@ namespace DeliveryNoteFiles
                     {
                         //ProcessFile(s);
                         i++;
-                        if (i >= 500)
+                        if (i >= 200)
                             break;
                         if (i % 50 == 0)
                         {
@@ -83,13 +84,11 @@ namespace DeliveryNoteFiles
             Console.WriteLine(sw.Elapsed.ToString());
 #if DEBUG
             //Files selected for debigging purposes...
-            DeliveryNoteFile[] test = DelNoteFiles.Where(d => d.Positions != null).Where(d => d.Positions.Where(p => p.InvoicedQty == 0).Any()).ToArray();
             DeliveryNoteFile[] test2 = DelNoteFiles.Where(d => d.Header.OrderType == "FC").ToArray();
             DeliveryNoteFile[] test3 = DelNoteFiles.Where(d => d.Header.isNZOKOrder ?? false).ToArray();
 
             var withPositiions = DelNoteFiles.Where(d => d.Positions != null);
             DeliveryNoteFile[] test4 = withPositiions.Where(p => p.Positions.Any(pos => pos.isNZOKArticle ?? false)).ToArray();
-            DeliveryNoteFile[] test5 = DelNoteFiles.Where(d => d.hasPos5).ToArray();
 #endif
 
             //Home

@@ -52,7 +52,6 @@ namespace DelNoteItems
                         RebateInKindOrder = Parse.IntToBool(intVal);
                     }
                 }
-
                 
                 //isNZOKOrder
                 if (line.Length >= Settings.Default.isNZOKOrderStart + Settings.Default.isNZOKOrderLength)
