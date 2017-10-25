@@ -20,6 +20,10 @@ namespace DeliveryNoteFiles
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
 
+#if DEBUG
+        public bool hasPos5 { get; set; }
+#endif
+
         private List<string> suppLines = new List<string>();
         private List<string> custLines = new List<string>();
         private List<string> headLines = new List<string>();
@@ -286,6 +290,18 @@ namespace DeliveryNoteFiles
                         posLines[4] = line;
                         havePos[4] = true;
                     }
+                    else if (line.StartsWith("$$POS5$$"))
+                    {
+                        hasPos5 = true;
+                    }
+
+                    else
+                    {
+                        if(!(string.IsNullOrEmpty(line.Trim()) || string.IsNullOrWhiteSpace(line.Trim())))
+                        {
+                            Console.WriteLine(line);
+                        }
+                    }
                 }
                 catch (NotImplementedException)
                 {
@@ -343,11 +359,11 @@ namespace DeliveryNoteFiles
                     if (last.ArticleNo == current.ArticleNo)
                     {
                         testWriteL = true;
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, "Before correction:" + Environment.NewLine);
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString() + Environment.NewLine);
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, current.ToString() + Environment.NewLine);
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50) + Environment.NewLine);
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, "Before correction:" + Environment.NewLine
+                        + new string('-', 50)
+                        + last.ToString() + Environment.NewLine
+                        + current.ToString() + Environment.NewLine
+                        + new string('-', 50) + Environment.NewLine);
                     }
                 }
 #endif
@@ -356,10 +372,11 @@ namespace DeliveryNoteFiles
 #if DEBUG
                     if (last.OrderQty != last.DeliveryQty)
                     {
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, "Different DeliveryQty:" + Environment.NewLine);
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString() + Environment.NewLine);
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50) + Environment.NewLine);
+                        File.AppendAllText(Settings.Default.ChangedPosFilePath, "Different DeliveryQty:" + Environment.NewLine
+                            + new string('-', 50)
+                            + last.ToString() + Environment.NewLine
+                            + current.ToString() + Environment.NewLine
+                            + new string('-', 50) + Environment.NewLine);
                     }
 #endif
                     if (last.DeliveryQty == (last.InvoicedQty + current.InvoicedQty))
@@ -380,11 +397,11 @@ namespace DeliveryNoteFiles
 #if DEBUG
             if (testWriteL)
             {
-                File.AppendAllText(Settings.Default.ChangedPosFilePath, "Corrected:" + Environment.NewLine);
-                File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50));
-                File.AppendAllText(Settings.Default.ChangedPosFilePath, last.ToString() + Environment.NewLine);
-                File.AppendAllText(Settings.Default.ChangedPosFilePath, current.ToString() + Environment.NewLine);
-                File.AppendAllText(Settings.Default.ChangedPosFilePath, new string('-', 50) + Environment.NewLine);
+                File.AppendAllText(Settings.Default.ChangedPosFilePath, "Corrected:" + Environment.NewLine
+                    + new string('-', 50)
+                    + last.ToString() + Environment.NewLine
+                    + current.ToString() + Environment.NewLine
+                    + new string('-', 50) + Environment.NewLine);
             }
 #endif
         }
