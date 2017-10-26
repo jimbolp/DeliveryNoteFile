@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DeliveryNoteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DeliveryNoteErrors">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="255" />
+          <Property Name="EventDate" Type="datetime" />
+          <Property Name="Errors" Type="varchar" MaxLength="4096" />
+          <Property Name="Warnings" Type="varchar" MaxLength="4096" />
+        </EntityType>
+        <EntityType Name="DelNote">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileName" Type="nchar" MaxLength="50" />
+          <Property Name="ProcessTime" Type="smalldatetime" />
+          <Property Name="CustomerIDF" Type="char" MaxLength="7" />
+          <Property Name="DocNo" Type="char" MaxLength="10" />
+          <Property Name="DocDate" Type="smalldatetime" />
+          <Property Name="PaymentSum" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="TotalDiscounts" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="CreditNoteType" Type="char" MaxLength="10" />
+          <Property Name="CreditNoteDescr" Type="varchar" MaxLength="500" />
+          <Property Name="ShipmentDate" Type="smalldatetime" />
+          <Property Name="RouteID" Type="int" />
+          <Property Name="VatPercent" Type="decimal" Precision="4" Scale="1" />
+          <Property Name="PaymentTimeID" Type="tinyint" />
+          <Property Name="PaymentConsignDate" Type="smalldatetime" />
+          <Property Name="isNZOK" Type="bit" />
+          <Property Name="isRebateDiscount" Type="bit" />
+          <Property Name="KSCOrderNo" Type="char" MaxLength="6" />
+        </EntityType>
+        <EntityType Name="DelNoteItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DelNoteID" Type="int" />
+          <Property Name="ArticlePZN" Type="int" />
+          <Property Name="ArticleLongName" Type="char" MaxLength="50" />
+          <Property Name="DelQty" Type="int" />
+          <Property Name="BonusQty" Type="int" />
+          <Property Name="PharmacyPurchasePrice" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="DiscountPercentage" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="InvoicedPrice" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="InvoicedPriceExclVAT" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="InvoicedPriceInclVAT" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="ParcelNo" Type="varchar" MaxLength="24" />
+          <Property Name="Certification" Type="varchar" MaxLength="20" />
+          <Property Name="ExpiryDate" Type="varchar" MaxLength="8" />
+          <Property Name="PharmacySellPrice" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="BasePrice" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="InvoicePriceNoDisc" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="RetailerMaxPrice" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="GroupID" Type="tinyint" />
+        </EntityType>
+        <EntityContainer Name="DeliveryNoteModelStoreContainer">
+          <EntitySet Name="DeliveryNoteErrors" EntityType="Self.DeliveryNoteErrors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DelNote" EntityType="Self.DelNote" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DelNoteItem" EntityType="Self.DelNoteItem" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DeliveryNoteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DeliveryNoteError">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="EventDate" Type="DateTime" Precision="3" />
+          <Property Name="Errors" Type="String" MaxLength="4096" FixedLength="false" Unicode="false" />
+          <Property Name="Warnings" Type="String" MaxLength="4096" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DelNote">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="ProcessTime" Type="DateTime" Precision="0" />
+          <Property Name="CustomerIDF" Type="String" MaxLength="7" FixedLength="true" Unicode="false" />
+          <Property Name="DocNo" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="0" />
+          <Property Name="PaymentSum" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TotalDiscounts" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="CreditNoteType" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="CreditNoteDescr" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ShipmentDate" Type="DateTime" Precision="0" />
+          <Property Name="RouteID" Type="Int32" />
+          <Property Name="VatPercent" Type="Decimal" Precision="4" Scale="1" />
+          <Property Name="PaymentTimeID" Type="Byte" />
+          <Property Name="PaymentConsignDate" Type="DateTime" Precision="0" />
+          <Property Name="isNZOK" Type="Boolean" />
+          <Property Name="isRebateDiscount" Type="Boolean" />
+          <Property Name="KSCOrderNo" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DelNoteItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DelNoteID" Type="Int32" />
+          <Property Name="ArticlePZN" Type="Int32" />
+          <Property Name="ArticleLongName" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
+          <Property Name="DelQty" Type="Int32" />
+          <Property Name="BonusQty" Type="Int32" />
+          <Property Name="PharmacyPurchasePrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="DiscountPercentage" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="InvoicedPrice" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="InvoicedPriceExclVAT" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="InvoicedPriceInclVAT" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ParcelNo" Type="String" MaxLength="24" FixedLength="false" Unicode="false" />
+          <Property Name="Certification" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ExpiryDate" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="PharmacySellPrice" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="BasePrice" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="InvoicePriceNoDisc" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="RetailerMaxPrice" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="GroupID" Type="Byte" />
+        </EntityType>
+        <EntityContainer Name="DeliveryNoteEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DeliveryNoteErrors" EntityType="Self.DeliveryNoteError" />
+          <EntitySet Name="DelNotes" EntityType="Self.DelNote" />
+          <EntitySet Name="DelNoteItems" EntityType="Self.DelNoteItem" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DeliveryNoteModelStoreContainer" CdmEntityContainer="DeliveryNoteEntities">
+          <EntitySetMapping Name="DeliveryNoteErrors">
+            <EntityTypeMapping TypeName="DeliveryNoteModel.DeliveryNoteError">
+              <MappingFragment StoreEntitySet="DeliveryNoteErrors">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="Errors" ColumnName="Errors" />
+                <ScalarProperty Name="Warnings" ColumnName="Warnings" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DelNotes">
+            <EntityTypeMapping TypeName="DeliveryNoteModel.DelNote">
+              <MappingFragment StoreEntitySet="DelNote">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
+                <ScalarProperty Name="CustomerIDF" ColumnName="CustomerIDF" />
+                <ScalarProperty Name="DocNo" ColumnName="DocNo" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="PaymentSum" ColumnName="PaymentSum" />
+                <ScalarProperty Name="TotalDiscounts" ColumnName="TotalDiscounts" />
+                <ScalarProperty Name="CreditNoteType" ColumnName="CreditNoteType" />
+                <ScalarProperty Name="CreditNoteDescr" ColumnName="CreditNoteDescr" />
+                <ScalarProperty Name="ShipmentDate" ColumnName="ShipmentDate" />
+                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
+                <ScalarProperty Name="VatPercent" ColumnName="VatPercent" />
+                <ScalarProperty Name="PaymentTimeID" ColumnName="PaymentTimeID" />
+                <ScalarProperty Name="PaymentConsignDate" ColumnName="PaymentConsignDate" />
+                <ScalarProperty Name="isNZOK" ColumnName="isNZOK" />
+                <ScalarProperty Name="isRebateDiscount" ColumnName="isRebateDiscount" />
+                <ScalarProperty Name="KSCOrderNo" ColumnName="KSCOrderNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DelNoteItems">
+            <EntityTypeMapping TypeName="DeliveryNoteModel.DelNoteItem">
+              <MappingFragment StoreEntitySet="DelNoteItem">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="DelNoteID" ColumnName="DelNoteID" />
+                <ScalarProperty Name="ArticlePZN" ColumnName="ArticlePZN" />
+                <ScalarProperty Name="ArticleLongName" ColumnName="ArticleLongName" />
+                <ScalarProperty Name="DelQty" ColumnName="DelQty" />
+                <ScalarProperty Name="BonusQty" ColumnName="BonusQty" />
+                <ScalarProperty Name="PharmacyPurchasePrice" ColumnName="PharmacyPurchasePrice" />
+                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+                <ScalarProperty Name="InvoicedPrice" ColumnName="InvoicedPrice" />
+                <ScalarProperty Name="InvoicedPriceExclVAT" ColumnName="InvoicedPriceExclVAT" />
+                <ScalarProperty Name="InvoicedPriceInclVAT" ColumnName="InvoicedPriceInclVAT" />
+                <ScalarProperty Name="ParcelNo" ColumnName="ParcelNo" />
+                <ScalarProperty Name="Certification" ColumnName="Certification" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="PharmacySellPrice" ColumnName="PharmacySellPrice" />
+                <ScalarProperty Name="BasePrice" ColumnName="BasePrice" />
+                <ScalarProperty Name="InvoicePriceNoDisc" ColumnName="InvoicePriceNoDisc" />
+                <ScalarProperty Name="RetailerMaxPrice" ColumnName="RetailerMaxPrice" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -13,6 +13,9 @@ namespace DeliveryNoteFiles
         private static List<DeliveryNoteFile> DelNoteFiles = new List<DeliveryNoteFile>();
         static void Main(string[] args)
         {
+            DeliveryNoteEntities db = new DeliveryNoteEntities();
+            var gg = db.DelNotes.AsNoTracking().LastOrDefault();
+
             Settings.Default.Save();
             Stopwatch sw = new Stopwatch();
             sw.Start();
