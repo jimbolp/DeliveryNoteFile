@@ -16,6 +16,9 @@ namespace DeliveryNoteFiles
         public Supplier Supplier { get; set; }
         public Header Header { get; set; }
         public Customer Customer { get; set; }
+        public Mail Mail { get; set; }
+        public Bank Bank { get; set; }
+        public Tour Tour { get; set; }
         public List<Position> Positions { get; set; }
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
@@ -29,7 +32,7 @@ namespace DeliveryNoteFiles
         private bool _isCustomerProcessing = false;
 
         //will try to fire an event here!
-        public bool IsSupplierProcessing {
+        private bool IsSupplierProcessing {
             get
             {
                 return _isSupplierProcessing;
@@ -46,9 +49,9 @@ namespace DeliveryNoteFiles
                     _isSupplierProcessing = value;
                 }
             }
-        }        
+        }
 
-        public bool IsHeaderProcessing
+        private bool IsHeaderProcessing
         {
             get
             {
@@ -67,7 +70,7 @@ namespace DeliveryNoteFiles
                 }
             }
         }
-        public bool IsCustomerProcessing
+        private bool IsCustomerProcessing
         {
             get
             {
@@ -93,10 +96,10 @@ namespace DeliveryNoteFiles
 
         //debuging purposes...
         //Work
-        private string processedFilesPath = Settings.Default.SaveFilesPath;
+        //private string processedFilesPath = Settings.Default.SaveFilesPath;
 
         //Home
-        //private string processedFilesPath = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Moved Files";
+        private string processedFilesPath = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Moved Files";
 
         public DeliveryNoteFile(string filePath)
         {
@@ -179,48 +182,78 @@ namespace DeliveryNoteFiles
                     {
                         DocType = new Type(line);
                     }
+
                     else if (line.StartsWith("$$SUPPLIER$$"))
                     {
                         if (!IsSupplierProcessing)
                             IsSupplierProcessing = true;
                         suppLines.Add(line);
                     }
+
                     else if (line.StartsWith("$$SUPPLIER2$$"))
                     {
                         if (!IsSupplierProcessing)
                             IsSupplierProcessing = true;
                         suppLines.Add(line);
                     }
+
                     else if (line.StartsWith("$$SUPPLIER3$$"))
                     {
                         if (!IsSupplierProcessing)
                             IsSupplierProcessing = true;
                         suppLines.Add(line);
                     }
+
                     else if (line.StartsWith("$$HEADER$$"))
                     {
                         if (!IsHeaderProcessing)
                             IsHeaderProcessing = true;
                         headLines.Add(line);
                     }
+
                     else if (line.StartsWith("$$HEADER2$$"))
                     {
                         if (!IsHeaderProcessing)
                             IsHeaderProcessing = true;                        
                         headLines.Add(line);
                     }
+
                     else if (line.StartsWith("$$CUSTOMER$$"))
                     {
                         if (!IsCustomerProcessing)
                             IsCustomerProcessing = true;
                         custLines.Add(line);
                     }
+
                     else if (line.StartsWith("$$CUSTOMER2$$"))
                     {
                         if(!IsCustomerProcessing)
                             IsCustomerProcessing = true;                        
                         custLines.Add(line);
                     }
+
+                    else if (line.StartsWith("$$MAIL$$") || line.StartsWith("$$DISC$$") || line.StartsWith("$$BLPD$$"))
+                    {
+                        Mail = new Mail(line, DocType.isCreditNote);
+                    }
+
+                    else if (line.StartsWith("$$TOUR$$"))
+                    {
+                        try
+                        {
+                            Tour = new Tour(line, DocType.isCreditNote);
+                        }
+                        catch(Exception e)
+                        {
+                            WriteExceptionToLog(e);
+                        }
+                    }
+
+                    else if (line.StartsWith("$$BANK$$"))
+                    {
+                        Bank = new Bank(line, DocType.isCreditNote);
+                    }
+
                     else if (line.StartsWith("$$FOOTER$$"))
                     {                        
                         if (!string.IsNullOrEmpty(posLines[0]))
@@ -230,6 +263,7 @@ namespace DeliveryNoteFiles
                         }
                         Footer = new Footer(line, DocType.isCreditNote);
                     }
+
                     else if (line.StartsWith("$$MWST$$"))
                     {
                         if (VATTable == null)
@@ -241,6 +275,7 @@ namespace DeliveryNoteFiles
                             VATTable.Table.Add(new MWST(line, DocType.isCreditNote));
                         }
                     }
+
                     else if (line.StartsWith("$$POS$$"))
                     {
                         if (!string.IsNullOrEmpty(posLines[0]))
@@ -256,26 +291,31 @@ namespace DeliveryNoteFiles
                         posLines[0] = line;
                         havePos[0] = true;
                     }
+
                     else if (line.StartsWith("$$POS1$"))
                     {
                         posLines[1] = line;
                         havePos[1] = true;
                     }
+
                     else if (line.StartsWith("$$POS2$$"))
                     {
                         posLines[2] = line;
                         havePos[2] = true;
                     }
+
                     else if (line.StartsWith("$$POS3$"))
                     {
                         posLines[3] = line;
                         havePos[3] = true;
                     }
+
                     else if (line.StartsWith("$$POS4$$"))
                     {
                         posLines[4] = line;
                         havePos[4] = true;
                     }
+
                     else if (line.StartsWith("$$POS5$$"))
                     {
                         posLines[5] = line;
@@ -289,6 +329,7 @@ namespace DeliveryNoteFiles
                             //Console.WriteLine(line);
                         }
                     }
+
                     IsCustomerProcessing = false;
                     IsHeaderProcessing = false;
                     IsSupplierProcessing = false;
@@ -298,6 +339,11 @@ namespace DeliveryNoteFiles
 
                 }
             }
+        }
+
+        private void WriteExceptionToLog(Exception e)
+        {
+
         }
 
         private void ProcessPosition(string[] lines, bool isCreditNote)

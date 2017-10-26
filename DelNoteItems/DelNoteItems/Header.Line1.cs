@@ -102,6 +102,22 @@ namespace DelNoteItems
                 {
                     DiscountType = Parse.StringToBool(line.Substring(Settings.Default.DiscountTypeStart));
                 }
+
+                //PharmacyID
+                if (line.Length >= Settings.Default.PharmacyIDStart + Settings.Default.PharmacyIDLength)
+                {
+                    if (Int32.TryParse(line.Substring(Settings.Default.PharmacyIDStart, Settings.Default.PharmacyIDLength).Trim(), out intVal))
+                    {
+                        PharmacyID = intVal;
+                    }
+                }
+                else if (line.Length >= Settings.Default.PharmacyIDStart)
+                {
+                    if (Int32.TryParse(line.Substring(Settings.Default.PharmacyIDStart).Trim(), out intVal))
+                    {
+                        PharmacyID = intVal;
+                    }
+                }
             }
             catch (Exception e)
             {

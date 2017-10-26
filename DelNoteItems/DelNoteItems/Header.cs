@@ -15,6 +15,7 @@ namespace DelNoteItems
         public DateTime? NarcoticsFormDate { get; set; }
         public DateTime? DateOfDelivery { get; set; }
         public bool? DiscountType { get; set; }
+        public int PharmacyID { get; set; }                 //Pharmos Customer Number!!!
 
         //$$Header2$$ Line properties
         public string OrderType { get; set; }
@@ -23,7 +24,7 @@ namespace DelNoteItems
         public string OrderRemark { get; set; }
         public int? PickingType { get; set; }
         public int? BookingType { get; set; }
-        public int? CSCOrderNumber { get; set; }
+        public int? CSCOrderNumber { get; set; }        //Order Number in KSC/Order Entry
 
         public Header(string[] lines, bool isCreditNote)
         {

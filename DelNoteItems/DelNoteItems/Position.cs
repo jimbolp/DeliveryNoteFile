@@ -36,7 +36,14 @@ namespace DelNoteItems
         //$$POS3$$ Line properties
         public string ArticleLongName { get; set; }
 
-        //$$POS4$$ Line properties - still no explanation about this one!
+        //$$POS4$$ Line properties
+        public string PharmaceuticalForm { get; set; }
+        public decimal? WholesalePurchasePrice { get; set; }            //GEP
+        public decimal? PharmacyPurchasePriceNoDisc { get; set; }       //AEP - NotImplemented for now... Have to check which price is that exactly!
+        public decimal? MaxPharmacySalesPrice { get; set; }             //MAXAVP
+
+        public int PriceType { get; set; }
+
 
         //$$POS5$$ Line properties
         public string ArticleRemark { get; set; }

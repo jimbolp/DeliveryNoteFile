@@ -10,7 +10,7 @@ namespace DelNoteItems
     public static class Parse
     {
         /// <summary>
-        /// Parse DateID (20171020) to DateTime (20.10.2017)
+        /// This method is trying to convert DateID (20171020) to DateTime (20.10.2017) and return the result. Returns null if it fails.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -23,7 +23,6 @@ namespace DelNoteItems
             DateTime date = new DateTime();
             try
             {
-                //dateFromDateID = dateid.Substring(6, 2) + "." + dateid.Substring(4, 2) + "." + dateid.Substring(0, 4);
                 if (DateTime.TryParseExact(str, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
                     return date;
                 else

@@ -7,7 +7,7 @@ namespace DelNoteItems
     {
         public string PharmacyStreet { get; set; }
         public string PharmacyName { get; set; }
-        public int? PharmacyCIP { get; set; }     //Post Code
+        public int? PharmacyCIP { get; set; }           //Post Code
         public string PharmacyCity { get; set; }
         public int? TourID { get; set; }
         public DateTime? TourDate { get; set; }
