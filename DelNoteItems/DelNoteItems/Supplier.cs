@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Reflection;
-using Settings = DelNoteItems.Properties.Settings;
 
 namespace DelNoteItems
 {
@@ -9,7 +6,7 @@ namespace DelNoteItems
     {
         //$$SUPPLIER$$ Line properties
 
-        //According to Mr. Rolf Raab, these are constant values and I don't know what they represent
+        //According to Mr. Rolf Raab, these are constant values for Bulgaria and I don't know what they represent and how to change them.
         private long? notKnownNumber { get; set; }          //100000266
         private string notKnownString { get; set; }         //LIBRA AG
         private long? notKnownLongerNumber { get; set; }    //8606004100001
@@ -26,7 +23,7 @@ namespace DelNoteItems
         //$$SUPPLIER3$$ Line properties (Mask PA96 in PHARMOS)
         public string BranchLicenceNumber { get; set; }
         public string BranchNarcLicenceNumber { get; set; }
-        public string BranchResponsible { get; set; }           //Branch Pharmacist 
+        public string BranchResponsible { get; set; }           //Branch Responsible Pharmacist 
 
         public Supplier(string[] lines, bool isCreditNote)
         {

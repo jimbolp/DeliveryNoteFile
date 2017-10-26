@@ -12,7 +12,7 @@ namespace DelNoteItems.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.3.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -728,8 +728,8 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\C# Projects\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFi" +
-            "les\\bin\\Debug\\Changed Pos\\changed.txt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Documents\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFiles\\bin\\Debu" +
+            "g\\Changed Pos\\changed.txt")]
         public string ChangedPosFilePath {
             get {
                 return ((string)(this["ChangedPosFilePath"]));
@@ -1435,6 +1435,40 @@ namespace DelNoteItems.Properties {
         public int ValueOfFieldInSK17Length {
             get {
                 return ((int)(this["ValueOfFieldInSK17Length"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Documents\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFiles\\bin\\Debu" +
+            "g\\LogFiles\\log.txt")]
+        public string LogFilePath {
+            get {
+                return ((string)(this["LogFilePath"]));
+            }
+            set {
+                this["LogFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int PermittedNumberOfThreads {
+            get {
+                return ((int)(this["PermittedNumberOfThreads"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ReadFromDirectory {
+            get {
+                return ((string)(this["ReadFromDirectory"]));
+            }
+            set {
+                this["ReadFromDirectory"] = value;
             }
         }
     }

@@ -31,7 +31,7 @@ namespace DeliveryNoteFiles
         private bool _isHeaderProcessing = false;
         private bool _isCustomerProcessing = false;
 
-        //will try to fire an event here!
+        
         private bool IsSupplierProcessing {
             get
             {
@@ -180,7 +180,14 @@ namespace DeliveryNoteFiles
                 {
                     if (line.StartsWith("$$TYPE$$"))
                     {
-                        DocType = new Type(line);
+                        try
+                        {
+                            DocType = new Type(line);
+                        }
+                        catch(Exception e)
+                        {
+                            WriteExceptionToLog(e);
+                        }
                     }
 
                     else if (line.StartsWith("$$SUPPLIER$$"))
@@ -234,7 +241,14 @@ namespace DeliveryNoteFiles
 
                     else if (line.StartsWith("$$MAIL$$") || line.StartsWith("$$DISC$$") || line.StartsWith("$$BLPD$$"))
                     {
-                        Mail = new Mail(line, DocType.isCreditNote);
+                        try
+                        {
+                            Mail = new Mail(line, DocType.isCreditNote);
+                        }
+                        catch(Exception e)
+                        {
+                            WriteExceptionToLog(e);
+                        }
                     }
 
                     else if (line.StartsWith("$$TOUR$$"))
@@ -251,7 +265,14 @@ namespace DeliveryNoteFiles
 
                     else if (line.StartsWith("$$BANK$$"))
                     {
-                        Bank = new Bank(line, DocType.isCreditNote);
+                        try
+                        {
+                            Bank = new Bank(line, DocType.isCreditNote);
+                        }
+                        catch (Exception e)
+                        {
+                            WriteExceptionToLog(e);
+                        }
                     }
 
                     else if (line.StartsWith("$$FOOTER$$"))
@@ -261,18 +282,32 @@ namespace DeliveryNoteFiles
                             ProcessPosition(posLines, DocType.isCreditNote);
                             posLines = null;
                         }
-                        Footer = new Footer(line, DocType.isCreditNote);
+                        try
+                        {
+                            Footer = new Footer(line, DocType.isCreditNote);
+                        }
+                        catch (Exception e)
+                        {
+                            WriteExceptionToLog(e);
+                        }
                     }
 
                     else if (line.StartsWith("$$MWST$$"))
                     {
-                        if (VATTable == null)
+                        try
                         {
-                            VATTable = new VATTable(line, DocType.isCreditNote);
+                            if (VATTable == null)
+                            {
+                                VATTable = new VATTable(line, DocType.isCreditNote);
+                            }
+                            else
+                            {
+                                VATTable.Table.Add(new MWST(line, DocType.isCreditNote));
+                            }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            VATTable.Table.Add(new MWST(line, DocType.isCreditNote));
+                            WriteExceptionToLog(e);
                         }
                     }
 
@@ -280,7 +315,14 @@ namespace DeliveryNoteFiles
                     {
                         if (!string.IsNullOrEmpty(posLines[0]))
                         {
-                            ProcessPosition(posLines, DocType.isCreditNote);
+                            try
+                            {
+                                ProcessPosition(posLines, DocType.isCreditNote);
+                            }
+                            catch (Exception e)
+                            {
+                                WriteExceptionToLog(e);
+                            }
                         }
                         else
                         {
@@ -334,16 +376,21 @@ namespace DeliveryNoteFiles
                     IsHeaderProcessing = false;
                     IsSupplierProcessing = false;
                 }
-                catch (NotImplementedException)
+                catch (NotImplementedException nie)
                 {
-
+                    WriteExceptionToLog(nie);
+                }
+                catch(Exception e)
+                {
+                    WriteExceptionToLog(e);
                 }
             }
         }
 
         private void WriteExceptionToLog(Exception e)
         {
-
+            File.AppendAllText(Settings.Default.LogFilePath,
+                DateTime.Now + Environment.NewLine + e.ToString() + Environment.NewLine);
         }
 
         private void ProcessPosition(string[] lines, bool isCreditNote)

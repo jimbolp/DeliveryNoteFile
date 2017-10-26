@@ -237,7 +237,7 @@
       <Value Profile="(Default)">D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\MovedFiles</Value>
     </Setting>
     <Setting Name="ChangedPosFilePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Changed Pos\changed.txt</Value>
+      <Value Profile="(Default)">D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Changed Pos\changed.txt</Value>
     </Setting>
     <Setting Name="BranchNameStart" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">13</Value>
@@ -472,6 +472,15 @@
     </Setting>
     <Setting Name="ValueOfFieldInSK17Length" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="LogFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\LogFiles\log.txt</Value>
+    </Setting>
+    <Setting Name="PermittedNumberOfThreads" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="ReadFromDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

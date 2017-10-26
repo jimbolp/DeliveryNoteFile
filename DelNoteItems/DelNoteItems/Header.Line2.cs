@@ -8,7 +8,6 @@ namespace DelNoteItems
         private void Line2(string line)
         {
             int intVal = 0;
-            long longVal = 0;
             try
             {
                 //OrderType

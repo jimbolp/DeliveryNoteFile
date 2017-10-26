@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="8b68a56b-8e13-426b-bc85-cc9fc7810163" 
+           Name="DelNoteFileReader" 
+           Language="1033" 
+           Version="1.0.0.0" 
+           Manufacturer="Yavor Georgiev" 
+           UpgradeCode="1d34dcf3-13b8-4c46-8295-777746f715e9">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="DelNoteFileReader" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="DelNoteFileReader" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<Component Id="MainExecutable">
+        <File Source="$(var.DeliveryNoteFiles.TargetPath)"></File>
+			</Component>
+
+      <Component Id ="Dll">
+        <File Id="Dll" Name="DelNoteItems.dll" Source="$(var.DeliveryNoteFiles.TargetDir)DelNoteItems.dll"></File>
+      </Component>
+
+      <Component Id ="Exe.config">
+        <File Id="Exe.config" Name="DeliveryNoteFiles.exe.config" Source="$(var.DeliveryNoteFiles.TargetDir)DeliveryNoteFiles.exe.config"></File>
+      </Component>
+
+      <Component Id ="Dll.config">
+        <File Id="Dll.config" Name="DelNoteItems.dll.config" Source="$(var.DeliveryNoteFiles.TargetDir)DelNoteItems.dll.config"></File>
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
