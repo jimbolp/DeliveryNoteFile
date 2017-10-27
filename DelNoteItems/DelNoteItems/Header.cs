@@ -7,7 +7,7 @@ namespace DelNoteItems
     public partial class Header : DelNoteItems
     {
         //$$Header$$ Line properties
-        public long? DeliveryNoteNumber { get; set; }
+        public long? DeliveryNoteNumber { get; set; }       //Invoice Number
         public DateTime? DeliveryNoteDate { get; set; }
         public bool? RebateInKindOrder { get; set; }
         public bool? isNZOKOrder { get; set; }
@@ -25,6 +25,7 @@ namespace DelNoteItems
         public int? PickingType { get; set; }
         public int? BookingType { get; set; }
         public int? CSCOrderNumber { get; set; }        //Order Number in KSC/Order Entry
+        public string CreditNoteType { get; set; }
 
         public Header(string[] lines, bool isCreditNote)
         {

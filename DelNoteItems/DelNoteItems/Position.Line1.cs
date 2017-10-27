@@ -100,19 +100,19 @@ namespace DelNoteItems
                     }
                 }
 
-                //PharmacyPurchasePrice
-                if (line.Length >= Settings.Default.PharmacyPurchasePriceStart + Settings.Default.PharmacyPurchasePriceLength)
+                //PharmacySellPrice
+                if (line.Length >= Settings.Default.PharmacySellPriceStart + Settings.Default.PharmacySellPriceLength)
                 {
-                    if(Decimal.TryParse(line.Substring(Settings.Default.PharmacyPurchasePriceStart, Settings.Default.PharmacyPurchasePriceLength).Trim().Replace(',','.'), out decVal))
+                    if(Decimal.TryParse(line.Substring(Settings.Default.PharmacySellPriceStart, Settings.Default.PharmacySellPriceLength).Trim().Replace(',','.'), out decVal))
                     {
-                        PharmacyPurchasePrice = decVal;
+                        PharmacySellPrice = decVal;
                     }
                 }
-                else if (line.Length >= Settings.Default.PharmacyPurchasePriceStart)
+                else if (line.Length >= Settings.Default.PharmacySellPriceStart)
                 {
-                    if (Decimal.TryParse(line.Substring(Settings.Default.PharmacyPurchasePriceStart).Trim().Replace(',', '.'), out decVal))
+                    if (Decimal.TryParse(line.Substring(Settings.Default.PharmacySellPriceStart).Trim().Replace(',', '.'), out decVal))
                     {
-                        PharmacyPurchasePrice = decVal;
+                        PharmacySellPrice = decVal;
                     }
                 }
 

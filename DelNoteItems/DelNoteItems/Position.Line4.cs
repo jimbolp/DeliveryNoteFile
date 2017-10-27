@@ -37,7 +37,21 @@ namespace DelNoteItems
                     }
                 }
 
-                //PharmacyPurchasePriceNoDisc
+                //PharmacyPurchasePrice
+                if (line.Length >= Settings.Default.PharmacyPurchasePriceStart + Settings.Default.PharmacyPurchasePriceLength)
+                {
+                    if (Decimal.TryParse(line.Substring(Settings.Default.PharmacyPurchasePriceStart, Settings.Default.PharmacyPurchasePriceLength).Trim().Replace(',', '.'), out decVal))
+                    {
+                        PharmacyPurchasePrice = decVal;
+                    }
+                }
+                else if (line.Length >= Settings.Default.PharmacyPurchasePriceStart)
+                {
+                    if (Decimal.TryParse(line.Substring(Settings.Default.PharmacyPurchasePriceStart).Trim().Replace(',', '.'), out decVal))
+                    {
+                        PharmacyPurchasePrice = decVal;
+                    }
+                }
 
                 //MaxPharmacySalesPrice
                 if (line.Length >= Settings.Default.MaxPharmacySalesPriceStart + Settings.Default.MaxPharmacySalesPriceLength)

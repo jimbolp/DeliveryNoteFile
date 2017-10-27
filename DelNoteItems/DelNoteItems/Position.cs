@@ -24,7 +24,7 @@ namespace DelNoteItems
         public int? OrderQty { get; set; }
         public int? DeliveryQty { get; set; }
         public int? BonusQty { get; set; }
-        public decimal? PharmacyPurchasePrice { get; set; }
+        public decimal? PharmacySellPrice { get; set; }                 //BG: Цена Аптека
         public decimal? InvoicedPriceInclVATNoDiscount { get; set; }
         public decimal? InvoicedPriceExclVAT { get; set; }
         public decimal? InvoicedPriceInclVAT { get; set; }
@@ -38,11 +38,11 @@ namespace DelNoteItems
 
         //$$POS4$$ Line properties
         public string PharmaceuticalForm { get; set; }
-        public decimal? WholesalePurchasePrice { get; set; }            //GEP
-        public decimal? PharmacyPurchasePriceNoDisc { get; set; }       //AEP - NotImplemented for now... Have to check which price is that exactly!
-        public decimal? MaxPharmacySalesPrice { get; set; }             //MAXAVP
+        public decimal? WholesalePurchasePrice { get; set; }            //GEP       BG: Базова Цена
+        public decimal? PharmacyPurchasePrice { get; set; }             //AEP       BG: ЦенаТЕ
+        public decimal? MaxPharmacySalesPrice { get; set; }             //MAXAVP    BG: Пределна Цена
 
-        public int PriceType { get; set; }
+        public int? PriceType { get; set; }
 
 
         //$$POS5$$ Line properties

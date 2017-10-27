@@ -23,6 +23,8 @@ namespace DeliveryNoteFiles
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
 
+        public string FileName { get; set; }
+
         private List<string> suppLines = new List<string>();
         private List<string> custLines = new List<string>();
         private List<string> headLines = new List<string>();
@@ -96,13 +98,21 @@ namespace DeliveryNoteFiles
 
         //debuging purposes...
         //Work
-        //private string processedFilesPath = Settings.Default.SaveFilesPath;
+        private string processedFilesPath = Settings.Default.SaveFilesPath;
 
         //Home
-        private string processedFilesPath = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Moved Files";
+        //private string processedFilesPath = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Moved Files";
 
         public DeliveryNoteFile(string filePath)
         {
+            try
+            {
+                FileName = Path.GetFileName(filePath);
+            }
+            catch(Exception e)
+            {
+                throw e; 
+            }
             ReadFile(filePath);
         }
 

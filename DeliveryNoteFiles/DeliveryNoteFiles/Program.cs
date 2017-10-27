@@ -1,22 +1,26 @@
 ﻿using System;
+using System.Data.Entity.Validation;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Settings = DelNoteItems.Properties.Settings;
 using System.Threading;
+using System.Data.SqlClient;
+using System.Data.Entity;
 
 namespace DeliveryNoteFiles
 {
     class Program
     {
         private static List<DeliveryNoteFile> DelNoteFiles = new List<DeliveryNoteFile>();
+        private static DeliveryNoteEntities db = new DeliveryNoteEntities();
         static void Main(string[] args)
         {
-            DeliveryNoteEntities db = new DeliveryNoteEntities();
-            var gg = db.DelNotes.AsNoTracking().LastOrDefault();
+            
+            DelNote gg = (db.DelNotes.AsNoTracking()).FirstOrDefault();
 
-            Settings.Default.Save();
+            
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
@@ -24,10 +28,13 @@ namespace DeliveryNoteFiles
             //string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
 
             //Work - Server 22
-            string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171025");
+            //string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171026");
 
             //Work - Special files for tests
             //string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+
+            //Work - One file only
+            string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\One File");
 
             File.WriteAllText(Settings.Default.ChangedPosFilePath, "");
             if (args != null && args.Length != 0)
@@ -39,7 +46,7 @@ namespace DeliveryNoteFiles
                     {
                         Console.WriteLine(s);
                         i++;
-                        if (i >= 500)
+                        if (i >= 100)
                         {
                             break;
                             //DelNoteFiles = new List<DeliveryNoteFile>();
@@ -77,9 +84,9 @@ namespace DeliveryNoteFiles
                         output++;
                         if (i >= 500)
                         {
-                            break;
-                            //DelNoteFiles = new List<DeliveryNoteFile>();
-                            //i = 0;
+                            //break;
+                            DelNoteFiles = new List<DeliveryNoteFile>();
+                            i = 0;
                         }
                         
                         if (i % 50 == 0)
@@ -130,8 +137,146 @@ namespace DeliveryNoteFiles
         {
             if (!(file.Trim().EndsWith(".txt")))
                 return;
-            
-            DelNoteFiles.Add(new DeliveryNoteFile(file));
+
+            DeliveryNoteFile delNote = new DeliveryNoteFile(file);
+            using (DbContextTransaction transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    DelNote delNoteForTest = AddDelNote(delNote);
+
+                    db.DelNotes.Add(delNoteForTest);
+                    List<DelNoteItem> delNoteItems = AddDelNoteItems(db.DelNotes.OrderByDescending(i => i.ID).FirstOrDefault().ID, delNote);
+                    foreach (DelNoteItem item in delNoteItems)
+                    {
+                        db.DelNoteItems.Add(item);
+                    }
+                    db.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (DbEntityValidationException e)
+                {
+                    transaction.Rollback();
+
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                }
+            }
+            DelNoteFiles.Add(delNote);
+        }
+
+        
+        private static List<DelNoteItem> AddDelNoteItems(int ID, DeliveryNoteFile delNote)
+        {
+            try
+            {
+                List<DelNoteItem> items = new List<DelNoteItem>();
+                if (delNote.Positions != null && delNote.Positions.Count > 0)
+                {
+                    foreach (var position in delNote.Positions)
+                    {
+                        items.Add(new DelNoteItem
+                        {
+                            DelNoteID = ID,
+                            ArticlePZN = position.ArticleNo,
+                            ArticleLongName = position.ArticleLongName,
+                            DelQty = position.DeliveryQty,
+                            BonusQty = position.BonusQty,
+                            PharmacyPurchasePrice = position.PharmacyPurchasePrice,
+                            DiscountPercentage = position.DiscountPercentage,
+                            InvoicedPrice = position.InvoicedPrice,
+                            InvoicedPriceExclVAT = position.InvoicedPriceExclVAT,
+                            InvoicedPriceInclVAT = position.InvoicedPriceInclVAT,
+                            ParcelNo = position.Batch,
+                            Certification = position.ArticleCertification,
+                            ExpiryDate = string.Format("yyyyMMdd", position.ExpiryDate),
+                            PharmacySellPrice = position.PharmacySellPrice,
+                            BasePrice = position.WholesalePurchasePrice,
+                            InvoicePriceNoDisc = position.InvoicedPriceInclVATNoDiscount,
+                            RetailerMaxPrice = position.MaxPharmacySalesPrice
+                            //GroupID = 
+                        });
+                    }
+                }
+                return items;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }//*/
+
+        private static DelNote AddDelNote(DeliveryNoteFile delNote)
+        {
+            string creditNoteDescr = "";
+            if (delNote.DocType.isCreditNote && (delNote.Positions != null && delNote.Positions.Count > 0))
+            {
+                creditNoteDescr = delNote.Positions.FirstOrDefault().ArticleName;
+            }
+            DelNote dNote = new DelNote
+            {
+                FileName = delNote.FileName,
+                ProcessTime = DateTime.Now,
+                CustomerIDF = delNote.Header.PharmacyID.ToString(),
+                DocNo = delNote.Header.DeliveryNoteNumber.ToString(),
+                DocDate = delNote.Header.DeliveryNoteDate,
+                PaymentSum = delNote.Footer.InvoiceTotal,
+                TotalDiscounts = delNote.Footer.TotalDiscounts,
+                CreditNoteType = delNote.Header.CreditNoteType,
+                CreditNoteDescr = creditNoteDescr,
+                ShipmentDate = delNote.Tour.TourDate,
+                RouteID = delNote.Tour.TourID,
+                VatPercent = delNote.VATTable.TotalPercent,
+                //PaymentTimeID = "",
+                PaymentConsignDate = delNote.Footer.DueDate,
+                isNZOK = delNote.Header.isNZOKOrder,
+                isRebateDiscount = delNote.Header.RebateInKindOrder,
+                KSCOrderNo = delNote.Header.CSCOrderNumber.ToString()
+            };
+                                    
+            return dNote;
+        }
+        private static string TranslateCreditType(string CreditNoteType)
+        {
+            switch (CreditNoteType)
+            {
+                case "БР":
+                case "NO":
+                    return "Без Рекламация";
+                case "НК":
+                case "RM":
+                    return "Нормално Кредитно";
+                case "ДК":
+                case "MW":
+                    return "ДДС Кредитно";
+                case "ПК":
+                case "HE":
+                    return "Производител Кредитно";
+                case "СК":
+                case "FI":
+                    return "Склад Кредитно";
+                case "РК":
+                case "RG":
+                    return "Рабат Кредитно";
+                case "УК":
+                case "RB":
+                    return "Утежняване кредитно";
+                case "ПС":
+                case "HW":
+                    return "Стойностно Кредитно";
+                case "НР":
+                case "NR":
+                    return "Натурален Рабат";
+                case "ФР":
+                case "FR":
+                    return "Финансов Рабат";
+                case "MP":
+                    return "Ръчна Промоция";
+                default:
+                    return CreditNoteType;                    
+            }
         }
     }
 }

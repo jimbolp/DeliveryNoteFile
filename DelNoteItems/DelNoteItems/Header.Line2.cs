@@ -97,6 +97,16 @@ namespace DelNoteItems
                         CSCOrderNumber = intVal;
                     }
                 }
+
+                //CreditNoteType
+                if (line.Length >= Settings.Default.CreditNoteTypeStart + Settings.Default.CreditNoteTypeLength)
+                {
+                    CreditNoteType = line.Substring(Settings.Default.CreditNoteTypeStart, Settings.Default.CreditNoteTypeLength).Trim();
+                }
+                else if (line.Length >= Settings.Default.CreditNoteTypeStart)
+                {
+                    CreditNoteType = line.Substring(Settings.Default.CreditNoteTypeStart).Trim();
+                }
             }
             catch (Exception e)
             {

@@ -458,18 +458,18 @@ namespace DelNoteItems.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
-        public int PharmacyPurchasePriceStart {
+        public int PharmacySellPriceStart {
             get {
-                return ((int)(this["PharmacyPurchasePriceStart"]));
+                return ((int)(this["PharmacySellPriceStart"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("9")]
-        public int PharmacyPurchasePriceLength {
+        public int PharmacySellPriceLength {
             get {
-                return ((int)(this["PharmacyPurchasePriceLength"]));
+                return ((int)(this["PharmacySellPriceLength"]));
             }
         }
         
@@ -1469,6 +1469,42 @@ namespace DelNoteItems.Properties {
             }
             set {
                 this["ReadFromDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("61")]
+        public int CreditNoteTypeStart {
+            get {
+                return ((int)(this["CreditNoteTypeStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int CreditNoteTypeLength {
+            get {
+                return ((int)(this["CreditNoteTypeLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("22")]
+        public int PharmacyPurchasePriceStart {
+            get {
+                return ((int)(this["PharmacyPurchasePriceStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
+        public int PharmacyPurchasePriceLength {
+            get {
+                return ((int)(this["PharmacyPurchasePriceLength"]));
             }
         }
     }

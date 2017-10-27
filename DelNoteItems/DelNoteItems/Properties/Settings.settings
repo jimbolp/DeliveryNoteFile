@@ -146,10 +146,10 @@
     <Setting Name="BonusQtyLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">6</Value>
     </Setting>
-    <Setting Name="PharmacyPurchasePriceStart" Type="System.Int32" Scope="Application">
+    <Setting Name="PharmacySellPriceStart" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">60</Value>
     </Setting>
-    <Setting Name="PharmacyPurchasePriceLength" Type="System.Int32" Scope="Application">
+    <Setting Name="PharmacySellPriceLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">9</Value>
     </Setting>
     <Setting Name="InvoicedPriceInclVATNoDiscountStart" Type="System.Int32" Scope="Application">
@@ -481,6 +481,18 @@
     </Setting>
     <Setting Name="ReadFromDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CreditNoteTypeStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">61</Value>
+    </Setting>
+    <Setting Name="CreditNoteTypeLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="PharmacyPurchasePriceStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">22</Value>
+    </Setting>
+    <Setting Name="PharmacyPurchasePriceLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">11</Value>
     </Setting>
   </Settings>
 </SettingsFile>

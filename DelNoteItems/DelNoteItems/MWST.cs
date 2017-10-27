@@ -70,7 +70,24 @@ namespace DelNoteItems
                     return 0;
             }
         }
-        
+        public decimal? TotalPercent
+        {
+            get
+            {
+                if (Table != null && Table.Count > 0)
+                {
+                    decimal? val = 0;
+                    foreach (var item in Table)
+                    {
+                        val += item.OrderVATPercentage;
+                    }
+                    return val;
+                }
+                else
+                    return 0;
+            }
+        }
+
         public VATTable(string line, bool isCreditNote)
         {
             if (Table == null)
