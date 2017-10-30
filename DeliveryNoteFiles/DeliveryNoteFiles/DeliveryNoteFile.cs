@@ -44,7 +44,6 @@ namespace DeliveryNoteFiles
         private bool _isSupplierProcessing = false;
         private bool _isHeaderProcessing = false;
         private bool _isCustomerProcessing = false;
-
         
         private bool IsSupplierProcessing {
             get
@@ -64,7 +63,6 @@ namespace DeliveryNoteFiles
                 }
             }
         }
-
         private bool IsHeaderProcessing
         {
             get
@@ -147,7 +145,7 @@ namespace DeliveryNoteFiles
                         }
                     }
                 }
-                InitializeComponents(Lines.ToArray());
+                InitializeComponents(Lines);
             }
             catch(Exception)
             {
@@ -191,7 +189,7 @@ namespace DeliveryNoteFiles
         /// Initializes each Property with the information from the file.
         /// </summary>
         /// <param name="lines"></param>
-        private void InitializeComponents(string[] lines)
+        private void InitializeComponents(List<string> lines)
         {
             string[] posLines = new string[6];                  //Reason to use array: The array indexes coincides with the "position's line numbers"
 
@@ -506,6 +504,7 @@ namespace DeliveryNoteFiles
                 {
                     try
                     {
+                        toString += Environment.NewLine;
                         toString += pi.GetValue(this).ToString();
                         toString += Environment.NewLine;
                     }

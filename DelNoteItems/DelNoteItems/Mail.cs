@@ -3,7 +3,7 @@ using Settings = DelNoteItems.Properties.Settings;
 
 namespace DelNoteItems
 {
-    public class Mail
+    public class Mail : DelNoteItems
     {
         public string CustomerEmailAddress { get; set; }
         public string ValueOfFieldInSK17 { get; set; }      //Seriously... That's the information I got from Mr. Rolf Raab!? What field... Who knows?!

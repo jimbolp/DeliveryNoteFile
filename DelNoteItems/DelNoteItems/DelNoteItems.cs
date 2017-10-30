@@ -47,7 +47,6 @@ namespace DelNoteItems
                         {
                             try
                             {
-                                toString += Environment.NewLine;
                                 toString += m.ToString();
                             }
                             catch (Exception) { }
@@ -55,7 +54,7 @@ namespace DelNoteItems
                     }
                 }
             }
-            return toString;
+            return toString + Environment.NewLine;
         }
     }
 }

@@ -3,7 +3,7 @@ using Settings = DelNoteItems.Properties.Settings;
 
 namespace DelNoteItems
 {
-    public class Bank
+    public class Bank : DelNoteItems
     {
         public string BranchBankName { get; set; }
         public string BranchBankIBAN { get; set; }

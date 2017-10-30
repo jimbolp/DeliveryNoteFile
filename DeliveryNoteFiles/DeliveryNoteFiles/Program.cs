@@ -9,6 +9,7 @@ using System.Threading;
 using System.Data.SqlClient;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Core;
 
 namespace DeliveryNoteFiles
 {
@@ -22,84 +23,43 @@ namespace DeliveryNoteFiles
             sw.Start();
 
             //Home
-            //string[] files = Directory.GetFiles(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+            string dir = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests";
 
             //Work - Server 22
-            //string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171026");
+            //string dir = @"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171026";
 
             //Work - Special files for tests
-            string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+            //string dir = @"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests";
 
             //Work - One file only
-            //string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\One File");
+            //string dir = @"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\One File";
 
             File.WriteAllText(Settings.Default.ChangedPosFilePath, "");
-            if (args != null && args.Length != 0)
+            try
             {
-                int i = 0;
-                foreach (var s in args)
+                if (args != null && args.Length == 1)
                 {
-                    if (!string.IsNullOrEmpty(s))
-                    {
-                        Console.WriteLine(s);
-                        i++;
-                        if (i >= 100)
-                        {
-                            break;
-                            //DelNoteFiles = new List<DeliveryNoteFile>();
-                            //i = 0;
-                        }
-                        
-                        if (i % 50 == 0)
-                        {
-                            Console.WriteLine(i);
-                            Thread.Sleep(1);
-                        }
-                        try
-                        {
-                            Thread t = new Thread(() => ProcessFile(s));
-                            t.Start();
-                            t.Join();//*/
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e.ToString());
-                        }
-                    }
+                    OpenDirectory(args[0]);
+                }
+                else
+                {
+                    OpenDirectory(dir);
                 }
             }
-            else
+            catch(ArgumentException ae)
             {
-                int i = 0;
-                int output = i;
-                foreach (var s in files)
-                {
-                    if (!string.IsNullOrEmpty(s))
-                    {
-                        //ProcessFile(s);
-                        i++;
-                        output++;
-                        if (i >= 200)
-                        {
-                            break;
-                            //DelNoteFiles = new List<DeliveryNoteFile>();
-                            //i = 0;
-                        }
-                        
-                        if (i % 50 == 0)
-                        {
-                            Console.WriteLine(output);
-                            Thread.Sleep(1);
-                        }
-                        //    break;
-                        Thread t = new Thread(() => ProcessFile(s));
-                        t.Start();
-                        t.Join();//*/
-                    }
-                }
+                Console.WriteLine(ae.Message);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
             sw.Stop();
             Console.WriteLine(sw.Elapsed.ToString());
+            foreach(DeliveryNoteFile file in DelNoteFiles)
+            {
+                Console.WriteLine(file);
+            }
 #if DEBUG
             //Files selected for debigging purposes...
             DeliveryNoteFile[] test2 = DelNoteFiles.Where(d => d.Header.OrderType == "FC").ToArray();
@@ -126,55 +86,104 @@ namespace DeliveryNoteFiles
             //{
             //    File.AppendAllText(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", pos.ToString(), Encoding.Default);
             //}
-            //Thread.Sleep(1000);
             Console.WriteLine("End");
             Console.ReadLine();
         }
 
+        private static void OpenDirectory(string dirPath)
+        {
+            if(!Directory.Exists(dirPath))
+            {
+                throw new ArgumentException($"Directory {dirPath}, does not exist!");
+            }
+            if(Path.HasExtension(dirPath))
+            {
+                if (Path.GetExtension(dirPath) != ".txt")
+                    throw new ArgumentException("Invalid file type! Only Text files (txt) are allowed!");
+            }
+
+            int i = 0;
+            string[] files = Directory.GetFiles(dirPath);
+            foreach (var s in files)
+            {
+                if (!string.IsNullOrEmpty(s) && Path.GetExtension(s) == ".txt")
+                {
+                    //Console.WriteLine(s);
+                    i++;
+                    if (i >= 100)
+                    {
+                        //break;
+                        DelNoteFiles = new List<DeliveryNoteFile>();
+                        i = 0;
+                    }
+
+                    if (i % 50 == 0)
+                    {
+                        Console.WriteLine(i);
+                        Thread.Sleep(1);
+                    }
+                    try
+                    {
+                        Thread t = new Thread(() => ProcessFile(s));
+                        t.Start();
+                        t.Join();//*/
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+            }
+        }
+
         public static void ProcessFile(string file)
         {
-            if (!(file.Trim().EndsWith(".txt")))
-                return;
-
             DeliveryNoteFile delNote = new DeliveryNoteFile(file);
-            /*
-            //Add DeliveryNote
-            using (DbContextTransaction transaction = db.Database.BeginTransaction())
+            try
             {
-                try
+                /*
+                //Add DeliveryNote
+                using (DbContextTransaction transaction = db.Database.BeginTransaction())
                 {
-                    DelNote dNote = new DelNote();
-                    dNote = AddDelNote(delNote);
-                    dNote = db.DelNotes.Add(dNote);
-                    db.SaveChanges();
-
-                    List<DelNoteItem> delNoteItems = AddDelNoteItems(dNote.ID, delNote);
-                    db.DelNoteItems.AddRange(delNoteItems);
-                    db.SaveChanges();
-                    transaction.Commit();
-                }
-                catch (DbEntityValidationException e)
-                {
-                    foreach (var err in e.EntityValidationErrors)
+                    try
                     {
-                        foreach (var err1 in err.ValidationErrors)
-                        {
-                            Console.WriteLine(err1.ErrorMessage);
-                        }
-                        
+                        DelNote dNote = new DelNote();
+                        dNote = AddDelNote(delNote);
+                        dNote = db.DelNotes.Add(dNote);
+                        db.SaveChanges();
+
+                        List<DelNoteItem> delNoteItems = AddDelNoteItems(dNote.ID, delNote);
+                        db.DelNoteItems.AddRange(delNoteItems);
+                        db.SaveChanges();
+                        transaction.Commit();
                     }
-                    
-                    transaction.Rollback();
-                }
-                catch(DbUpdateException ue)
-                {
-                    transaction.Rollback();
-                }
-                catch (Exception e)
-                {
-                    transaction.Rollback();
-                }
-            }//*/
+                    catch (DbEntityValidationException e)
+                    {
+                        foreach (var err in e.EntityValidationErrors)
+                        {
+                            foreach (var err1 in err.ValidationErrors)
+                            {
+                                Console.WriteLine(err1.ErrorMessage);
+                            }
+
+                        }
+
+                        transaction.Rollback();
+                    }
+                    catch (DbUpdateException ue)
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                    }
+                }//*/
+            }
+            catch(EntityException eex)
+            {
+                Console.WriteLine(eex.Message);
+            }
             DelNoteFiles.Add(delNote);
         }
         
