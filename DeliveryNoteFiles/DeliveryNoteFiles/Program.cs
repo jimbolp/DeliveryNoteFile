@@ -8,6 +8,7 @@ using Settings = DelNoteItems.Properties.Settings;
 using System.Threading;
 using System.Data.SqlClient;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace DeliveryNoteFiles
 {
@@ -16,11 +17,7 @@ namespace DeliveryNoteFiles
         private static List<DeliveryNoteFile> DelNoteFiles = new List<DeliveryNoteFile>();
         private static DeliveryNoteEntities db = new DeliveryNoteEntities();
         static void Main(string[] args)
-        {
-            
-            DelNote gg = (db.DelNotes.AsNoTracking()).FirstOrDefault();
-
-            
+        {            
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
@@ -31,10 +28,10 @@ namespace DeliveryNoteFiles
             //string[] files = Directory.GetFiles(@"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171026");
 
             //Work - Special files for tests
-            //string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
+            string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests");
 
             //Work - One file only
-            string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\One File");
+            //string[] files = Directory.GetFiles(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\One File");
 
             File.WriteAllText(Settings.Default.ChangedPosFilePath, "");
             if (args != null && args.Length != 0)
@@ -82,11 +79,11 @@ namespace DeliveryNoteFiles
                         //ProcessFile(s);
                         i++;
                         output++;
-                        if (i >= 500)
+                        if (i >= 200)
                         {
-                            //break;
-                            DelNoteFiles = new List<DeliveryNoteFile>();
-                            i = 0;
+                            break;
+                            //DelNoteFiles = new List<DeliveryNoteFile>();
+                            //i = 0;
                         }
                         
                         if (i % 50 == 0)
@@ -113,6 +110,7 @@ namespace DeliveryNoteFiles
             
             DeliveryNoteFile[] test6 = DelNoteFiles.Where(d => d.Positions != null).Where(d => d.Positions.Any(p => p.MaxPharmacySalesPrice != null)).ToArray();
             DeliveryNoteFile[] test7 = DelNoteFiles.Where(d => d.Mail != null).Where(d => (d.Mail.ValueOfFieldInSK17 != null && d.Mail.ValueOfFieldInSK17 != "0" && d.Mail.ValueOfFieldInSK17 != "5")).ToArray();
+            DeliveryNoteFile[] test8 = DelNoteFiles.Where(d => d.Tour.TourDate == d.Footer.DueDate).ToArray();
 #endif
 
             //Home
@@ -139,65 +137,93 @@ namespace DeliveryNoteFiles
                 return;
 
             DeliveryNoteFile delNote = new DeliveryNoteFile(file);
+            /*
+            //Add DeliveryNote
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
                 try
                 {
-                    DelNote delNoteForTest = AddDelNote(delNote);
+                    DelNote dNote = new DelNote();
+                    dNote = AddDelNote(delNote);
+                    dNote = db.DelNotes.Add(dNote);
+                    db.SaveChanges();
 
-                    db.DelNotes.Add(delNoteForTest);
-                    List<DelNoteItem> delNoteItems = AddDelNoteItems(db.DelNotes.OrderByDescending(i => i.ID).FirstOrDefault().ID, delNote);
-                    foreach (DelNoteItem item in delNoteItems)
-                    {
-                        db.DelNoteItems.Add(item);
-                    }
+                    List<DelNoteItem> delNoteItems = AddDelNoteItems(dNote.ID, delNote);
+                    db.DelNoteItems.AddRange(delNoteItems);
                     db.SaveChanges();
                     transaction.Commit();
                 }
                 catch (DbEntityValidationException e)
                 {
+                    foreach (var err in e.EntityValidationErrors)
+                    {
+                        foreach (var err1 in err.ValidationErrors)
+                        {
+                            Console.WriteLine(err1.ErrorMessage);
+                        }
+                        
+                    }
+                    
                     transaction.Rollback();
-
+                }
+                catch(DbUpdateException ue)
+                {
+                    transaction.Rollback();
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
                 }
-            }
+            }//*/
             DelNoteFiles.Add(delNote);
         }
-
         
         private static List<DelNoteItem> AddDelNoteItems(int ID, DeliveryNoteFile delNote)
         {
             try
-            {
+            {                
                 List<DelNoteItem> items = new List<DelNoteItem>();
                 if (delNote.Positions != null && delNote.Positions.Count > 0)
                 {
-                    foreach (var position in delNote.Positions)
-                    {
-                        items.Add(new DelNoteItem
+                    try
+                    {                        
+                        foreach (var position in delNote.Positions)
                         {
-                            DelNoteID = ID,
-                            ArticlePZN = position.ArticleNo,
-                            ArticleLongName = position.ArticleLongName,
-                            DelQty = position.DeliveryQty,
-                            BonusQty = position.BonusQty,
-                            PharmacyPurchasePrice = position.PharmacyPurchasePrice,
-                            DiscountPercentage = position.DiscountPercentage,
-                            InvoicedPrice = position.InvoicedPrice,
-                            InvoicedPriceExclVAT = position.InvoicedPriceExclVAT,
-                            InvoicedPriceInclVAT = position.InvoicedPriceInclVAT,
-                            ParcelNo = position.Batch,
-                            Certification = position.ArticleCertification,
-                            ExpiryDate = string.Format("yyyyMMdd", position.ExpiryDate),
-                            PharmacySellPrice = position.PharmacySellPrice,
-                            BasePrice = position.WholesalePurchasePrice,
-                            InvoicePriceNoDisc = position.InvoicedPriceInclVATNoDiscount,
-                            RetailerMaxPrice = position.MaxPharmacySalesPrice
-                            //GroupID = 
-                        });
+                            string expiryDate = "";
+                            if (position.ExpiryDate != null)
+                            {
+                                expiryDate = position.ExpiryDate.Value.ToString("yyyyMMdd");
+                            }
+                            items.Add(new DelNoteItem
+                            {
+                                DelNoteID = ID,
+                                ArticlePZN = position.ArticleNo,
+                                ArticleLongName = position.ArticleLongName,
+                                DelQty = position.DeliveryQty,
+                                BonusQty = position.BonusQty,
+                                PharmacyPurchasePrice = position.PharmacyPurchasePrice,
+                                DiscountPercentage = position.DiscountPercentage,
+                                InvoicedPrice = position.InvoicedPrice,
+                                InvoicedPriceExclVAT = position.InvoicedPriceExclVAT,
+                                InvoicedPriceInclVAT = position.InvoicedPriceInclVAT,
+                                ParcelNo = position.Batch,
+                                Certification = position.ArticleCertification,
+                                ExpiryDate = expiryDate,
+                                PharmacySellPrice = position.PharmacySellPrice,
+                                BasePrice = position.WholesalePurchasePrice,
+                                InvoicePriceNoDisc = position.InvoicedPriceInclVATNoDiscount,
+                                RetailerMaxPrice = position.MaxPharmacySalesPrice,
+                                GroupID = GetOverrateGroupID(position.ArticleNo.Value)
+                            });
+                        }
+                    }
+                    catch (DbEntityValidationException)
+                    {
+                        throw;
+                    }
+                    catch (Exception)
+                    {
+                        throw;
                     }
                 }
                 return items;
@@ -229,7 +255,7 @@ namespace DeliveryNoteFiles
                 ShipmentDate = delNote.Tour.TourDate,
                 RouteID = delNote.Tour.TourID,
                 VatPercent = delNote.VATTable.TotalPercent,
-                //PaymentTimeID = "",
+                PaymentTimeID = delNote.PaymentTimeID,
                 PaymentConsignDate = delNote.Footer.DueDate,
                 isNZOK = delNote.Header.isNZOKOrder,
                 isRebateDiscount = delNote.Header.RebateInKindOrder,
@@ -276,6 +302,23 @@ namespace DeliveryNoteFiles
                     return "Ръчна Промоция";
                 default:
                     return CreditNoteType;                    
+            }
+        }
+
+        private static byte? GetOverrateGroupID(int articlePZN)
+        {
+            string sql = $"select OverrateGroupID from LibraCentral.dbo.Article with (nolock) where id = {articlePZN/10}";
+            try
+            {
+                int temp = db.Database.SqlQuery<int>(sql).FirstOrDefault();
+                if (temp <= 255)
+                    return (byte)temp;
+                else
+                    return null;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }

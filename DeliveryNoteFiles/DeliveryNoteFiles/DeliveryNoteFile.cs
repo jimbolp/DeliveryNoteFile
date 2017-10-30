@@ -22,6 +22,18 @@ namespace DeliveryNoteFiles
         public List<Position> Positions { get; set; }
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
+        public byte PaymentTimeID
+        {
+            get
+            {
+                if(Tour.TourDate.HasValue && Footer.DueDate.HasValue)
+                {
+                    byte id = (byte)(Tour.TourDate.Value.Date < Footer.DueDate.Value.Date ? 2 : 1);
+                    return id;
+                }
+                return 1;
+            }
+        }
 
         public string FileName { get; set; }
 
@@ -428,8 +440,7 @@ namespace DeliveryNoteFiles
                 //Console.WriteLine("Все още няма въведена позиция!");
                 //Console.ReadLine();
             }
-
-            bool testWriteL = false;
+            
             if (havePos[1])
             {
                 if (current.InvoicedQty == 0 || current.InvoicedQty == null)
@@ -446,32 +457,8 @@ namespace DeliveryNoteFiles
             }
             else
             {
-#if DEBUG
-                if (current.InvoicedQty != current.DeliveryQty)
-                {
-                    if (last.ArticleNo == current.ArticleNo)
-                    {
-                        testWriteL = true;
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, "Before correction:" + Environment.NewLine
-                        + new string('-', 50)
-                        + last.ToString() + Environment.NewLine
-                        + current.ToString() + Environment.NewLine
-                        + new string('-', 50) + Environment.NewLine);
-                    }
-                }
-#endif
                 if (current.ArticleNo == last.ArticleNo)
                 {
-#if DEBUG
-                    if (last.OrderQty != last.DeliveryQty)
-                    {
-                        File.AppendAllText(Settings.Default.ChangedPosFilePath, "Different DeliveryQty:" + Environment.NewLine
-                            + new string('-', 50)
-                            + last.ToString() + Environment.NewLine
-                            + current.ToString() + Environment.NewLine
-                            + new string('-', 50) + Environment.NewLine);
-                    }
-#endif
                     if (last.DeliveryQty == (last.InvoicedQty + current.InvoicedQty))
                     {
                         current.DeliveryQty -= last.InvoicedQty;
@@ -487,16 +474,6 @@ namespace DeliveryNoteFiles
             }
             Positions.Add(current);
             havePos.SetAll(false);
-#if DEBUG
-            if (testWriteL)
-            {
-                File.AppendAllText(Settings.Default.ChangedPosFilePath, "Corrected:" + Environment.NewLine
-                    + new string('-', 50)
-                    + last.ToString() + Environment.NewLine
-                    + current.ToString() + Environment.NewLine
-                    + new string('-', 50) + Environment.NewLine);
-            }
-#endif
         }
 
         private void FixRebatePosition()
@@ -518,7 +495,6 @@ namespace DeliveryNoteFiles
         {
             Header = new Header(headLines.ToArray(), DocType.isCreditNote);
         }
-
 
 #if DEBUG
         public override string ToString()
