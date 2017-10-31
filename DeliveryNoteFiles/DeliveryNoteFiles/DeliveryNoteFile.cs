@@ -44,8 +44,9 @@ namespace DeliveryNoteFiles
         private bool _isSupplierProcessing = false;
         private bool _isHeaderProcessing = false;
         private bool _isCustomerProcessing = false;
-        
-        private bool IsSupplierProcessing {
+
+        private bool IsSupplierProcessing
+        {
             get
             {
                 return _isSupplierProcessing;
@@ -102,7 +103,7 @@ namespace DeliveryNoteFiles
             }
         }
 
-        private BitArray havePos = new BitArray(new bool[6]);       //Using Array for two reasons.. 1. Less variables(less memory :D) 2. The array indexes coincides with the "position's line numbers"
+        private BitArray havePos = new BitArray(new bool[6]);       //Using Array for two reasons.. 1. Less variables 2. The array indexes coincides with the "position's line numbers"
                                                                     //Example: POS == 0; POS1 == 1; etc.
         private List<string> Lines = new List<string>();
 
@@ -150,41 +151,9 @@ namespace DeliveryNoteFiles
             catch(Exception)
             {
                 throw;
-            }
-            string movedFilePath = null;
-            try
-            {
-                movedFilePath = MoveFile(filePath, processedFilesPath);
-                SendEmail(movedFilePath);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Problem moving file: {filePath}!");
-                Console.WriteLine(e.ToString());
-                Console.ReadLine();
-            }
-            
+            }    
         }
-
-        private void SendEmail(string movedFilePath)
-        {
-            
-        }
-        private string MoveFile(string currentFilePath, string processedFilesPath)
-        {
-            processedFilesPath += "\\" + Path.GetFileName(currentFilePath);
-            try
-            {
-                //File.Copy(currentFilePath, processedFilesPath);
-                //File.Move(currentFilePath, processedFilesPath);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return processedFilesPath;
-        }
-
+        
         /// <summary>
         /// Initializes each Property with the information from the file.
         /// </summary>

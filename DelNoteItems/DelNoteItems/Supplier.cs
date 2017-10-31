@@ -44,8 +44,9 @@ namespace DelNoteItems
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                WriteExceptionToLog(e);
                 throw;
             }            
         }

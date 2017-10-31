@@ -97,36 +97,5 @@ namespace DelNoteItems
             Table.Add(new MWST(line, isCreditNote));
         }
 
-#if DEBUG
-        public override string ToString()
-        {
-            string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                if (!typeof(IEnumerable).IsAssignableFrom(pi.PropertyType))
-                {
-                    toString += pi.Name + " -> ";
-                    try
-                    {
-                        toString += pi.GetValue(this).ToString();
-                    }
-                    catch (Exception) { }
-                    toString += Environment.NewLine;
-                }
-                else
-                {
-                    foreach (var m in pi.GetValue(this) as IEnumerable)
-                    {
-                        try
-                        {
-                            toString += m.ToString();
-                        }
-                        catch (Exception) { }
-                    }
-                }
-            }
-            return toString;
-        } 
-#endif
     }
 }

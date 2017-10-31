@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Reflection;
+using DelNoteItems.Properties;
 
 namespace DelNoteItems
 {
@@ -24,6 +26,12 @@ namespace DelNoteItems
             }
             return toString;
         }//*/
+        public void WriteExceptionToLog(Exception e)
+        {
+            File.AppendAllText(Settings.Default.LogFilePath,
+                DateTime.Now + Environment.NewLine + e.ToString() + Environment.NewLine);
+        }
+
         public override string ToString()
         {
             string toString = GetType().Name + ":" + Environment.NewLine;

@@ -101,7 +101,11 @@ namespace DelNoteItems
                     TourDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.TourDateStart).Trim());
                 }
             }
-            catch (Exception) { throw; }
+            catch (Exception e)
+            {
+                WriteExceptionToLog(e);
+                throw;
+            }
         }
         private void InitializeCreditNote(string line)
         {

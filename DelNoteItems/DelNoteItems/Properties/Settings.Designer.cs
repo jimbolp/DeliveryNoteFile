@@ -12,7 +12,7 @@ namespace DelNoteItems.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.3.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -728,8 +728,8 @@ namespace DelNoteItems.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\C# Projects\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFi" +
-            "les\\bin\\Debug\\Changed Pos\\changed.txt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Documents\\GitHub\\DeliveryNoteFile\\DeliveryNoteFiles\\DeliveryNoteFiles\\bin\\Debu" +
+            "g\\Changed Pos\\changed.txt")]
         public string ChangedPosFilePath {
             get {
                 return ((string)(this["ChangedPosFilePath"]));

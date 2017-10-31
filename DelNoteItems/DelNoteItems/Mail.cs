@@ -21,9 +21,9 @@ namespace DelNoteItems
                     InitializeInvoice(line);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                WriteExceptionToLog(e);
             }
         }
 

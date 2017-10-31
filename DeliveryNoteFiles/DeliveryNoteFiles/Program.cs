@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DelNoteItems;
 using Settings = DelNoteItems.Properties.Settings;
 using System.Threading;
 using System.Data.SqlClient;
@@ -13,7 +14,7 @@ using System.Data.Entity.Core;
 
 namespace DeliveryNoteFiles
 {
-    class Program
+    partial class Program
     {
         private static List<DeliveryNoteFile> DelNoteFiles = new List<DeliveryNoteFile>();
         private static DeliveryNoteEntities db = new DeliveryNoteEntities();
@@ -23,7 +24,7 @@ namespace DeliveryNoteFiles
             sw.Start();
 
             //Home
-            string dir = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests";
+            //string dir = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests";
 
             //Work - Server 22
             //string dir = @"\\bgsf2s022\c$\Phoenix\XML\delnote.old\171026";
@@ -32,9 +33,9 @@ namespace DeliveryNoteFiles
             //string dir = @"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests";
 
             //Work - One file only
-            //string dir = @"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\One File";
+            string dir = @"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\One File";
 
-            File.WriteAllText(Settings.Default.ChangedPosFilePath, "");
+            //File.WriteAllText(Settings.Default.ChangedPosFilePath, "");
             try
             {
                 if (args != null && args.Length == 1)
@@ -56,21 +57,19 @@ namespace DeliveryNoteFiles
             }
             sw.Stop();
             Console.WriteLine(sw.Elapsed.ToString());
-            foreach(DeliveryNoteFile file in DelNoteFiles)
+            /*foreach(DeliveryNoteFile file in DelNoteFiles)
             {
                 Console.WriteLine(file);
-            }
+            }//*/
 #if DEBUG
             //Files selected for debigging purposes...
-            DeliveryNoteFile[] test2 = DelNoteFiles.Where(d => d.Header.OrderType == "FC").ToArray();
-            DeliveryNoteFile[] test3 = DelNoteFiles.Where(d => d.Header.isNZOKOrder ?? false).ToArray();
-
-            var withPositiions = DelNoteFiles.Where(d => d.Positions != null);
-            DeliveryNoteFile[] test4 = withPositiions.Where(p => p.Positions.Any(pos => pos.isNZOKArticle ?? false)).ToArray();
-            
-            DeliveryNoteFile[] test6 = DelNoteFiles.Where(d => d.Positions != null).Where(d => d.Positions.Any(p => p.MaxPharmacySalesPrice != null)).ToArray();
-            DeliveryNoteFile[] test7 = DelNoteFiles.Where(d => d.Mail != null).Where(d => (d.Mail.ValueOfFieldInSK17 != null && d.Mail.ValueOfFieldInSK17 != "0" && d.Mail.ValueOfFieldInSK17 != "5")).ToArray();
-            DeliveryNoteFile[] test8 = DelNoteFiles.Where(d => d.Tour.TourDate == d.Footer.DueDate).ToArray();
+            //DeliveryNoteFile[] test2 = DelNoteFiles.Where(d => d.Header.OrderType == "FC").ToArray();
+            //DeliveryNoteFile[] test3 = DelNoteFiles.Where(d => d.Header.isNZOKOrder ?? false).ToArray();            
+            //DeliveryNoteFile[] test4 = DelNoteFiles.Where(d => d.Positions != null && d.Positions.Any(pos => pos.isNZOKArticle ?? false)).ToArray();            
+            //DeliveryNoteFile[] test6 = DelNoteFiles.Where(d => d.Positions != null).Where(d => d.Positions.Any(p => p.MaxPharmacySalesPrice != null)).ToArray();
+            //DeliveryNoteFile[] test7 = DelNoteFiles.Where(d => d.Mail != null).Where(d => (d.Mail.ValueOfFieldInSK17 != null && d.Mail.ValueOfFieldInSK17 != "0" && d.Mail.ValueOfFieldInSK17 != "5")).ToArray();
+            //DeliveryNoteFile[] test8 = DelNoteFiles.Where(d => d.Tour.TourDate == d.Footer.DueDate).ToArray();
+            //DeliveryNoteFile[] test9 = DelNoteFiles.Where(d => !string.IsNullOrEmpty(d.Header.NarcoticsFormID)).ToArray();
 #endif
 
             //Home
@@ -104,34 +103,34 @@ namespace DeliveryNoteFiles
 
             int i = 0;
             string[] files = Directory.GetFiles(dirPath);
-            foreach (var s in files)
+            foreach (string file in files)
             {
-                if (!string.IsNullOrEmpty(s) && Path.GetExtension(s) == ".txt")
+                if (Path.GetExtension(file) != ".txt")
                 {
-                    //Console.WriteLine(s);
-                    i++;
-                    if (i >= 100)
-                    {
-                        //break;
-                        DelNoteFiles = new List<DeliveryNoteFile>();
-                        i = 0;
-                    }
+                    continue;
+                }
+                i++;
+                if (i >= 600)
+                {
+                    break;
+                    //DelNoteFiles = new List<DeliveryNoteFile>();
+                    //i = 0;
+                }
 
-                    if (i % 50 == 0)
-                    {
-                        Console.WriteLine(i);
-                        Thread.Sleep(1);
-                    }
-                    try
-                    {
-                        Thread t = new Thread(() => ProcessFile(s));
-                        t.Start();
-                        t.Join();//*/
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
+                if (i % 50 == 0)
+                {
+                    Console.WriteLine(i);
+                    Thread.Sleep(1);
+                }
+                try
+                {
+                    Thread t = new Thread(() => ProcessFile(file));
+                    t.Start();
+                    t.Join();//*/
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
                 }
             }
         }
@@ -139,54 +138,107 @@ namespace DeliveryNoteFiles
         public static void ProcessFile(string file)
         {
             DeliveryNoteFile delNote = new DeliveryNoteFile(file);
-            try
+            int? existingEntryID;
+            if (EntryExists(delNote, out existingEntryID))
             {
-                /*
-                //Add DeliveryNote
-                using (DbContextTransaction transaction = db.Database.BeginTransaction())
+                Console.WriteLine("Updating entry...");
+                UpdateExistingDelNote(existingEntryID.Value, delNote);
+            }
+            else
+            {
+                bool InsertCompleted = false;
+                try
                 {
-                    try
+                    Console.WriteLine("Inserting new entry...");
+                    //Insert DeliveryNote in Database
+                    InsertCompleted = InsertNewDeliveryNote(delNote);
+                }
+                catch (EntityException eex)
+                {
+                    Console.WriteLine(eex.Message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+                if (InsertCompleted)
+                {
+                    if (MoveFile(file))
                     {
-                        DelNote dNote = new DelNote();
-                        dNote = AddDelNote(delNote);
-                        dNote = db.DelNotes.Add(dNote);
-                        db.SaveChanges();
-
-                        List<DelNoteItem> delNoteItems = AddDelNoteItems(dNote.ID, delNote);
-                        db.DelNoteItems.AddRange(delNoteItems);
-                        db.SaveChanges();
-                        transaction.Commit();
-                    }
-                    catch (DbEntityValidationException e)
-                    {
-                        foreach (var err in e.EntityValidationErrors)
+                        Console.WriteLine($"File {Path.GetFileName(file)} is moved to {Settings.Default.SaveFilesPath}, successfully!");
+                        string fileToSend = Settings.Default.SaveFilesPath + "\\" + file;
+                        if (SendFile(fileToSend))
                         {
-                            foreach (var err1 in err.ValidationErrors)
-                            {
-                                Console.WriteLine(err1.ErrorMessage);
-                            }
-
+                            Console.WriteLine($"File {Path.GetFileName(fileToSend)} sent successfully!");
                         }
 
-                        transaction.Rollback();
                     }
-                    catch (DbUpdateException ue)
-                    {
-                        transaction.Rollback();
-                    }
-                    catch (Exception e)
-                    {
-                        transaction.Rollback();
-                    }
-                }//*/
-            }
-            catch(EntityException eex)
-            {
-                Console.WriteLine(eex.Message);
+                }
             }
             DelNoteFiles.Add(delNote);
         }
-        
+
+        private static bool EntryExists(DeliveryNoteFile delNote, out int? ID)
+        {
+            DelNote[] delNotes = db.DelNotes.Where(d => d.DocNo == delNote.Header.DeliveryNoteNumber.ToString()).ToArray();
+            if (delNotes == null || delNotes.Length == 0)
+            {
+                ID = 0;
+                return false;
+            }
+            else
+            {
+                ID = delNotes.Where(d => d.DocDate == delNote.Header.DeliveryNoteDate).Select(d => d.ID).FirstOrDefault();
+                if (ID == null || ID == 0)
+                    return false;
+                return true;
+            }
+        }
+
+        private static bool SendFile(string fileToSend) { return false; }
+        private static bool MoveFile(string file) { return false; }
+
+        private static DelNoteItem CreateDelNoteItem(int DelNoteID, Position pos)
+        {
+            string expiryDate = "";
+            if (pos.ExpiryDate != null)
+            {
+                expiryDate = pos.ExpiryDate.Value.ToString("yyyyMMdd");
+            }
+            try
+            {
+                DelNoteItem item = new DelNoteItem
+                {
+                    DelNoteID = DelNoteID,
+                    ArticlePZN = pos.ArticleNo,
+                    ArticleLongName = pos.ArticleLongName,
+                    DelQty = pos.DeliveryQty,
+                    BonusQty = pos.BonusQty,
+                    PharmacyPurchasePrice = pos.PharmacyPurchasePrice,
+                    DiscountPercentage = pos.DiscountPercentage,
+                    InvoicedPrice = pos.InvoicedPrice,
+                    InvoicedPriceExclVAT = pos.InvoicedPriceExclVAT,
+                    InvoicedPriceInclVAT = pos.InvoicedPriceInclVAT,
+                    ParcelNo = pos.Batch,
+                    Certification = pos.ArticleCertification,
+                    ExpiryDate = expiryDate,
+                    PharmacySellPrice = pos.PharmacySellPrice,
+                    BasePrice = pos.WholesalePurchasePrice,
+                    InvoicePriceNoDisc = pos.InvoicedPriceInclVATNoDiscount,
+                    RetailerMaxPrice = pos.MaxPharmacySalesPrice,
+                    GroupID = GetOverrateGroupID(pos.ArticleNo.Value)
+                };
+                return item;
+            }
+            catch (DbEntityValidationException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         private static List<DelNoteItem> AddDelNoteItems(int ID, DeliveryNoteFile delNote)
         {
             try
@@ -197,33 +249,8 @@ namespace DeliveryNoteFiles
                     try
                     {                        
                         foreach (var position in delNote.Positions)
-                        {
-                            string expiryDate = "";
-                            if (position.ExpiryDate != null)
-                            {
-                                expiryDate = position.ExpiryDate.Value.ToString("yyyyMMdd");
-                            }
-                            items.Add(new DelNoteItem
-                            {
-                                DelNoteID = ID,
-                                ArticlePZN = position.ArticleNo,
-                                ArticleLongName = position.ArticleLongName,
-                                DelQty = position.DeliveryQty,
-                                BonusQty = position.BonusQty,
-                                PharmacyPurchasePrice = position.PharmacyPurchasePrice,
-                                DiscountPercentage = position.DiscountPercentage,
-                                InvoicedPrice = position.InvoicedPrice,
-                                InvoicedPriceExclVAT = position.InvoicedPriceExclVAT,
-                                InvoicedPriceInclVAT = position.InvoicedPriceInclVAT,
-                                ParcelNo = position.Batch,
-                                Certification = position.ArticleCertification,
-                                ExpiryDate = expiryDate,
-                                PharmacySellPrice = position.PharmacySellPrice,
-                                BasePrice = position.WholesalePurchasePrice,
-                                InvoicePriceNoDisc = position.InvoicedPriceInclVATNoDiscount,
-                                RetailerMaxPrice = position.MaxPharmacySalesPrice,
-                                GroupID = GetOverrateGroupID(position.ArticleNo.Value)
-                            });
+                        {                            
+                            items.Add(CreateDelNoteItem(ID, position));
                         }
                     }
                     catch (DbEntityValidationException)
@@ -320,7 +347,7 @@ namespace DeliveryNoteFiles
             try
             {
                 int temp = db.Database.SqlQuery<int>(sql).FirstOrDefault();
-                if (temp <= 255)
+                if (temp <= 255 && temp != 0)
                     return (byte)temp;
                 else
                     return null;

@@ -79,8 +79,10 @@
     <Compile Include="DelNoteItem.cs">
       <DependentUpon>DeliveryNote.tt</DependentUpon>
     </Compile>
+    <Compile Include="InsertNewDeliveryNote.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateExistingDelNote.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

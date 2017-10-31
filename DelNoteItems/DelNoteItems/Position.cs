@@ -61,9 +61,10 @@ namespace DelNoteItems
                     InitializeInvoice(lines);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                WriteExceptionToLog(e);
+                throw;
             }
         }
 
@@ -73,43 +74,23 @@ namespace DelNoteItems
             {
                 if (line.StartsWith("$$POS$$"))
                 {
-                    try
-                    {
-                        Line0(line);
-                    }
-                    catch (NotImplementedException) { }
+                    Line0(line);
                 }
                 else if (line.StartsWith("$$POS1$"))
                 {
-                    try
-                    {
-                        Line1(line);
-                    }
-                    catch (NotImplementedException) { }
+                    Line1(line);
                 }
                 else if (line.StartsWith("$$POS2$$"))
                 {
-                    try
-                    {
-                        Line2(line);
-                    }
-                    catch (NotImplementedException) { }
+                    Line2(line);
                 }
                 else if (line.StartsWith("$$POS3$"))
                 {
-                    try
-                    {
-                        Line3(line);
-                    }
-                    catch (NotImplementedException) { }
+                    Line3(line);
                 }
                 else if (line.StartsWith("$$POS4$$"))
                 {
-                    try
-                    {
-                        Line4(line);
-                    }
-                    catch (NotImplementedException) { }
+                    Line4(line);
                 }
                 else if (line.StartsWith("$$POS5$$"))
                 {
@@ -127,43 +108,23 @@ namespace DelNoteItems
             {
                 if (line.StartsWith("$$POS$$"))
                 {
-                    try
-                    {
-                        Line0(line);
-                    }
-                    catch (NotImplementedException) { }
+                    Line0(line);
                 }
                 else if (line.StartsWith("$$POS1$$"))
                 {
-                    try
-                    {
-                        Line1(RemoveSymbol(line));
-                    }
-                    catch (NotImplementedException) { }
+                    Line1(RemoveSymbol(line));
                 }
                 else if (line.StartsWith("$$POS2$$"))
                 {
-                    try
-                    {
-                        Line2(line);
-                    }
-                    catch (NotImplementedException) { }
+                    Line2(line);
                 }
                 else if (line.StartsWith("$$POS3$$"))
                 {
-                    try
-                    {
-                        Line3(RemoveSymbol(line));
-                    }
-                    catch (NotImplementedException) { }
+                    Line3(RemoveSymbol(line));
                 }
                 else if (line.StartsWith("$$POS4$$"))
                 {
-                    try
-                    {
-                        Line4(line);
-                    }
-                    catch (NotImplementedException) { }
+                    Line4(line);
                 }
                 else if (line.StartsWith("$$POS5$$"))
                 {
