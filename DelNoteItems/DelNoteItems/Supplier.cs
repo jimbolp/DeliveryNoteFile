@@ -53,6 +53,8 @@ namespace DelNoteItems
 
         private void InitializeInvoice(string line)
         {
+            if (string.IsNullOrEmpty(line))
+                return;
             if (line.StartsWith("$$SUPPLIER$$"))
             {
                 Line1(line);

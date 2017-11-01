@@ -48,6 +48,8 @@ namespace DelNoteItems
 
         private void InitializeInvoice(string line)
         {
+            if (string.IsNullOrEmpty(line))
+                return;
             if (line.StartsWith("$$HEADER$$"))
             {
                 Line1(line);

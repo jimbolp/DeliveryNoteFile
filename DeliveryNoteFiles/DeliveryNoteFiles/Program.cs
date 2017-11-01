@@ -16,6 +16,7 @@ namespace DeliveryNoteFiles
 {
     partial class Program
     {
+        private static int _threadCount = 0;
         private static List<DeliveryNoteFile> DelNoteFiles = new List<DeliveryNoteFile>();
         private static DeliveryNoteEntities db = new DeliveryNoteEntities();
         static void Main(string[] args)
@@ -124,6 +125,10 @@ namespace DeliveryNoteFiles
                 }
                 try
                 {
+                    while(_threadCount >= Settings.Default.PermittedNumberOfThreads)
+                    {
+                        Thread.Sleep(1);
+                    }
                     Thread t = new Thread(() => ProcessFile(file));
                     t.Start();
                     t.Join();//*/
@@ -137,53 +142,63 @@ namespace DeliveryNoteFiles
 
         public static void ProcessFile(string file)
         {
-            DeliveryNoteFile delNote = new DeliveryNoteFile(file);
-            int? existingEntryID;
-            if (EntryExists(delNote, out existingEntryID))
+            try
             {
-                Console.WriteLine("Updating entry...");
-                UpdateExistingDelNote(existingEntryID.Value, delNote);
-            }
-            else
-            {
-                bool InsertCompleted = false;
-                try
+                _threadCount++;
+                DeliveryNoteFile delNote = new DeliveryNoteFile(file);
+                
+                int? existingEntryID;
+                if (EntryExists(delNote, out existingEntryID))
                 {
-                    Console.WriteLine("Inserting new entry...");
-                    //Insert DeliveryNote in Database
-                    InsertCompleted = InsertNewDeliveryNote(delNote);
+                    Console.WriteLine("Updating entry...");
+                    UpdateExistingDelNote(existingEntryID.Value, delNote);
                 }
-                catch (EntityException eex)
+                else
                 {
-                    Console.WriteLine(eex.Message);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
-                if (InsertCompleted)
-                {
-                    if (MoveFile(file))
+                    bool InsertCompleted = false;
+                    try
                     {
-                        Console.WriteLine($"File {Path.GetFileName(file)} is moved to {Settings.Default.SaveFilesPath}, successfully!");
-                        string fileToSend = Settings.Default.SaveFilesPath + "\\" + file;
-                        if (SendFile(fileToSend))
-                        {
-                            Console.WriteLine($"File {Path.GetFileName(fileToSend)} sent successfully!");
-                        }
-
+                        Console.WriteLine("Inserting new entry...");
+                        //Insert DeliveryNote in Database
+                        InsertCompleted = InsertNewDeliveryNote(delNote);
                     }
-                }
+                    catch (EntityException eex)
+                    {
+                        Console.WriteLine(eex.Message);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                    if (InsertCompleted)
+                    {
+                        if (MoveFile(file))
+                        {
+                            Console.WriteLine($"File {Path.GetFileName(file)} is moved to {Settings.Default.SaveFilesPath}, successfully!");
+                            string fileToSend = Settings.Default.SaveFilesPath + "\\" + file;
+                            if (SendFile(fileToSend))
+                            {
+                                Console.WriteLine($"File {Path.GetFileName(fileToSend)} sent successfully!");
+                            }
+                        }
+                    }
+                }//*/
+                DelNoteFiles.Add(delNote);
+                _threadCount--;
             }
-            DelNoteFiles.Add(delNote);
+            catch (Exception)
+            {
+                _threadCount--;
+                throw;
+            }
         }
 
         private static bool EntryExists(DeliveryNoteFile delNote, out int? ID)
         {
-            DelNote[] delNotes = db.DelNotes.Where(d => d.DocNo == delNote.Header.DeliveryNoteNumber.ToString()).ToArray();
+            DelNote[] delNotes = db.DelNotes.Where(d => d.DocNo.Trim() == delNote.Header.DeliveryNoteNumber.ToString()).ToArray();
             if (delNotes == null || delNotes.Length == 0)
             {
-                ID = 0;
+                ID = null;
                 return false;
             }
             else
@@ -248,7 +263,7 @@ namespace DeliveryNoteFiles
                 {
                     try
                     {                        
-                        foreach (var position in delNote.Positions)
+                        foreach (Position position in delNote.Positions)
                         {                            
                             items.Add(CreateDelNoteItem(ID, position));
                         }

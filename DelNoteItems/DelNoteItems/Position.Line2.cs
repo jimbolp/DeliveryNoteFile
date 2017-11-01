@@ -29,9 +29,9 @@ namespace DelNoteItems
                     Batch = line.Substring(Settings.Default.BatchStart).Trim();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
         }
     }

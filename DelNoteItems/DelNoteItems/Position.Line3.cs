@@ -19,9 +19,9 @@ namespace DelNoteItems
                     ArticleLongName = line.Substring(Settings.Default.ArticleLongNameStart).Trim();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
         }
     }

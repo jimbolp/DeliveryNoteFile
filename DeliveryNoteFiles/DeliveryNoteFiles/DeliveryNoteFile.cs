@@ -19,7 +19,7 @@ namespace DeliveryNoteFiles
         public Mail Mail { get; set; }
         public Bank Bank { get; set; }
         public Tour Tour { get; set; }
-        public List<Position> Positions { get; set; }
+        public LinkedList<Position> Positions { get; set; }
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
         public byte PaymentTimeID
@@ -165,6 +165,8 @@ namespace DeliveryNoteFiles
             //
             foreach (var line in lines)
             {
+                if (string.IsNullOrEmpty(line))
+                    continue;
                 try
                 {
                     if (line.StartsWith("$$TYPE$$"))
@@ -386,7 +388,7 @@ namespace DeliveryNoteFiles
         {            
             if (Positions == null)
             {
-                Positions = new List<Position>();
+                Positions = new LinkedList<Position>();
             }
             
             Position current;
@@ -439,7 +441,7 @@ namespace DeliveryNoteFiles
                     }
                 }
             }
-            Positions.Add(current);
+            Positions.AddLast(current);
             havePos.SetAll(false);
         }
 

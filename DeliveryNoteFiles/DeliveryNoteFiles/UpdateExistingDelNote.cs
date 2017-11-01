@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using DelNoteItems;
 
@@ -10,31 +11,45 @@ namespace DeliveryNoteFiles
 {
     partial class Program
     {
-        private static void UpdateExistingDelNote(int ID, DeliveryNoteFile delNote)
+        private static Stopwatch update = new Stopwatch();
+        private static void UpdateExistingDelNote(int ID, DeliveryNoteFile delNoteFile)
         {
+            update.Reset();
             DelNote dNote = db.DelNotes.Find(ID);
-            if (delNote.Positions == null || dNote == null)
+            if (dNote == null)
                 return;
+            if (delNoteFile.Positions == null)
+            {
+                UpdateDelNote(dNote, delNoteFile);
+                db.SaveChanges();
+                return;
+            }
             
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
                 try
                 {
-                    UpdateDelNote(dNote, delNote);
-                    List<DelNoteItem> items = db.DelNoteItems.Where(di => di.DelNoteID == ID).ToList();
-                    if (items.Count > delNote.Positions.Count)
+                    update.Start();
+                    IQueryable<int> items = db.DelNoteItems.Where(di => di.DelNoteID == ID).Select(di => di.ID);
+                    if (items.Count() > delNoteFile.Positions.Count)
                         return;
-                    for (int i = 0; i < items.Count; i++)
-                    {
-                        UpdateDelNoteItem(items[i], delNote.Positions[0]);
-                        delNote.Positions.RemoveAt(0);
+                    foreach (int item in items)
+                    { 
+                        DelNoteItem dNoteItem = db.DelNoteItems.Find(item);
+                        
+                        UpdateDelNoteItem(dNoteItem, delNoteFile.Positions.First.Value);
+                        delNoteFile.Positions.RemoveFirst();
+                        
                     }
-                    if (delNote.Positions.Count != 0)
+                    //delNoteFile.Positions.RemoveAll(p => p == null);
+                    if (delNoteFile.Positions.Count != 0)
                     {
-                        db.DelNoteItems.AddRange(AddDelNoteItems(ID, delNote));
+                        db.DelNoteItems.AddRange(AddDelNoteItems(ID, delNoteFile));
                     }
                     db.SaveChanges();
                     transaction.Commit();
+                    update.Stop();
+                    Console.WriteLine(update.Elapsed);
                 }
                 catch (DbEntityValidationException e)
                 {
