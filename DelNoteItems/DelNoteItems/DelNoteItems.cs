@@ -8,24 +8,6 @@ namespace DelNoteItems
 {
     public abstract class DelNoteItems
     {
-        /*public override string ToString()
-        {
-            string toString = GetType().Name + ":" + Environment.NewLine;
-            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                if (!pi.GetType().IsAssignableFrom(typeof(IEnumerable)))
-                {
-                    toString += pi.Name + " -> ";
-                    try
-                    {
-                        toString += pi.GetValue(this).ToString();
-                    }
-                    catch (Exception) { }
-                    toString += Environment.NewLine;
-                }
-            }
-            return toString;
-        }//*/
         public void WriteExceptionToLog(Exception e)
         {
             File.AppendAllText(Settings.Default.LogFilePath,

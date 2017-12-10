@@ -19,8 +19,11 @@ namespace DeliveryNoteFiles
         private static int _threadCount = 0;
         private static List<DeliveryNoteFile> DelNoteFiles = new List<DeliveryNoteFile>();
         private static DeliveryNoteEntities db = new DeliveryNoteEntities();
+
+        #region Main
         static void Main(string[] args)
-        {            
+        {
+            #region SetDirectoryAndPassToMethod
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
@@ -88,41 +91,49 @@ namespace DeliveryNoteFiles
             //}
             Console.WriteLine("End");
             Console.ReadLine();
+            #endregion
         }
+        #endregion Main
 
+        #region OpenDirectoryAndGetFiles
         private static void OpenDirectory(string dirPath)
         {
+            #region PathValidation
             if(!Directory.Exists(dirPath))
             {
                 throw new ArgumentException($"Directory {dirPath}, does not exist!");
             }
-            if(Path.HasExtension(dirPath))
+            if(Path.HasExtension(dirPath) && Path.GetExtension(dirPath) != ".txt")
             {
-                if (Path.GetExtension(dirPath) != ".txt")
-                    throw new ArgumentException("Invalid file type! Only Text files (txt) are allowed!");
+                throw new ArgumentException("Invalid file type! Only Text files (txt) are allowed!");
             }
+            #endregion
 
-            int i = 0;
+            int limitNumberOfFilesToRead = 0;
             string[] files = Directory.GetFiles(dirPath);
             foreach (string file in files)
             {
+                #region Check
+                //Process only text files
                 if (Path.GetExtension(file) != ".txt")
                 {
                     continue;
                 }
-                i++;
-                if (i >= 600)
+
+                //Break if limit reached
+                if (limitNumberOfFilesToRead++ >= 600)
                 {
                     break;
-                    //DelNoteFiles = new List<DeliveryNoteFile>();
-                    //i = 0;
                 }
 
-                if (i % 50 == 0)
+                //Notify on every 50th file
+                if (limitNumberOfFilesToRead % 50 == 0)
                 {
-                    Console.WriteLine(i);
+                    Console.WriteLine(limitNumberOfFilesToRead);
                     Thread.Sleep(1);
                 }
+                #endregion
+                #region ProcessInAnotherThread
                 try
                 {
                     while(_threadCount >= Settings.Default.PermittedNumberOfThreads)
@@ -137,22 +148,34 @@ namespace DeliveryNoteFiles
                 {
                     Console.WriteLine(e.ToString());
                 }
+                #endregion
             }
         }
+        #endregion OpenDirectoryAndGetFiles
 
+        #region FileProcessing
+        /// <summary>
+        /// Takes the file, creates DeliveryNoteFile object and inserts it in the database
+        /// </summary>
+        /// <param name="file"></param>
         public static void ProcessFile(string file)
         {
             try
             {
                 _threadCount++;
+
+                //The whole information from the file is contained in this object
                 DeliveryNoteFile delNote = new DeliveryNoteFile(file);
-                
+
+                //If document already exists, update it.
                 int? existingEntryID;
                 if (EntryExists(delNote, out existingEntryID))
                 {
                     Console.WriteLine("Updating entry...");
                     UpdateExistingDelNote(existingEntryID.Value, delNote);
                 }
+
+                //Otherwise create new DeliveryNote and insert the items
                 else
                 {
                     bool InsertCompleted = false;
@@ -170,6 +193,9 @@ namespace DeliveryNoteFiles
                     {
                         Console.WriteLine(e.ToString());
                     }
+
+                    //This process would probably be handled by another service...
+                    #region MoveAndSendFile
                     if (InsertCompleted)
                     {
                         if (MoveFile(file))
@@ -182,6 +208,8 @@ namespace DeliveryNoteFiles
                             }
                         }
                     }
+                    #endregion MoveAndSendFile
+
                 }//*/
                 DelNoteFiles.Add(delNote);
                 _threadCount--;
@@ -192,23 +220,37 @@ namespace DeliveryNoteFiles
                 throw;
             }
         }
+        #endregion FileProcessing
 
+        /// <summary>
+        /// Check if document with the same number and the same date exists in the database.
+        /// If yes, returns the ID
+        /// </summary>
+        /// <param name="delNote"></param>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         private static bool EntryExists(DeliveryNoteFile delNote, out int? ID)
         {
+            //Find all documents with the same number
             DelNote[] delNotes = db.DelNotes.Where(d => d.DocNo.Trim() == delNote.Header.DeliveryNoteNumber.ToString()).ToArray();
+
+            //If there are no documents with this number return false and set ID to null
             if (delNotes == null || delNotes.Length == 0)
             {
                 ID = null;
                 return false;
             }
+            //If there are documents with the same number we check the date
             else
             {
+                //
                 ID = delNotes.Where(d => d.DocDate == delNote.Header.DeliveryNoteDate).Select(d => d.ID).FirstOrDefault();
                 if (ID == null || ID == 0)
                     return false;
                 return true;
             }
         }
+
 
         private static bool SendFile(string fileToSend) { return false; }
         private static bool MoveFile(string file) { return false; }
@@ -245,12 +287,14 @@ namespace DeliveryNoteFiles
                 };
                 return item;
             }
-            catch (DbEntityValidationException)
+            catch (DbEntityValidationException dbEx)
             {
+                WriteExceptionToLog(dbEx);
                 throw;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                WriteExceptionToLog(ex);
                 throw;
             }
         }
@@ -287,11 +331,16 @@ namespace DeliveryNoteFiles
 
         private static DelNote AddDelNote(DeliveryNoteFile delNote)
         {
+            //For FR orders, there are no positions, but the order description is returned as a position line
             string creditNoteDescr = "";
-            if (delNote.DocType.isCreditNote && (delNote.Positions != null && delNote.Positions.Count > 0))
+            string creditType = "";
+            if (delNote.DocType.isCreditNote && 
+                ((creditType = delNote.Header.CreditNoteType) == "FR") || creditType == "")
             {
-                creditNoteDescr = delNote.Positions.FirstOrDefault().ArticleName;
+                if (delNote.Positions != null && delNote.Positions.Count > 0)
+                    creditNoteDescr = delNote.Positions.FirstOrDefault().ArticleName;
             }
+
             DelNote dNote = new DelNote
             {
                 FileName = delNote.FileName,
@@ -301,7 +350,7 @@ namespace DeliveryNoteFiles
                 DocDate = delNote.Header.DeliveryNoteDate,
                 PaymentSum = delNote.Footer.InvoiceTotal,
                 TotalDiscounts = delNote.Footer.TotalDiscounts,
-                CreditNoteType = delNote.Header.CreditNoteType,
+                CreditNoteType = creditType,
                 CreditNoteDescr = creditNoteDescr,
                 ShipmentDate = delNote.Tour.TourDate,
                 RouteID = delNote.Tour.TourID,
@@ -315,6 +364,7 @@ namespace DeliveryNoteFiles
                                     
             return dNote;
         }
+
         private static string TranslateCreditType(string CreditNoteType)
         {
             switch (CreditNoteType)
@@ -358,7 +408,7 @@ namespace DeliveryNoteFiles
 
         private static byte? GetOverrateGroupID(int articlePZN)
         {
-            string sql = $"select OverrateGroupID from LibraCentral.dbo.Article with (nolock) where id = {articlePZN/10}";
+            string sql = $"select OverrateGroupID from LibraCentral.dbo.Article where id = {articlePZN/10}";
             try
             {
                 int temp = db.Database.SqlQuery<int>(sql).FirstOrDefault();
@@ -371,6 +421,12 @@ namespace DeliveryNoteFiles
             {
                 return null;
             }
+        }
+
+        private static void WriteExceptionToLog(Exception e)
+        {
+            File.AppendAllText(Settings.Default.LogFilePath,
+                DateTime.Now + Environment.NewLine + e.ToString() + Environment.NewLine);
         }
     }
 }

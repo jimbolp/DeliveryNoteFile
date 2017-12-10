@@ -6,14 +6,16 @@ using System.Collections;
 
 namespace DelNoteItems
 {
-    /// <summary>
-    /// MwSt is the abbreviation for "Mehrwertsteuer", which is also known as "Umsatzsteuer" (USt). This is the equivalent to VAT in the UK.
-    /// </summary>
     public class MWST : DelNoteItems
     {
         public decimal? OrderVATPercentage { get; set; }
         public decimal? TotalVAT { get; set; }
 
+        /// <summary>
+        /// MwSt is the abbreviation for "Mehrwertsteuer", which is also known as "Umsatzsteuer" (USt). This is the equivalent to VAT in the UK.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="isCreditNote"></param>
         public MWST(string line, bool isCreditNote)
         {
             if (isCreditNote)

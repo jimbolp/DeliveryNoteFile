@@ -18,7 +18,7 @@ namespace DeliveryNoteFiles
             DelNote dNote = db.DelNotes.Find(ID);
             if (dNote == null)
                 return;
-            if (delNoteFile.Positions == null)
+            if (delNoteFile.Positions == null || delNoteFile.Positions.Count == 0)
             {
                 UpdateDelNote(dNote, delNoteFile);
                 db.SaveChanges();

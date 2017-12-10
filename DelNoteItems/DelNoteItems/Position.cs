@@ -6,6 +6,7 @@ namespace DelNoteItems
 {
     public partial class Position : DelNoteItems
     {
+        #region Properties
         //$$POS$$ Line properties        
         public int? ArticleNo { get; set; }
         public long? EAN { get; set; }
@@ -47,7 +48,9 @@ namespace DelNoteItems
 
         //$$POS5$$ Line properties
         public string ArticleRemark { get; set; }
+        #endregion Properties
 
+        #region Constructor
         public Position(string[] lines, bool isCreditNote)
         {
             try
@@ -67,7 +70,9 @@ namespace DelNoteItems
                 throw;
             }
         }
+        #endregion Constructor
 
+        #region Initialization
         private void InitializeInvoice(string[] lines)
         {
             try
@@ -160,5 +165,6 @@ namespace DelNoteItems
             string str = line.Substring(0, 7) + line.Substring(8);
             return str;
         }
+        #endregion Initialization
     }
 }
