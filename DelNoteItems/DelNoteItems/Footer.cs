@@ -12,20 +12,28 @@ namespace DelNoteItems
 
         public Footer(string line, bool isCreditNote)
         {
-            if (isCreditNote)
+            try
             {
-                InitializeCreditNote(line);
+                if (isCreditNote)
+                {
+                    InitializeCreditNote(line);
+                }
+                else
+                {
+                    InitializeInvoice(line);
+                }
             }
-            else
+            catch (Exception e)
             {
-                InitializeInvoice(line);
+                WriteExceptionToLog(e);
+                throw e;
             }
         }
 
         private void InitializeInvoice(string line)
         {
             decimal decimalValue = 0;
-
+            
             //TotalDiscounts
             if (line.Length >= Settings.Default.TotalDiscountsStart + Settings.Default.TotalDiscountsLength)
             {

@@ -26,10 +26,11 @@ namespace DelNoteItems
             }
             return toString;
         }//*/
+
         public void WriteExceptionToLog(Exception e)
         {
             File.AppendAllText(Settings.Default.LogFilePath,
-                DateTime.Now + Environment.NewLine + e.ToString() + Environment.NewLine);
+                DateTime.Now + Environment.NewLine + "Message: " + e.Message + Environment.NewLine + e.StackTrace + Environment.NewLine);
         }
 
         public override string ToString()

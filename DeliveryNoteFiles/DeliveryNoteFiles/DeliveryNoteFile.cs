@@ -19,7 +19,7 @@ namespace DeliveryNoteFiles
         public Mail Mail { get; set; }
         public Bank Bank { get; set; }
         public Tour Tour { get; set; }
-        public LinkedList<Position> Positions { get; set; }
+        public List<Position> Positions { get; set; }
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
         public byte PaymentTimeID
@@ -125,6 +125,10 @@ namespace DeliveryNoteFiles
                 throw e; 
             }
             ReadFile(filePath);
+            if(DocType == null || Header == null || Supplier == null || Footer == null)
+            {
+                throw new ArgumentException("Invalid file format!");
+            }
         }
 
         /// <summary>
@@ -378,17 +382,22 @@ namespace DeliveryNoteFiles
             }
         }
 
-        private void WriteExceptionToLog(Exception e)
+        public static void WriteExceptionToLog(Exception e)
         {
             File.AppendAllText(Settings.Default.LogFilePath,
-                DateTime.Now + Environment.NewLine + e.ToString() + Environment.NewLine);
+                DateTime.Now + Environment.NewLine + "Error Message: " + e.Message + Environment.NewLine + e.StackTrace + Environment.NewLine);
+        }
+        public static void WriteExceptionToLog(string str)
+        {
+            File.AppendAllText(Settings.Default.LogFilePath,
+                DateTime.Now + Environment.NewLine + "Error Message: " + str + Environment.NewLine);
         }
 
         private void ProcessPosition(string[] lines, bool isCreditNote)
         {            
             if (Positions == null)
             {
-                Positions = new LinkedList<Position>();
+                Positions = new List<Position>();
             }
             
             Position current;
@@ -441,7 +450,7 @@ namespace DeliveryNoteFiles
                     }
                 }
             }
-            Positions.AddLast(current);
+            Positions.Add(current);
             havePos.SetAll(false);
         }
 
@@ -464,7 +473,7 @@ namespace DeliveryNoteFiles
         {
             Header = new Header(headLines.ToArray(), DocType.isCreditNote);
         }
-
+        
 #if DEBUG
         public override string ToString()
         {

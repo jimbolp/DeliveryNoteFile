@@ -494,5 +494,11 @@
     <Setting Name="PharmacyPurchasePriceLength" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">11</Value>
     </Setting>
+    <Setting Name="ArticleRemarkStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="ArticleRemarkLength" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

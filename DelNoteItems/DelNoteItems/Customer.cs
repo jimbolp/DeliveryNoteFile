@@ -39,7 +39,7 @@ namespace DelNoteItems
             catch (Exception e)
             {
                 WriteExceptionToLog(e);
-                throw;
+                throw e;
             }
         }
 

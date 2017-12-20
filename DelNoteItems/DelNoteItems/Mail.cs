@@ -24,36 +24,30 @@ namespace DelNoteItems
             catch (Exception e)
             {
                 WriteExceptionToLog(e);
+                throw e;
             }
         }
 
         private void InitializeInvoice(string line)
         {
-            try
+            //CustomerEmailAddress
+            if (line.Length >= Settings.Default.CustomerEmailAddressStart + Settings.Default.CustomerEmailAddressLength)
             {
-                //CustomerEmailAddress
-                if (line.Length >= Settings.Default.CustomerEmailAddressStart + Settings.Default.CustomerEmailAddressLength)
-                {
-                    CustomerEmailAddress = line.Substring(Settings.Default.CustomerEmailAddressStart, Settings.Default.CustomerEmailAddressLength).Trim();
-                }
-                else if (line.Length >= Settings.Default.CustomerEmailAddressStart)
-                {
-                    CustomerEmailAddress = line.Substring(Settings.Default.CustomerEmailAddressStart).Trim();
-                }
-
-                //ValueOfFieldInSK17
-                if (line.Length >= Settings.Default.ValueOfFieldInSK17Start + Settings.Default.ValueOfFieldInSK17Length)
-                {
-                    ValueOfFieldInSK17 = line.Substring(Settings.Default.ValueOfFieldInSK17Start, Settings.Default.ValueOfFieldInSK17Length).Trim();
-                }
-                else if (line.Length >= Settings.Default.ValueOfFieldInSK17Start)
-                {
-                    ValueOfFieldInSK17 = line.Substring(Settings.Default.ValueOfFieldInSK17Start).Trim();
-                }
+                CustomerEmailAddress = line.Substring(Settings.Default.CustomerEmailAddressStart, Settings.Default.CustomerEmailAddressLength).Trim();
             }
-            catch (Exception e)
+            else if (line.Length >= Settings.Default.CustomerEmailAddressStart)
             {
-                throw e;
+                CustomerEmailAddress = line.Substring(Settings.Default.CustomerEmailAddressStart).Trim();
+            }
+
+            //ValueOfFieldInSK17
+            if (line.Length >= Settings.Default.ValueOfFieldInSK17Start + Settings.Default.ValueOfFieldInSK17Length)
+            {
+                ValueOfFieldInSK17 = line.Substring(Settings.Default.ValueOfFieldInSK17Start, Settings.Default.ValueOfFieldInSK17Length).Trim();
+            }
+            else if (line.Length >= Settings.Default.ValueOfFieldInSK17Start)
+            {
+                ValueOfFieldInSK17 = line.Substring(Settings.Default.ValueOfFieldInSK17Start).Trim();
             }
         }
 

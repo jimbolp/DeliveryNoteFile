@@ -7,28 +7,21 @@ namespace DelNoteItems
     {
         private void Line1(string line)
         {
-            try
+            int intVal = 0;
+            //BranchNumber
+            if (line.Length >= Settings.Default.BranchNoStart + Settings.Default.BranchNoLength)
             {
-                int intVal = 0;
-                //BranchNumber
-                if (line.Length >= Settings.Default.BranchNoStart + Settings.Default.BranchNoLength)
+                if (Int32.TryParse(line.Substring(Settings.Default.BranchNoStart, Settings.Default.BranchNoLength).Trim(), out intVal))
                 {
-                    if (Int32.TryParse(line.Substring(Settings.Default.BranchNoStart, Settings.Default.BranchNoLength).Trim(), out intVal))
-                    {
-                        BranchNumber = intVal;
-                    }
-                }
-                else if (line.Length >= Settings.Default.BranchNoStart)
-                {
-                    if (Int32.TryParse(line.Substring(Settings.Default.BranchNoStart).Trim(), out intVal))
-                    {
-                        BranchNumber = intVal;
-                    }
+                    BranchNumber = intVal;
                 }
             }
-            catch (Exception e)
+            else if (line.Length >= Settings.Default.BranchNoStart)
             {
-                throw e;
+                if (Int32.TryParse(line.Substring(Settings.Default.BranchNoStart).Trim(), out intVal))
+                {
+                    BranchNumber = intVal;
+                }
             }
         }
     }

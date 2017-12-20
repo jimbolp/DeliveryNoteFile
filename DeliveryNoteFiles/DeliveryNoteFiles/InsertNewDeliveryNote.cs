@@ -32,21 +32,20 @@ namespace DeliveryNoteFiles
                     {
                         foreach (var err1 in err.ValidationErrors)
                         {
-                            Console.WriteLine(err1.ErrorMessage);
+                            DeliveryNoteFile.WriteExceptionToLog(err1.ErrorMessage);
                         }
-
                     }
 
                     transaction.Rollback();
                 }
                 catch (DbUpdateException ue)
                 {
-                    Console.WriteLine(ue.ToString());
+                    DeliveryNoteFile.WriteExceptionToLog(ue);
                     transaction.Rollback();
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.ToString());
+                    DeliveryNoteFile.WriteExceptionToLog(e);
                     transaction.Rollback();
                 }
                 return transactionCompleted;

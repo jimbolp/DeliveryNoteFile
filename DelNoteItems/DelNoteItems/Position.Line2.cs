@@ -7,31 +7,24 @@ namespace DelNoteItems
     {
         private void Line2(string line)
         {
-            try
+            //ExpiryDate
+            if (line.Length >= Settings.Default.ExpiryDateStart + Settings.Default.ExpiryDateLength)
             {
-                //ExpiryDate
-                if (line.Length >= Settings.Default.ExpiryDateStart + Settings.Default.ExpiryDateLength)
-                {
-                    ExpiryDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.ExpiryDateStart, Settings.Default.ExpiryDateLength));
-                }
-                else if(line.Length >= Settings.Default.ExpiryDateStart)
-                {
-                    ExpiryDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.ExpiryDateStart));
-                }
-
-                //Batch
-                if (line.Length >= Settings.Default.BatchStart + Settings.Default.BatchLength)
-                {
-                    Batch = line.Substring(Settings.Default.BatchStart, Settings.Default.BatchLength).Trim();
-                }
-                else if(line.Length >= Settings.Default.BatchStart)
-                {
-                    Batch = line.Substring(Settings.Default.BatchStart).Trim();
-                }
+                ExpiryDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.ExpiryDateStart, Settings.Default.ExpiryDateLength));
             }
-            catch (Exception e)
+            else if(line.Length >= Settings.Default.ExpiryDateStart)
             {
-                throw e;
+                ExpiryDate = Parse.ConvertToDateTime(line.Substring(Settings.Default.ExpiryDateStart));
+            }
+
+            //Batch
+            if (line.Length >= Settings.Default.BatchStart + Settings.Default.BatchLength)
+            {
+                Batch = line.Substring(Settings.Default.BatchStart, Settings.Default.BatchLength).Trim();
+            }
+            else if(line.Length >= Settings.Default.BatchStart)
+            {
+                Batch = line.Substring(Settings.Default.BatchStart).Trim();
             }
         }
     }

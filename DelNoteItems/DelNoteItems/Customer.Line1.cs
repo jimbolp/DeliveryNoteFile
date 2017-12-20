@@ -8,68 +8,61 @@ namespace DelNoteItems
     {
         private void Line1(string line)
         {
-            try
+            int intVal;
+            //CustomerName
+            if (line.Length >= Settings.Default.CustomerNameStart + Settings.Default.CustomerNameLength)
             {
-                int intVal;
-                //CustomerName
-                if (line.Length >= Settings.Default.CustomerNameStart + Settings.Default.CustomerNameLength)
-                {
-                    CustomerName = line.Substring(Settings.Default.CustomerNameStart, Settings.Default.CustomerNameLength).Trim();
-                }
-                else if (line.Length >= Settings.Default.CustomerNameStart)
-                {
-                    CustomerName = line.Substring(Settings.Default.CustomerNameStart).Trim();
-                }
+                CustomerName = line.Substring(Settings.Default.CustomerNameStart, Settings.Default.CustomerNameLength).Trim();
+            }
+            else if (line.Length >= Settings.Default.CustomerNameStart)
+            {
+                CustomerName = line.Substring(Settings.Default.CustomerNameStart).Trim();
+            }
 
-                //CustomerAddress
-                if (line.Length >= Settings.Default.CustomerAddressStart + Settings.Default.CustomerAddressLength)
-                {
-                    CustomerAddress = line.Substring(Settings.Default.CustomerAddressStart, Settings.Default.CustomerAddressLength).Trim();
-                }
-                else if (line.Length >= Settings.Default.CustomerAddressStart)
-                {
-                    CustomerAddress = line.Substring(Settings.Default.CustomerAddressStart).Trim();
-                }
+            //CustomerAddress
+            if (line.Length >= Settings.Default.CustomerAddressStart + Settings.Default.CustomerAddressLength)
+            {
+                CustomerAddress = line.Substring(Settings.Default.CustomerAddressStart, Settings.Default.CustomerAddressLength).Trim();
+            }
+            else if (line.Length >= Settings.Default.CustomerAddressStart)
+            {
+                CustomerAddress = line.Substring(Settings.Default.CustomerAddressStart).Trim();
+            }
 
-                //CustomerCIP
-                if (line.Length >= Settings.Default.CustomerCIPStart + Settings.Default.CustomerCIPLength)
+            //CustomerCIP
+            if (line.Length >= Settings.Default.CustomerCIPStart + Settings.Default.CustomerCIPLength)
+            {
+                if (Int32.TryParse(line.Substring(Settings.Default.CustomerCIPStart, Settings.Default.CustomerCIPLength).Trim(), out intVal))
                 {
-                    if (Int32.TryParse(line.Substring(Settings.Default.CustomerCIPStart, Settings.Default.CustomerCIPLength).Trim(), out intVal))
+                    CustomerCIP = intVal;
+                }
+                else if (line.Length >= Settings.Default.CustomerCIPStart)
+                {
+                    if (Int32.TryParse(line.Substring(Settings.Default.CustomerCIPStart).Trim(), out intVal))
                     {
                         CustomerCIP = intVal;
                     }
-                    else if (line.Length >= Settings.Default.CustomerCIPStart)
-                    {
-                        if (Int32.TryParse(line.Substring(Settings.Default.CustomerCIPStart).Trim(), out intVal))
-                        {
-                            CustomerCIP = intVal;
-                        }
-                    }
-                }
-
-                //CustomerCity
-                if (line.Length >= Settings.Default.CustomerCityStart + Settings.Default.CustomerCityLength)
-                {
-                    CustomerCity = line.Substring(Settings.Default.CustomerCityStart, Settings.Default.CustomerCityLength).Trim();
-                }
-                else if (line.Length >= Settings.Default.CustomerCityStart)
-                {
-                    CustomerCity = line.Substring(Settings.Default.CustomerCityStart).Trim();
-                }
-
-                //CustomerUIN
-                if (line.Length >= Settings.Default.CustomerUINStart + Settings.Default.CustomerUINLength)
-                {
-                    CustomerUIN = line.Substring(Settings.Default.CustomerUINStart, Settings.Default.CustomerUINLength).Trim();
-                }
-                else if (line.Length >= Settings.Default.CustomerUINStart)
-                {
-                    CustomerUIN = line.Substring(Settings.Default.CustomerUINStart).Trim();
                 }
             }
-            catch (Exception e)
+
+            //CustomerCity
+            if (line.Length >= Settings.Default.CustomerCityStart + Settings.Default.CustomerCityLength)
             {
-                throw e;
+                CustomerCity = line.Substring(Settings.Default.CustomerCityStart, Settings.Default.CustomerCityLength).Trim();
+            }
+            else if (line.Length >= Settings.Default.CustomerCityStart)
+            {
+                CustomerCity = line.Substring(Settings.Default.CustomerCityStart).Trim();
+            }
+
+            //CustomerUIN
+            if (line.Length >= Settings.Default.CustomerUINStart + Settings.Default.CustomerUINLength)
+            {
+                CustomerUIN = line.Substring(Settings.Default.CustomerUINStart, Settings.Default.CustomerUINLength).Trim();
+            }
+            else if (line.Length >= Settings.Default.CustomerUINStart)
+            {
+                CustomerUIN = line.Substring(Settings.Default.CustomerUINStart).Trim();
             }
         }
     }

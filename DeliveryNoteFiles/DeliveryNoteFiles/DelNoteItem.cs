@@ -34,4 +34,6 @@ namespace DeliveryNoteFiles
         public Nullable<decimal> RetailerMaxPrice { get; set; }
         public Nullable<byte> GroupID { get; set; }
     }
+    
+    
 }

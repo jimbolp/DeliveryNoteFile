@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using DelNoteItems;
@@ -12,44 +13,49 @@ namespace DeliveryNoteFiles
     partial class Program
     {
         private static Stopwatch update = new Stopwatch();
-        private static void UpdateExistingDelNote(int ID, DeliveryNoteFile delNoteFile)
+        private static void UpdateExistingDelNote(int DelNoteID, DeliveryNoteFile delNoteFile)
         {
-            update.Reset();
-            DelNote dNote = db.DelNotes.Find(ID);
+            DelNote dNote = db.DelNotes.Find(DelNoteID);
             if (dNote == null)
                 return;
-            if (delNoteFile.Positions == null)
-            {
-                UpdateDelNote(dNote, delNoteFile);
-                db.SaveChanges();
-                return;
-            }
-            
+
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
                 try
                 {
-                    update.Start();
-                    IQueryable<int> items = db.DelNoteItems.Where(di => di.DelNoteID == ID).Select(di => di.ID);
-                    if (items.Count() > delNoteFile.Positions.Count)
-                        return;
-                    foreach (int item in items)
-                    { 
-                        DelNoteItem dNoteItem = db.DelNoteItems.Find(item);
-                        
-                        UpdateDelNoteItem(dNoteItem, delNoteFile.Positions.First.Value);
-                        delNoteFile.Positions.RemoveFirst();
-                        
-                    }
-                    //delNoteFile.Positions.RemoveAll(p => p == null);
-                    if (delNoteFile.Positions.Count != 0)
+                    UpdateDelNote(dNote, delNoteFile);
+                    List<int> items = db.DelNoteItems.Where(di => di.DelNoteID == DelNoteID).Select(di => di.ID).ToList();
+                    if (delNoteFile.Positions == null || delNoteFile.Positions.Count == 0)
                     {
-                        db.DelNoteItems.AddRange(AddDelNoteItems(ID, delNoteFile));
+                        if (items != null && items.Count != 0)
+                        {
+                            db.Database.ExecuteSqlCommandAsync("delete from dbo.DelNoteItems where DelNoteID = @delnoteid", new SqlParameter("@delnoteid", DelNoteID));
+                        }
+                        db.SaveChanges();
+                        transaction.Commit();
                     }
-                    db.SaveChanges();
-                    transaction.Commit();
-                    update.Stop();
-                    Console.WriteLine(update.Elapsed);
+                    else
+                    {
+                        if (items != null && items.Count > delNoteFile.Positions.Count)
+                        {
+                            db.Database.ExecuteSqlCommandAsync("delete from dbo.DelNoteItems where DelNoteID = @delnoteid", new SqlParameter("@delnoteid", DelNoteID));
+                        }
+                        int count = (items == null ? 0 : items.Count);
+                        for (int i = 0; i < count; ++i)
+                        {
+                            DelNoteItem dNoteItem = db.DelNoteItems.Find(items[i]);
+
+                            UpdateDelNoteItem(dNoteItem, delNoteFile.Positions[i]);
+                            delNoteFile.Positions[i] = null;
+                        }//*/
+                        delNoteFile.Positions.RemoveAll(p => p == null);
+                        if (delNoteFile.Positions.Count != 0)
+                        {
+                            db.DelNoteItems.AddRange(AddDelNoteItems(DelNoteID, delNoteFile));
+                        }
+                        db.SaveChanges();
+                        transaction.Commit();
+                    }
                 }
                 catch (DbEntityValidationException e)
                 {
@@ -59,9 +65,7 @@ namespace DeliveryNoteFiles
                         {
                             Console.WriteLine(err1.ErrorMessage);
                         }
-
                     }
-
                     transaction.Rollback();
                 }
                 catch (DbUpdateException ue)
@@ -100,15 +104,17 @@ namespace DeliveryNoteFiles
             delNoteItem.BasePrice = pos.WholesalePurchasePrice;
             delNoteItem.InvoicePriceNoDisc = pos.InvoicedPriceInclVATNoDiscount;
             delNoteItem.RetailerMaxPrice = pos.MaxPharmacySalesPrice;
-            delNoteItem.GroupID = GetOverrateGroupID(pos.ArticleNo.Value);
+            delNoteItem.GroupID = GetOverrateGroupID(pos.ArticleNo.Value);//*/
         }
 
         private static void UpdateDelNote(DelNote dNote, DeliveryNoteFile delNote)
         {
             string creditNoteDescr = "";
-            if (delNote.DocType.isCreditNote && (delNote.Positions != null && delNote.Positions.Count > 0))
+            if (delNote.Header.CreditNoteType == "ФР" || delNote.Header.CreditNoteType == "FR")
             {
-                creditNoteDescr = delNote.Positions.FirstOrDefault().ArticleName;
+                creditNoteDescr += delNote.Positions.FirstOrDefault().ArticleName;
+                if(!string.IsNullOrEmpty(delNote.Positions.FirstOrDefault().ArticleRemark))
+                    creditNoteDescr += " / " + delNote.Positions.FirstOrDefault().ArticleRemark;
             }
             dNote.FileName = delNote.FileName;
             dNote.ProcessTime = DateTime.Now;

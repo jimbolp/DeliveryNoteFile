@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Reflection;
 
 namespace DelNoteItems
 {
@@ -64,94 +62,72 @@ namespace DelNoteItems
             catch (Exception e)
             {
                 WriteExceptionToLog(e);
-                throw;
+                throw e;
             }
         }
 
         private void InitializeInvoice(string[] lines)
         {
-            try
+            foreach (string line in lines)
             {
-                foreach (string line in lines)
+                if (string.IsNullOrEmpty(line))
+                    continue;
+                if (line.StartsWith("$$POS$$"))
                 {
-                    if (string.IsNullOrEmpty(line))
-                        continue;
-                    if (line.StartsWith("$$POS$$"))
-                    {
-                        Line0(line);
-                    }
-                    else if (line.StartsWith("$$POS1$"))
-                    {
-                        Line1(line);
-                    }
-                    else if (line.StartsWith("$$POS2$$"))
-                    {
-                        Line2(line);
-                    }
-                    else if (line.StartsWith("$$POS3$"))
-                    {
-                        Line3(line);
-                    }
-                    else if (line.StartsWith("$$POS4$$"))
-                    {
-                        Line4(line);
-                    }
-                    else if (line.StartsWith("$$POS5$$"))
-                    {
-                        try
-                        {
-                            Line5(line);
-                        }
-                        catch (NotImplementedException) { }
-                    }
+                    Line0(line);
                 }
-            }
-            catch (Exception e)
-            {
-                throw e;
+                else if (line.StartsWith("$$POS1$"))
+                {
+                    Line1(line);
+                }
+                else if (line.StartsWith("$$POS2$$"))
+                {
+                    Line2(line);
+                }
+                else if (line.StartsWith("$$POS3$"))
+                {
+                    Line3(line);
+                }
+                else if (line.StartsWith("$$POS4$$"))
+                {
+                    Line4(line);
+                }
+                else if (line.StartsWith("$$POS5$$"))
+                {
+                    Line5(line);
+                }
             }
         }
         private void InitializeCreditNote(string[] lines)
-        {            
-            try
+        {
+            foreach (string line in lines)
             {
-                foreach (string line in lines)
+                if (string.IsNullOrEmpty(line))
+                    continue;
+                if (line.StartsWith("$$POS$$"))
                 {
-                    if (string.IsNullOrEmpty(line))
-                        continue;
-                    if (line.StartsWith("$$POS$$"))
-                    {
-                        Line0(line);
-                    }
-                    else if (line.StartsWith("$$POS1$$"))
-                    {
-                        Line1(RemoveSymbol(line));
-                    }
-                    else if (line.StartsWith("$$POS2$$"))
-                    {
-                        Line2(line);
-                    }
-                    else if (line.StartsWith("$$POS3$$"))
-                    {
-                        Line3(RemoveSymbol(line));
-                    }
-                    else if (line.StartsWith("$$POS4$$"))
-                    {
-                        Line4(line);
-                    }
-                    else if (line.StartsWith("$$POS5$$"))
-                    {
-                        try
-                        {
-                            Line5(line);
-                        }
-                        catch (NotImplementedException) { }
-                    }
+                    Line0(line);
                 }
-            }
-            catch(Exception e)
-            {
-                throw e;
+                else if (line.StartsWith("$$POS1$$"))
+                {
+                    Line1(RemoveSymbol(line));
+                }
+                else if (line.StartsWith("$$POS2$$"))
+                {
+                    Line2(line);
+                }
+                else if (line.StartsWith("$$POS3$$"))
+                {
+                    Line3(RemoveSymbol(line));
+                }
+                else if (line.StartsWith("$$POS4$$"))
+                {
+                    Line4(line);
+                }
+                else if (line.StartsWith("$$POS5$$"))
+                {
+                    Line5(line);
+                }
             }
         }
 
@@ -160,5 +136,6 @@ namespace DelNoteItems
             string str = line.Substring(0, 7) + line.Substring(8);
             return str;
         }
+        
     }
 }

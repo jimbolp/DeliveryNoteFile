@@ -33,19 +33,21 @@ namespace DeliveryNoteFiles
             //Work - Special files for tests
             //string dir = @"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\files for tests";
 
-            //Work - One file only
-            string dir = @"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\One File";
+            //Work - For adding in the test database
+            string dir = @"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Files To Add In Test";
 
             //File.WriteAllText(Settings.Default.ChangedPosFilePath, "");
             try
             {
                 if (args != null && args.Length == 1)
                 {
-                    OpenDirectory(args[0]);
+                    if(IsValidFilePath(args[0]))
+                        OpenDirectory(args[0]);
                 }
                 else
                 {
-                    OpenDirectory(dir);
+                    if (IsValidFilePath(dir))
+                        OpenDirectory(dir);
                 }
             }
             catch(ArgumentException ae)
@@ -58,10 +60,7 @@ namespace DeliveryNoteFiles
             }
             sw.Stop();
             Console.WriteLine(sw.Elapsed.ToString());
-            /*foreach(DeliveryNoteFile file in DelNoteFiles)
-            {
-                Console.WriteLine(file);
-            }//*/
+            
 #if DEBUG
             //Files selected for debigging purposes...
             //DeliveryNoteFile[] test2 = DelNoteFiles.Where(d => d.Header.OrderType == "FC").ToArray();
@@ -73,37 +72,26 @@ namespace DeliveryNoteFiles
             //DeliveryNoteFile[] test9 = DelNoteFiles.Where(d => !string.IsNullOrEmpty(d.Header.NarcoticsFormID)).ToArray();
 #endif
 
-            //Home
-            //File.WriteAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);
-            //foreach (var pos in DelNoteFiles)
-            //{
-            //    File.AppendAllText(@"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", pos.ToString(), Encoding.Default);
-            //}
-
-            //Work
-            //File.WriteAllText(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", "", Encoding.Default);
-            //foreach (var pos in DelNoteFiles)
-            //{
-            //    File.AppendAllText(@"D:\Documents\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\test positions.txt", pos.ToString(), Encoding.Default);
-            //}
             Console.WriteLine("End");
             Console.ReadLine();
         }
 
         private static void OpenDirectory(string dirPath)
         {
-            if(!Directory.Exists(dirPath))
+            string tempDir = Path.GetDirectoryName(dirPath);
+            string[] files = null;
+            //If the given path has extention, it's a file and we process only that file
+            if (Path.HasExtension(dirPath))
             {
-                throw new ArgumentException($"Directory {dirPath}, does not exist!");
+                files = new string[1] { dirPath };
             }
-            if(Path.HasExtension(dirPath))
+            else
             {
-                if (Path.GetExtension(dirPath) != ".txt")
-                    throw new ArgumentException("Invalid file type! Only Text files (txt) are allowed!");
+                files = Directory.GetFiles(tempDir);
             }
 
             int i = 0;
-            string[] files = Directory.GetFiles(dirPath);
+            
             foreach (string file in files)
             {
                 if (Path.GetExtension(file) != ".txt")
@@ -164,11 +152,14 @@ namespace DeliveryNoteFiles
                     }
                     catch (EntityException eex)
                     {
+                        DeliveryNoteFile.WriteExceptionToLog(eex);
+#if DEBUG
                         Console.WriteLine(eex.Message);
+#endif
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.ToString());
+                        DeliveryNoteFile.WriteExceptionToLog(e);
                     }
                     if (InsertCompleted)
                     {
@@ -182,13 +173,18 @@ namespace DeliveryNoteFiles
                             }
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine(file + "->" + Environment.NewLine + delNote.Header.DeliveryNoteNumber);
+                    }
                 }//*/
                 DelNoteFiles.Add(delNote);
                 _threadCount--;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 _threadCount--;
+                DeliveryNoteFile.WriteExceptionToLog(e);
                 throw;
             }
         }
@@ -254,7 +250,8 @@ namespace DeliveryNoteFiles
                 throw;
             }
         }
-        private static List<DelNoteItem> AddDelNoteItems(int ID, DeliveryNoteFile delNote)
+
+        private static List<DelNoteItem> AddDelNoteItems(int DelNoteID, DeliveryNoteFile delNote)
         {
             try
             {                
@@ -265,7 +262,7 @@ namespace DeliveryNoteFiles
                     {                        
                         foreach (Position position in delNote.Positions)
                         {                            
-                            items.Add(CreateDelNoteItem(ID, position));
+                            items.Add(CreateDelNoteItem(DelNoteID, position));
                         }
                     }
                     catch (DbEntityValidationException)
@@ -288,9 +285,11 @@ namespace DeliveryNoteFiles
         private static DelNote AddDelNote(DeliveryNoteFile delNote)
         {
             string creditNoteDescr = "";
-            if (delNote.DocType.isCreditNote && (delNote.Positions != null && delNote.Positions.Count > 0))
+            if (delNote.Header.CreditNoteType == "ФР" || delNote.Header.CreditNoteType == "FR")
             {
-                creditNoteDescr = delNote.Positions.FirstOrDefault().ArticleName;
+                creditNoteDescr += delNote.Positions.FirstOrDefault().ArticleName;
+                if (!string.IsNullOrEmpty(delNote.Positions.FirstOrDefault().ArticleRemark))
+                    creditNoteDescr += " / " + delNote.Positions.FirstOrDefault().ArticleRemark;
             }
             DelNote dNote = new DelNote
             {
@@ -315,6 +314,11 @@ namespace DeliveryNoteFiles
                                     
             return dNote;
         }
+        /// <summary>
+        /// The field (CreditNoteType) in the table is limited to 10 characters. This method is not used for now!
+        /// </summary>
+        /// <param name="CreditNoteType"></param>
+        /// <returns></returns>
         private static string TranslateCreditType(string CreditNoteType)
         {
             switch (CreditNoteType)
@@ -356,7 +360,7 @@ namespace DeliveryNoteFiles
             }
         }
 
-        private static byte? GetOverrateGroupID(int articlePZN)
+        public static byte? GetOverrateGroupID(int articlePZN)
         {
             string sql = $"select OverrateGroupID from LibraCentral.dbo.Article with (nolock) where id = {articlePZN/10}";
             try
@@ -371,6 +375,37 @@ namespace DeliveryNoteFiles
             {
                 return null;
             }
+        }
+
+        private static bool IsValidFilePath(string filePath)
+        {
+            bool isValid = false;
+            try
+            {
+                string temp = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(temp))
+                {
+                    isValid = false;
+                }
+                else if(Path.HasExtension(filePath))
+                {
+                    if (Path.GetExtension(filePath) == ".txt")
+                    {
+                        isValid = true;
+                    }
+                }
+                else
+                {
+                    isValid = true;
+                }
+            }
+            catch(Exception e)
+            {
+                DeliveryNoteFile.WriteExceptionToLog(e);
+                isValid = false;
+            }
+
+            return isValid;
         }
     }
 }

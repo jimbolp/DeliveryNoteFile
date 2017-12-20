@@ -1507,5 +1507,23 @@ namespace DelNoteItems.Properties {
                 return ((int)(this["PharmacyPurchasePriceLength"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public int ArticleRemarkStart {
+            get {
+                return ((int)(this["ArticleRemarkStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int ArticleRemarkLength {
+            get {
+                return ((int)(this["ArticleRemarkLength"]));
+            }
+        }
     }
 }

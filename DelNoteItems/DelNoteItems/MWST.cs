@@ -50,7 +50,7 @@ namespace DelNoteItems
             InitializeInvoice(line);
         }
     }
-    public class VATTable
+    public class VATTable : DelNoteItems
     {
         public List<MWST> Table { get; set; }
         public decimal? Value
@@ -90,11 +90,19 @@ namespace DelNoteItems
 
         public VATTable(string line, bool isCreditNote)
         {
-            if (Table == null)
+            try
             {
-                Table = new List<MWST>();
+                if (Table == null)
+                {
+                    Table = new List<MWST>();
+                }
+                Table.Add(new MWST(line, isCreditNote));
             }
-            Table.Add(new MWST(line, isCreditNote));
+            catch (Exception e)
+            {
+                WriteExceptionToLog(e);
+                throw e;
+            }
         }
 
     }

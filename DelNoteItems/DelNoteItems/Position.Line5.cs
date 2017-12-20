@@ -7,7 +7,15 @@ namespace DelNoteItems
     {
         private void Line5(string line)
         {
-            throw new NotImplementedException();
+            //ArticleRemark
+            if (line.Length >= Settings.Default.ArticleRemarkStart + Settings.Default.ArticleRemarkLength)
+            {
+                ArticleRemark = line.Substring(Settings.Default.ArticleRemarkStart, Settings.Default.ArticleRemarkLength).Trim();
+            }
+            else if (line.Length >= Settings.Default.ArticleRemarkStart)
+            {
+                ArticleRemark = line.Substring(Settings.Default.ArticleRemarkStart).Trim();
+            }
         }
     }
 }
