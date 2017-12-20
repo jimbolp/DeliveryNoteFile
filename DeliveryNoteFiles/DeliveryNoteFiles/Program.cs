@@ -17,7 +17,9 @@ namespace DeliveryNoteFiles
     partial class Program
     {
         private static int _threadCount = 0;
+#if DEBUG
         private static List<DeliveryNoteFile> DelNoteFiles = new List<DeliveryNoteFile>();
+#endif
         private static DeliveryNoteEntities db = new DeliveryNoteEntities();
 
         #region Main
@@ -77,31 +79,20 @@ namespace DeliveryNoteFiles
 
             Console.WriteLine("End");
             Console.ReadLine();
-            #endregion
+            #endregion SetDirectoryAndPassToMethod
         }
         #endregion Main
 
         #region OpenDirectoryAndGetFiles
         private static void OpenDirectory(string dirPath)
         {
-            #region PathValidation
-            if(!Directory.Exists(dirPath))
-            {
-                files = new string[1] { dirPath };
-            }
-            if(Path.HasExtension(dirPath) && Path.GetExtension(dirPath) != ".txt")
-            {
-                throw new ArgumentException("Invalid file type! Only Text files (txt) are allowed!");
-            }
-            #endregion
-
             int limitNumberOfFilesToRead = 0;
             string[] files = Directory.GetFiles(dirPath);
             foreach (string file in files)
             {
                 #region Check
                 //Process only text files
-                if (Path.GetExtension(file) != ".txt")
+                if (!IsValidFilePath(file))
                 {
                     continue;
                 }
@@ -146,61 +137,35 @@ namespace DeliveryNoteFiles
         /// <param name="file"></param>
         public static void ProcessFile(string file)
         {
+            bool InsertCompleted = false;
             try
             {
                 _threadCount++;
 
                 //The whole information from the file is contained in this object
+                //The actual processing happens in the constructor
                 DeliveryNoteFile delNote = new DeliveryNoteFile(file);
+                                
+                //InsertCompleted = InserIntoDB(delNote);
 
-                //If document already exists, update it.
-                int? existingEntryID;
-                if (EntryExists(delNote, out existingEntryID))
+                //This process would probably be handled by another service...
+                #region MoveAndSendFile
+                if (InsertCompleted)
                 {
-                    Console.WriteLine("Updating entry...");
-                    UpdateExistingDelNote(existingEntryID.Value, delNote);
-                }
-
-                //Otherwise create new DeliveryNote and insert the items
-                else
-                {
-                    bool InsertCompleted = false;
-                    try
+                    if (MoveFile(file))
                     {
-                        Console.WriteLine("Inserting new entry...");
-                        //Insert DeliveryNote in Database
-                        InsertCompleted = InsertNewDeliveryNote(delNote);
-                    }
-                    catch (EntityException eex)
-                    {
-                        DeliveryNoteFile.WriteExceptionToLog(eex);
-#if DEBUG
-                        Console.WriteLine(eex.Message);
-#endif
-                    }
-                    catch (Exception e)
-                    {
-                        DeliveryNoteFile.WriteExceptionToLog(e);
-                    }
-
-                    //This process would probably be handled by another service...
-                    #region MoveAndSendFile
-                    if (InsertCompleted)
-                    {
-                        if (MoveFile(file))
+                        Console.WriteLine($"File {Path.GetFileName(file)} is moved to {Settings.Default.SaveFilesPath}, successfully!");
+                        string fileToSend = Settings.Default.SaveFilesPath + "\\" + file;
+                        if (SendFile(fileToSend))
                         {
-                            Console.WriteLine($"File {Path.GetFileName(file)} is moved to {Settings.Default.SaveFilesPath}, successfully!");
-                            string fileToSend = Settings.Default.SaveFilesPath + "\\" + file;
-                            if (SendFile(fileToSend))
-                            {
-                                Console.WriteLine($"File {Path.GetFileName(fileToSend)} sent successfully!");
-                            }
+                            Console.WriteLine($"File {Path.GetFileName(fileToSend)} sent successfully!");
                         }
                     }
-                    #endregion MoveAndSendFile
-
-                }//*/
+                }
+                #endregion MoveAndSendFile
+#if DEBUG
                 DelNoteFiles.Add(delNote);
+#endif
                 _threadCount--;
             }
             catch (Exception e)
@@ -210,7 +175,49 @@ namespace DeliveryNoteFiles
                 throw;
             }
         }
-        #endregion FileProcessing
+#endregion FileProcessing
+
+        #region AddingToDatabase
+        private static bool InserIntoDB(DeliveryNoteFile delNote)
+        {
+            bool InsertCompleted = false;
+            //If document already exists, update it.
+            int? existingEntryID;
+            if (EntryExists(delNote, out existingEntryID))
+            {
+                Console.WriteLine("Updating entry...");
+                InsertCompleted = UpdateExistingDelNote(existingEntryID.Value, delNote);
+            }
+
+            //Otherwise create new DeliveryNote and insert the items
+            else
+            {
+                
+                try
+                {
+                    Console.WriteLine("Inserting new entry...");
+                    //Insert DeliveryNote in Database
+                    InsertCompleted = InsertNewDeliveryNote(delNote);
+                }
+                catch (EntityException eex)
+                {
+                    InsertCompleted = false;
+                    DeliveryNoteFile.WriteExceptionToLog(eex);
+#if DEBUG
+                    Console.WriteLine(eex.Message);
+#endif
+                }
+                catch (Exception e)
+                {
+                    InsertCompleted = false;
+                    DeliveryNoteFile.WriteExceptionToLog(e);
+                }
+            }//*/
+            return InsertCompleted;
+        }
+        #endregion AddingToDatabase
+
+        #region HelperMethods
 
         /// <summary>
         /// Check if document with the same number and the same date exists in the database.
@@ -289,38 +296,31 @@ namespace DeliveryNoteFiles
             }
         }
 
-        private static List<DelNoteItem> AddDelNoteItems(int DelNoteID, DeliveryNoteFile delNote)
-        {
-            try
-            {                
-                List<DelNoteItem> items = new List<DelNoteItem>();
-                if (delNote.Positions != null && delNote.Positions.Count > 0)
-                {
-                    try
-                    {                        
-                        foreach (Position position in delNote.Positions)
-                        {                            
-                            items.Add(CreateDelNoteItem(DelNoteID, position));
-                        }
-                    }
-                    catch (DbEntityValidationException)
-                    {
-                        throw;
-                    }
-                    catch (Exception)
-                    {
-                        throw;
+        private static List<DelNoteItem> CreateListOfDelNoteItems(int DelNoteID, DeliveryNoteFile delNote)
+        {             
+            List<DelNoteItem> items = new List<DelNoteItem>();
+            if (delNote.Positions != null && delNote.Positions.Count > 0)
+            {
+                try
+                {                        
+                    foreach (Position position in delNote.Positions)
+                    {                            
+                        items.Add(CreateDelNoteItem(DelNoteID, position));
                     }
                 }
-                return items;
+                catch (DbEntityValidationException)
+                {
+                    throw;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return items;
         }//*/
 
-        private static DelNote AddDelNote(DeliveryNoteFile delNote)
+        private static DelNote CreateDelNote(DeliveryNoteFile delNote)
         {
             //For FR orders, there are no positions, but the order description is returned as a position line
             string creditNoteDescr = "";
@@ -355,6 +355,7 @@ namespace DeliveryNoteFiles
                                     
             return dNote;
         }
+        
         /// <summary>
         /// The field (CreditNoteType) in the table is limited to 10 characters. This method is not used for now!
         /// </summary>
@@ -423,21 +424,24 @@ namespace DeliveryNoteFiles
             bool isValid = false;
             try
             {
-                string temp = Path.GetDirectoryName(filePath);
-                if (!Directory.Exists(temp))
-                {
-                    isValid = false;
-                }
-                else if(Path.HasExtension(filePath))
+                if (Path.HasExtension(filePath))
                 {
                     if (Path.GetExtension(filePath) == ".txt")
                     {
                         isValid = true;
                     }
+                    else
+                    {
+                        throw new ArgumentException("Invalid file type! Only Text files (.txt) are allowed!");
+                    }
+                }
+                else if (Directory.Exists(filePath))
+                {
+                    isValid = true;
                 }
                 else
                 {
-                    isValid = true;
+                    isValid = false;
                 }
             }
             catch(Exception e)
@@ -448,10 +452,12 @@ namespace DeliveryNoteFiles
 
             return isValid;
         }
+
         private static void WriteExceptionToLog(Exception e)
         {
             File.AppendAllText(Settings.Default.LogFilePath,
                 DateTime.Now + Environment.NewLine + e.ToString() + Environment.NewLine);
         }
+        #endregion HelperMethods
     }
 }

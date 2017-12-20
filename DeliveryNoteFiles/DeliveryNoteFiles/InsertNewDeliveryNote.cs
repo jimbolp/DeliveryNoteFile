@@ -21,11 +21,11 @@ namespace DeliveryNoteFiles
                 try
                 {
                     DelNote dNote = new DelNote();
-                    dNote = AddDelNote(delNote);
+                    dNote = CreateDelNote(delNote);
                     dNote = db.DelNotes.Add(dNote);
                     db.SaveChanges();
 
-                    List<DelNoteItem> delNoteItems = AddDelNoteItems(dNote.ID, delNote);
+                    List<DelNoteItem> delNoteItems = CreateListOfDelNoteItems(dNote.ID, delNote);
                     db.DelNoteItems.AddRange(delNoteItems);
                     db.SaveChanges();
                     transaction.Commit();
@@ -33,9 +33,9 @@ namespace DeliveryNoteFiles
                 }
                 catch (DbEntityValidationException e)
                 {
-                    foreach (var err in e.EntityValidationErrors)
+                    foreach (DbEntityValidationResult err in e.EntityValidationErrors)
                     {
-                        foreach (var err1 in err.ValidationErrors)
+                        foreach (DbValidationError err1 in err.ValidationErrors)
                         {
                             DeliveryNoteFile.WriteExceptionToLog(err1.ErrorMessage);
                         }

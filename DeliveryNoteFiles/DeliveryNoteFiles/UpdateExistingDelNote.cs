@@ -13,11 +13,12 @@ namespace DeliveryNoteFiles
     partial class Program
     {
         private static Stopwatch update = new Stopwatch();
-        private static void UpdateExistingDelNote(int DelNoteID, DeliveryNoteFile delNoteFile)
+        private static bool UpdateExistingDelNote(int DelNoteID, DeliveryNoteFile delNoteFile)
         {
+            bool InsertCompleted = false;
             DelNote dNote = db.DelNotes.Find(DelNoteID);
             if (dNote == null)
-                return;
+                return InsertCompleted;
 
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -33,6 +34,7 @@ namespace DeliveryNoteFiles
                         }
                         db.SaveChanges();
                         transaction.Commit();
+                        InsertCompleted = true;
                     }
                     else
                     {
@@ -51,17 +53,19 @@ namespace DeliveryNoteFiles
                         delNoteFile.Positions.RemoveAll(p => p == null);
                         if (delNoteFile.Positions.Count != 0)
                         {
-                            db.DelNoteItems.AddRange(AddDelNoteItems(DelNoteID, delNoteFile));
+                            db.DelNoteItems.AddRange(CreateListOfDelNoteItems(DelNoteID, delNoteFile));
                         }
                         db.SaveChanges();
                         transaction.Commit();
+                        InsertCompleted = true;
                     }
                 }
                 catch (DbEntityValidationException e)
                 {
-                    foreach (var err in e.EntityValidationErrors)
+                    InsertCompleted = false;
+                    foreach (DbEntityValidationResult err in e.EntityValidationErrors)
                     {
-                        foreach (var err1 in err.ValidationErrors)
+                        foreach (DbValidationError err1 in err.ValidationErrors)
                         {
                             Console.WriteLine(err1.ErrorMessage);
                         }
@@ -70,15 +74,18 @@ namespace DeliveryNoteFiles
                 }
                 catch (DbUpdateException ue)
                 {
+                    InsertCompleted = false;
                     Console.WriteLine(ue.ToString());
                     transaction.Rollback();
                 }
                 catch (Exception e)
                 {
+                    InsertCompleted = false;
                     Console.WriteLine(e.ToString()); 
                     transaction.Rollback();
                 }
             }
+            return InsertCompleted;
         }
 
         private static void UpdateDelNoteItem(DelNoteItem delNoteItem, Position pos)

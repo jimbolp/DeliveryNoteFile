@@ -62,7 +62,7 @@ namespace DelNoteItems
                 if (Table != null && Table.Count > 0)
                 {
                     decimal? val = 0;
-                    foreach (var item in Table)
+                    foreach (MWST item in Table)
                     {
                         val += item.TotalVAT;
                     }
@@ -79,7 +79,7 @@ namespace DelNoteItems
                 if (Table != null && Table.Count > 0)
                 {
                     decimal? val = 0;
-                    foreach (var item in Table)
+                    foreach (MWST item in Table)
                     {
                         val += item.OrderVATPercentage;
                     }

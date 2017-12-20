@@ -20,7 +20,7 @@ namespace DeliveryNoteFiles
         public Mail Mail { get; set; }
         public Bank Bank { get; set; }
         public Tour Tour { get; set; }
-        public LinkedList<Position> Positions { get; set; }
+        public List<Position> Positions { get; set; }
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
         public byte PaymentTimeID
@@ -104,9 +104,13 @@ namespace DeliveryNoteFiles
             }
         }
 
-        private BitArray havePos = new BitArray(new bool[6]);       //Using Array for two reasons.. 1. Less variables 2. The array indexes coincides with the "position's line numbers"
+        private BitArray havePos = new BitArray(new bool[6]);       //Reason to use array: The array indexes coincides with the "position's line numbers"
                                                                     //Example: POS == 0; POS1 == 1; etc.
-        private List<string> Lines = new List<string>();
+
+        string[] posLines = new string[6];                          //Reason to use array: The same."
+
+        //private List<string> Lines = new List<string>();
+
         #endregion
 
         //debuging purposes...
@@ -144,17 +148,17 @@ namespace DeliveryNoteFiles
                 //Open the file in Read-Only mode in case the service is still writing in it
                 using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    //If the Default Encoding is not specified explicitly, the encoding is broken! Yep.. That's wierd!
+                    //If the Default Encoding is not specified explicitly, the encoding is broken!
                     using (StreamReader file = new StreamReader(fs, System.Text.Encoding.Default))
                     {
                         string line;
                         while ((line = file.ReadLine()) != null)
                         {
-                            Lines.Add(line);
+                            //Lines.Add(line);
+                            InitializeComponents(line);
                         }
                     }
                 }
-                InitializeComponents(Lines);
             }
             catch(Exception)
             {
@@ -165,261 +169,251 @@ namespace DeliveryNoteFiles
         /// <summary>
         /// Initializes each Property with the information from the file.
         /// </summary>
-        /// <param name="lines"></param>
-        private void InitializeComponents(List<string> lines)
+        /// <param name="line"></param>
+        private void InitializeComponents(string line)
         {
-            string[] posLines = new string[6];                  //Reason to use array: The array indexes coincides with the "position's line numbers"
+            //Sometimes there are empty lines. I see no problem in that. Just continue
+            if (string.IsNullOrEmpty(line.Trim()) || string.IsNullOrWhiteSpace(line.Trim()))
+                return;
 
-            //
-            foreach (var line in lines)
+            try
             {
-                //Sometimes there are empty lines. I see no problem in that. Just continue
-                if (string.IsNullOrEmpty(line.Trim()) || string.IsNullOrWhiteSpace(line.Trim())) continue;
-
-                try
+                #region Type
+                //Two options for now. Either an Invoice or a Credit Note.
+                if (line.StartsWith("$$TYPE$$"))
                 {
-                    #region Type
-                    //Two options for now. Either an Invoice or a Credit Note.
-                    if (line.StartsWith("$$TYPE$$"))
+                    try
                     {
-                        try
-                        {
-                            DocType = new Type(line);
-                        }
-                        catch(Exception e)
-                        {
-                            WriteExceptionToLog(e);
-                        }
+                        DocType = new Type(line);
                     }
-                    #endregion
-
-                    #region Supplier
-                    //There are a couple of lines that contains the Supplier info. It's mandatory that they are consecutive.
-                    //A flag is raised when we start reading those lines and when flag is set back to false again, we initialize the Supplier with the whole information
-                    else if (line.StartsWith("$$SUPPLIER$$"))
+                    catch(Exception e)
                     {
-                        if (!IsSupplierProcessing)
-                            IsSupplierProcessing = true;
-                        suppLines.Add(line);
+                        WriteExceptionToLog(e);
                     }
+                }
+                #endregion
 
-                    else if (line.StartsWith("$$SUPPLIER2$$"))
+                #region Supplier
+                //There are a couple of lines that contains the Supplier info. It's mandatory that they are consecutive.
+                //A flag is raised when we start reading those lines and when flag is set back to false again, we initialize the Supplier with the whole information
+                else if (line.StartsWith("$$SUPPLIER$$"))
+                {
+                    if (!IsSupplierProcessing)
+                        IsSupplierProcessing = true;
+                    suppLines.Add(line);
+                }
+
+                else if (line.StartsWith("$$SUPPLIER2$$"))
+                {
+                    if (!IsSupplierProcessing)
+                        IsSupplierProcessing = true;
+                    suppLines.Add(line);
+                }
+
+                else if (line.StartsWith("$$SUPPLIER3$$"))
+                {
+                    if (!IsSupplierProcessing)
+                        IsSupplierProcessing = true;
+                    suppLines.Add(line);
+                }
+                #endregion Supplier
+
+                #region Header
+                else if (line.StartsWith("$$HEADER$$"))
+                {
+                    if (!IsHeaderProcessing)
+                        IsHeaderProcessing = true;
+                    headLines.Add(line);
+                }
+
+                else if (line.StartsWith("$$HEADER2$$"))
+                {
+                    if (!IsHeaderProcessing)
+                        IsHeaderProcessing = true;                        
+                    headLines.Add(line);
+                }
+                #endregion Header
+
+                #region Customer
+                else if (line.StartsWith("$$CUSTOMER$$"))
+                {
+                    if (!IsCustomerProcessing)
+                        IsCustomerProcessing = true;
+                    custLines.Add(line);
+                }
+
+                else if (line.StartsWith("$$CUSTOMER2$$"))
+                {
+                    if(!IsCustomerProcessing)
+                        IsCustomerProcessing = true;                        
+                    custLines.Add(line);
+                }
+                #endregion Customer
+
+                #region Mail
+                else if (line.StartsWith("$$MAIL$$") || line.StartsWith("$$DISC$$") || line.StartsWith("$$BLPD$$"))
+                {
+                    try
                     {
-                        if (!IsSupplierProcessing)
-                            IsSupplierProcessing = true;
-                        suppLines.Add(line);
+                        Mail = new Mail(line, DocType.isCreditNote);
                     }
-
-                    else if (line.StartsWith("$$SUPPLIER3$$"))
+                    catch(Exception e)
                     {
-                        if (!IsSupplierProcessing)
-                            IsSupplierProcessing = true;
-                        suppLines.Add(line);
+                        WriteExceptionToLog(e);
                     }
-                    #endregion Supplier
+                }
+                #endregion
 
-                    #region Header
-                    else if (line.StartsWith("$$HEADER$$"))
+                #region Tour
+                else if (line.StartsWith("$$TOUR$$"))
+                {
+                    try
                     {
-                        if (!IsHeaderProcessing)
-                            IsHeaderProcessing = true;
-                        headLines.Add(line);
+                        Tour = new Tour(line, DocType.isCreditNote);
                     }
-
-                    else if (line.StartsWith("$$HEADER2$$"))
+                    catch(Exception e)
                     {
-                        if (!IsHeaderProcessing)
-                            IsHeaderProcessing = true;                        
-                        headLines.Add(line);
+                        WriteExceptionToLog(e);
                     }
-                    #endregion Header
+                }
+                #endregion
 
-                    #region Customer
-                    else if (line.StartsWith("$$CUSTOMER$$"))
+                #region Bank
+                else if (line.StartsWith("$$BANK$$"))
+                {
+                    try
                     {
-                        if (!IsCustomerProcessing)
-                            IsCustomerProcessing = true;
-                        custLines.Add(line);
+                        Bank = new Bank(line, DocType.isCreditNote);
                     }
-
-                    else if (line.StartsWith("$$CUSTOMER2$$"))
+                    catch (Exception e)
                     {
-                        if(!IsCustomerProcessing)
-                            IsCustomerProcessing = true;                        
-                        custLines.Add(line);
+                        WriteExceptionToLog(e);
                     }
-                    #endregion Customer
+                }
+                #endregion
 
-                    #region Mail
-                    else if (line.StartsWith("$$MAIL$$") || line.StartsWith("$$DISC$$") || line.StartsWith("$$BLPD$$"))
+                #region Footer
+                //The Footer is a mandatory line. 
+                //When the Footer line is received, we know that there are no more positions, so we process the last position and then, the Footer
+                else if (line.StartsWith("$$FOOTER$$"))
+                {                        
+                    if (!string.IsNullOrEmpty(posLines[0]))
                     {
-                        try
-                        {
-                            Mail = new Mail(line, DocType.isCreditNote);
-                        }
-                        catch(Exception e)
-                        {
-                            WriteExceptionToLog(e);
-                        }
+                        ProcessPosition(posLines, DocType.isCreditNote);
+                        posLines = null;
                     }
-                    #endregion
-
-                    #region Tour
-                    else if (line.StartsWith("$$TOUR$$"))
+                    try
                     {
-                        try
-                        {
-                            Tour = new Tour(line, DocType.isCreditNote);
-                        }
-                        catch(Exception e)
-                        {
-                            WriteExceptionToLog(e);
-                        }
+                        Footer = new Footer(line, DocType.isCreditNote);
                     }
-                    #endregion
-
-                    #region Bank
-                    else if (line.StartsWith("$$BANK$$"))
+                    catch (Exception e)
                     {
-                        try
-                        {
-                            Bank = new Bank(line, DocType.isCreditNote);
-                        }
-                        catch (Exception e)
-                        {
-                            WriteExceptionToLog(e);
-                        }
+                        WriteExceptionToLog(e);
                     }
-                    #endregion
-
-                    #region Footer
-                    //The Footer is a mandatory line. 
-                    //When the Footer line is received, we know that there are no more positions, so we process the last position and then, the Footer
-                    else if (line.StartsWith("$$FOOTER$$"))
-                    {                        
-                        if (!string.IsNullOrEmpty(posLines[0]))
-                        {
-                            ProcessPosition(posLines, DocType.isCreditNote);
-                            posLines = null;
-                        }
-                        try
-                        {
-                            Footer = new Footer(line, DocType.isCreditNote);
-                        }
-                        catch (Exception e)
-                        {
-                            WriteExceptionToLog(e);
-                        }
-                        finally
-                        {
-                            //Set the flags to false
-                            IsCustomerProcessing = false;
-                            IsHeaderProcessing = false;
-                            IsSupplierProcessing = false;
-                        }
-                    }
-                    #endregion Footer
-
-                    #region VAT
-                    else if (line.StartsWith("$$MWST$$"))
+                    finally
                     {
-                        try
-                        {
-                            //In the VAT Table we could have more than one VAT percentage for different reasons.
-                            //If the table is empty, we create it and add the current info to it as MWST object
-                            if (VATTable == null)
-                            {
-                                VATTable = new VATTable(line, DocType.isCreditNote);
-                            }
-                            //Otherwise just add another VAT to the table
-                            else
-                            {
-                                VATTable.Table.Add(new MWST(line, DocType.isCreditNote));
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            WriteExceptionToLog(e);
-                        }
+                        //Set the flags to false
+                        IsCustomerProcessing = false;
+                        IsHeaderProcessing = false;
+                        IsSupplierProcessing = false;
                     }
-                    #endregion VAT
+                }
+                #endregion Footer
 
-                    #region Positions
-                    //Each position starts with this line. For each POS line received, the previous position is initialized. Except when it's the first one...  obviously! :D
-                    //The last position from the file is initialized when we receive the Footer line
-                    else if (line.StartsWith("$$POS$$"))
+                #region VAT
+                else if (line.StartsWith("$$MWST$$"))
+                {
+                    try
                     {
-                        //If the first index of the posLines is null or empty, this should be the first position
-                        //Otherwise process the previous one
-                        if (!string.IsNullOrEmpty(posLines[0]))
+                        //In the VAT Table we could have more than one VAT percentage for different reasons.
+                        //If the table is empty, we create it and add the current info to it as MWST object
+                        if (VATTable == null)
                         {
-                            try
-                            {
-                                ProcessPosition(posLines, DocType.isCreditNote);
-                            }
-                            catch (Exception e)
-                            {
-                                WriteExceptionToLog(e);
-                            }
+                            VATTable = new VATTable(line, DocType.isCreditNote);
                         }
+                        //Otherwise just add another VAT to the table
                         else
                         {
-                            //On the first received position, set those flags to false.
-                            IsCustomerProcessing = false;
-                            IsHeaderProcessing = false;
-                            IsSupplierProcessing = false;
+                            VATTable.Table.Add(new MWST(line, DocType.isCreditNote));
                         }
-                        posLines[0] = line;
-                        havePos[0] = true;
                     }
-
-                    else if (line.StartsWith("$$POS1$"))
+                    catch (Exception e)
                     {
-                        posLines[1] = line;
-                        havePos[1] = true;
+                        WriteExceptionToLog(e);
                     }
+                }
+                #endregion VAT
 
-                    else if (line.StartsWith("$$POS2$$"))
+                #region Positions
+                //Each position starts with this line. For each POS line received, the previous position is initialized. Except when it's the first one...  obviously! :D
+                //The last position from the file is initialized when we receive the Footer line
+                else if (line.StartsWith("$$POS$$"))
+                {
+                    //If the first index of the posLines is null or empty, this should be the first position
+                    //Otherwise process the previous one
+                    if (!string.IsNullOrEmpty(posLines[0]))
                     {
-                        posLines[2] = line;
-                        havePos[2] = true;
+                        try
+                        {
+                            ProcessPosition(posLines, DocType.isCreditNote);
+                        }
+                        catch (Exception e)
+                        {
+                            WriteExceptionToLog(e);
+                        }
                     }
-
-                    else if (line.StartsWith("$$POS3$"))
-                    {
-                        posLines[3] = line;
-                        havePos[3] = true;
-                    }
-
-                    else if (line.StartsWith("$$POS4$$"))
-                    {
-                        posLines[4] = line;
-                        havePos[4] = true;
-                    }
-                    //I think, this line is only received on Credit Notes.
-                    else if (line.StartsWith("$$POS5$$"))
-                    {
-                        posLines[5] = line;
-                        havePos[5] = true;
-                    }
-                    #endregion Positions
-
-                    //The unkown lines are ignored
                     else
                     {
-                        continue;
+                        //On the first received position, set those flags to false.
+                        IsCustomerProcessing = false;
+                        IsHeaderProcessing = false;
+                        IsSupplierProcessing = false;
                     }
+                    posLines[0] = line;
+                    havePos[0] = true;
+                }
 
+                else if (line.StartsWith("$$POS1$"))
+                {
+                    posLines[1] = line;
+                    havePos[1] = true;
+                }
+
+                else if (line.StartsWith("$$POS2$$"))
+                {
+                    posLines[2] = line;
+                    havePos[2] = true;
+                }
+
+                else if (line.StartsWith("$$POS3$"))
+                {
+                    posLines[3] = line;
+                    havePos[3] = true;
+                }
+
+                else if (line.StartsWith("$$POS4$$"))
+                {
+                    posLines[4] = line;
+                    havePos[4] = true;
+                }
+                //I think, this line is only received on Credit Notes.
+                else if (line.StartsWith("$$POS5$$"))
+                {
+                    posLines[5] = line;
+                    havePos[5] = true;
+                }
+                #endregion Positions
+
+                //The unkown lines are ignored
                     
-                }
-                catch (NotImplementedException nie)
-                {
-                    WriteExceptionToLog(nie);
-                }
-                catch(Exception e)
-                {
-                    WriteExceptionToLog(e);
-                }
+            }
+            catch (NotImplementedException nie)
+            {
+                WriteExceptionToLog(nie);
+            }
+            catch(Exception e)
+            {
+                WriteExceptionToLog(e);
             }
         }
         
@@ -432,7 +426,7 @@ namespace DeliveryNoteFiles
         private void ProcessPosition(string[] lines, bool isCreditNote)
         {            
             if (Positions == null)
-                Positions = new LinkedList<Position>();
+                Positions = new List<Position>();
             
             Position current;
             try
@@ -452,7 +446,7 @@ namespace DeliveryNoteFiles
             //We shouldn't receive rebate at the first position
             if(last == null)
             {
-                Positions.AddLast(current);
+                Positions.Add(current);
                 havePos.SetAll(false);
                 return;
             }
@@ -496,7 +490,7 @@ namespace DeliveryNoteFiles
                 //Add the position as it's received (with no quantities)
                 else { }
             }
-            Positions.AddLast(current);
+            Positions.Add(current);
             havePos.SetAll(false);
         }
         
@@ -515,11 +509,17 @@ namespace DeliveryNoteFiles
             Header = new Header(headLines.ToArray(), DocType.isCreditNote);
         }
 
-        private void WriteExceptionToLog(Exception e)
+        public static void WriteExceptionToLog(Exception e)
         {
             File.AppendAllText(Settings.Default.LogFilePath,
                 DateTime.Now + Environment.NewLine + e.ToString() + Environment.NewLine);
         }
+        public static void WriteExceptionToLog(string e)
+        {
+            File.AppendAllText(Settings.Default.LogFilePath,
+                DateTime.Now + Environment.NewLine + e + Environment.NewLine);
+        }
+
         //Only when debugging
         #region ToString
 #if DEBUG
