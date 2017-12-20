@@ -12,6 +12,8 @@ namespace DelNoteItems
         public int? CustomerCIP { get; set; }                    //Post Code
         public string CustomerCity { get; set; }
         public string CustomerUIN { get; set; }                 //Bulstat
+
+        //$$CUSTOMER2$$ Line properties
         public string CustomerLicenceNumber { get; set; }
         public string CustomerNarcLicenceNumber { get; set; }
         public string CustomerAccountablePerson { get; set; }   //МОЛ

@@ -12,6 +12,7 @@ namespace DeliveryNoteFiles
 {
     class DeliveryNoteFile
     {
+        #region Properties
         public Type DocType { get; set; }
         public Supplier Supplier { get; set; }
         public Header Header { get; set; }
@@ -19,7 +20,7 @@ namespace DeliveryNoteFiles
         public Mail Mail { get; set; }
         public Bank Bank { get; set; }
         public Tour Tour { get; set; }
-        public List<Position> Positions { get; set; }
+        public LinkedList<Position> Positions { get; set; }
         public Footer Footer { get; set; }
         public VATTable VATTable { get; set; }
         public byte PaymentTimeID
@@ -106,6 +107,7 @@ namespace DeliveryNoteFiles
         private BitArray havePos = new BitArray(new bool[6]);       //Using Array for two reasons.. 1. Less variables 2. The array indexes coincides with the "position's line numbers"
                                                                     //Example: POS == 0; POS1 == 1; etc.
         private List<string> Lines = new List<string>();
+        #endregion
 
         //debuging purposes...
         //Work
@@ -114,6 +116,10 @@ namespace DeliveryNoteFiles
         //Home
         //private string processedFilesPath = @"E:\Documents\C# Projects\GitHub\DeliveryNoteFile\DeliveryNoteFiles\DeliveryNoteFiles\bin\Debug\Moved Files";
 
+        /// <summary>
+        /// Returns fully initialized object with the information from the file
+        /// </summary>
+        /// <param name="filePath"></param>
         public DeliveryNoteFile(string filePath)
         {
             try
@@ -125,22 +131,20 @@ namespace DeliveryNoteFiles
                 throw e; 
             }
             ReadFile(filePath);
-            if(DocType == null || Header == null || Supplier == null || Footer == null)
-            {
-                throw new ArgumentException("Invalid file format!");
-            }
         }
 
         /// <summary>
-        /// Reads each line of the file and initialize a List of strings "Lines"
+        /// Reads each line of the file, initializes a List of strings "Lines" and passes it to InitializeComponents()
         /// </summary>
         /// <param name="filePath"></param>
         private void ReadFile(string filePath)
         {
             try
             {
+                //Open the file in Read-Only mode in case the service is still writing in it
                 using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
+                    //If the Default Encoding is not specified explicitly, the encoding is broken! Yep.. That's wierd!
                     using (StreamReader file = new StreamReader(fs, System.Text.Encoding.Default))
                     {
                         string line;
@@ -169,10 +173,13 @@ namespace DeliveryNoteFiles
             //
             foreach (var line in lines)
             {
-                if (string.IsNullOrEmpty(line))
-                    continue;
+                //Sometimes there are empty lines. I see no problem in that. Just continue
+                if (string.IsNullOrEmpty(line.Trim()) || string.IsNullOrWhiteSpace(line.Trim())) continue;
+
                 try
                 {
+                    #region Type
+                    //Two options for now. Either an Invoice or a Credit Note.
                     if (line.StartsWith("$$TYPE$$"))
                     {
                         try
@@ -184,7 +191,11 @@ namespace DeliveryNoteFiles
                             WriteExceptionToLog(e);
                         }
                     }
+                    #endregion
 
+                    #region Supplier
+                    //There are a couple of lines that contains the Supplier info. It's mandatory that they are consecutive.
+                    //A flag is raised when we start reading those lines and when flag is set back to false again, we initialize the Supplier with the whole information
                     else if (line.StartsWith("$$SUPPLIER$$"))
                     {
                         if (!IsSupplierProcessing)
@@ -205,7 +216,9 @@ namespace DeliveryNoteFiles
                             IsSupplierProcessing = true;
                         suppLines.Add(line);
                     }
+                    #endregion Supplier
 
+                    #region Header
                     else if (line.StartsWith("$$HEADER$$"))
                     {
                         if (!IsHeaderProcessing)
@@ -219,7 +232,9 @@ namespace DeliveryNoteFiles
                             IsHeaderProcessing = true;                        
                         headLines.Add(line);
                     }
+                    #endregion Header
 
+                    #region Customer
                     else if (line.StartsWith("$$CUSTOMER$$"))
                     {
                         if (!IsCustomerProcessing)
@@ -233,7 +248,9 @@ namespace DeliveryNoteFiles
                             IsCustomerProcessing = true;                        
                         custLines.Add(line);
                     }
+                    #endregion Customer
 
+                    #region Mail
                     else if (line.StartsWith("$$MAIL$$") || line.StartsWith("$$DISC$$") || line.StartsWith("$$BLPD$$"))
                     {
                         try
@@ -245,7 +262,9 @@ namespace DeliveryNoteFiles
                             WriteExceptionToLog(e);
                         }
                     }
+                    #endregion
 
+                    #region Tour
                     else if (line.StartsWith("$$TOUR$$"))
                     {
                         try
@@ -257,7 +276,9 @@ namespace DeliveryNoteFiles
                             WriteExceptionToLog(e);
                         }
                     }
+                    #endregion
 
+                    #region Bank
                     else if (line.StartsWith("$$BANK$$"))
                     {
                         try
@@ -269,7 +290,11 @@ namespace DeliveryNoteFiles
                             WriteExceptionToLog(e);
                         }
                     }
+                    #endregion
 
+                    #region Footer
+                    //The Footer is a mandatory line. 
+                    //When the Footer line is received, we know that there are no more positions, so we process the last position and then, the Footer
                     else if (line.StartsWith("$$FOOTER$$"))
                     {                        
                         if (!string.IsNullOrEmpty(posLines[0]))
@@ -285,16 +310,28 @@ namespace DeliveryNoteFiles
                         {
                             WriteExceptionToLog(e);
                         }
+                        finally
+                        {
+                            //Set the flags to false
+                            IsCustomerProcessing = false;
+                            IsHeaderProcessing = false;
+                            IsSupplierProcessing = false;
+                        }
                     }
+                    #endregion Footer
 
+                    #region VAT
                     else if (line.StartsWith("$$MWST$$"))
                     {
                         try
                         {
+                            //In the VAT Table we could have more than one VAT percentage for different reasons.
+                            //If the table is empty, we create it and add the current info to it as MWST object
                             if (VATTable == null)
                             {
                                 VATTable = new VATTable(line, DocType.isCreditNote);
                             }
+                            //Otherwise just add another VAT to the table
                             else
                             {
                                 VATTable.Table.Add(new MWST(line, DocType.isCreditNote));
@@ -305,9 +342,15 @@ namespace DeliveryNoteFiles
                             WriteExceptionToLog(e);
                         }
                     }
+                    #endregion VAT
 
+                    #region Positions
+                    //Each position starts with this line. For each POS line received, the previous position is initialized. Except when it's the first one...  obviously! :D
+                    //The last position from the file is initialized when we receive the Footer line
                     else if (line.StartsWith("$$POS$$"))
                     {
+                        //If the first index of the posLines is null or empty, this should be the first position
+                        //Otherwise process the previous one
                         if (!string.IsNullOrEmpty(posLines[0]))
                         {
                             try
@@ -321,6 +364,7 @@ namespace DeliveryNoteFiles
                         }
                         else
                         {
+                            //On the first received position, set those flags to false.
                             IsCustomerProcessing = false;
                             IsHeaderProcessing = false;
                             IsSupplierProcessing = false;
@@ -352,24 +396,21 @@ namespace DeliveryNoteFiles
                         posLines[4] = line;
                         havePos[4] = true;
                     }
-
+                    //I think, this line is only received on Credit Notes.
                     else if (line.StartsWith("$$POS5$$"))
                     {
                         posLines[5] = line;
                         havePos[5] = true;
                     }
+                    #endregion Positions
 
+                    //The unkown lines are ignored
                     else
                     {
-                        if(!(string.IsNullOrEmpty(line.Trim()) || string.IsNullOrWhiteSpace(line.Trim())))
-                        {
-                            //Console.WriteLine(line);
-                        }
+                        continue;
                     }
 
-                    IsCustomerProcessing = false;
-                    IsHeaderProcessing = false;
-                    IsSupplierProcessing = false;
+                    
                 }
                 catch (NotImplementedException nie)
                 {
@@ -381,24 +422,17 @@ namespace DeliveryNoteFiles
                 }
             }
         }
-
-        public static void WriteExceptionToLog(Exception e)
-        {
-            File.AppendAllText(Settings.Default.LogFilePath,
-                DateTime.Now + Environment.NewLine + "Error Message: " + e.Message + Environment.NewLine + e.StackTrace + Environment.NewLine);
-        }
-        public static void WriteExceptionToLog(string str)
-        {
-            File.AppendAllText(Settings.Default.LogFilePath,
-                DateTime.Now + Environment.NewLine + "Error Message: " + str + Environment.NewLine);
-        }
-
+        
+        /// <summary>
+        /// Validates each position by checking if it is a rebate position and if it has the right quantities.
+        /// If necessary, fix the quantities and add to the List
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <param name="isCreditNote"></param>
         private void ProcessPosition(string[] lines, bool isCreditNote)
         {            
             if (Positions == null)
-            {
-                Positions = new List<Position>();
-            }
+                Positions = new LinkedList<Position>();
             
             Position current;
             try
@@ -413,19 +447,25 @@ namespace DeliveryNoteFiles
             Position last = null;
             if(Positions.Count != 0)
                 last = Positions.LastOrDefault();
+
+            //If there is no previous position, there should be nothing to fix. Just add the current position to the list
+            //We shouldn't receive rebate at the first position
             if(last == null)
             {
-                //Console.WriteLine("Все още няма въведена позиция!");
-                //Console.ReadLine();
+                Positions.AddLast(current);
+                havePos.SetAll(false);
+                return;
             }
-            
+
+            //The quantities are received on POS1 line
             if (havePos[1])
             {
+                //if Invoiced quantity is 0 we set it to be as the Delivery or as the Bonus quantity. Last case scenario is 0
                 if (current.InvoicedQty == 0 || current.InvoicedQty == null)
                 {
                     if (current.DeliveryQty == 0 || current.DeliveryQty == null)
                     {
-                        current.InvoicedQty = current.BonusQty ?? 0;
+                        current.InvoicedQty = current.BonusQty ?? 0; //Last case scenario
                     }
                     else
                     {
@@ -433,6 +473,8 @@ namespace DeliveryNoteFiles
                     }
                 }
             }
+
+            //If POS1 line is not received for the current position, it's a rebate/bonus to the previous position
             else
             {
                 if (current.ArticleNo == last.ArticleNo)
@@ -443,22 +485,21 @@ namespace DeliveryNoteFiles
                         last.DeliveryQty -= current.InvoicedQty;
                     }
 
-                    if(last.BonusQty == (last.InvoicedQty + current.InvoicedQty))
+                    if (last.BonusQty == (last.InvoicedQty + current.InvoicedQty))
                     {
                         current.BonusQty -= last.InvoicedQty;
                         last.BonusQty -= current.InvoicedQty;
                     }
                 }
+                //improbable case: 
+                //If there are no quantities received for the current line and it's not the same article as the previous position, just do nothing. 
+                //Add the position as it's received (with no quantities)
+                else { }
             }
-            Positions.Add(current);
+            Positions.AddLast(current);
             havePos.SetAll(false);
         }
-
-        private void FixRebatePosition()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         private void ProcessSupplier(List<string> lines)
         {
             Supplier = new Supplier(lines.ToArray(), DocType.isCreditNote);
@@ -473,7 +514,14 @@ namespace DeliveryNoteFiles
         {
             Header = new Header(headLines.ToArray(), DocType.isCreditNote);
         }
-        
+
+        private void WriteExceptionToLog(Exception e)
+        {
+            File.AppendAllText(Settings.Default.LogFilePath,
+                DateTime.Now + Environment.NewLine + e.ToString() + Environment.NewLine);
+        }
+        //Only when debugging
+        #region ToString
 #if DEBUG
         public override string ToString()
         {
@@ -502,7 +550,8 @@ namespace DeliveryNoteFiles
                 }
             }
             return toString;
-        } 
+        }
 #endif
+        #endregion
     }
 }

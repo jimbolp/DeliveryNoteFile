@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Reflection;
 
 namespace DelNoteItems
 {
     public partial class Position : DelNoteItems
     {
+        #region Properties
         //$$POS$$ Line properties        
         public int? ArticleNo { get; set; }
         public long? EAN { get; set; }
@@ -45,7 +48,9 @@ namespace DelNoteItems
 
         //$$POS5$$ Line properties
         public string ArticleRemark { get; set; }
+        #endregion Properties
 
+        #region Constructor
         public Position(string[] lines, bool isCreditNote)
         {
             try
@@ -62,72 +67,96 @@ namespace DelNoteItems
             catch (Exception e)
             {
                 WriteExceptionToLog(e);
+                throw;
+            }
+        }
+        #endregion Constructor
+
+        #region Initialization
+        private void InitializeInvoice(string[] lines)
+        {
+            try
+            {
+                foreach (string line in lines)
+                {
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+                    if (line.StartsWith("$$POS$$"))
+                    {
+                        Line0(line);
+                    }
+                    else if (line.StartsWith("$$POS1$"))
+                    {
+                        Line1(line);
+                    }
+                    else if (line.StartsWith("$$POS2$$"))
+                    {
+                        Line2(line);
+                    }
+                    else if (line.StartsWith("$$POS3$"))
+                    {
+                        Line3(line);
+                    }
+                    else if (line.StartsWith("$$POS4$$"))
+                    {
+                        Line4(line);
+                    }
+                    else if (line.StartsWith("$$POS5$$"))
+                    {
+                        try
+                        {
+                            Line5(line);
+                        }
+                        catch (NotImplementedException) { }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
                 throw e;
             }
         }
-
-        private void InitializeInvoice(string[] lines)
-        {
-            foreach (string line in lines)
+        private void InitializeCreditNote(string[] lines)
+        {            
+            try
             {
-                if (string.IsNullOrEmpty(line))
-                    continue;
-                if (line.StartsWith("$$POS$$"))
+                foreach (string line in lines)
                 {
-                    Line0(line);
-                }
-                else if (line.StartsWith("$$POS1$"))
-                {
-                    Line1(line);
-                }
-                else if (line.StartsWith("$$POS2$$"))
-                {
-                    Line2(line);
-                }
-                else if (line.StartsWith("$$POS3$"))
-                {
-                    Line3(line);
-                }
-                else if (line.StartsWith("$$POS4$$"))
-                {
-                    Line4(line);
-                }
-                else if (line.StartsWith("$$POS5$$"))
-                {
-                    Line5(line);
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+                    if (line.StartsWith("$$POS$$"))
+                    {
+                        Line0(line);
+                    }
+                    else if (line.StartsWith("$$POS1$$"))
+                    {
+                        Line1(RemoveSymbol(line));
+                    }
+                    else if (line.StartsWith("$$POS2$$"))
+                    {
+                        Line2(line);
+                    }
+                    else if (line.StartsWith("$$POS3$$"))
+                    {
+                        Line3(RemoveSymbol(line));
+                    }
+                    else if (line.StartsWith("$$POS4$$"))
+                    {
+                        Line4(line);
+                    }
+                    else if (line.StartsWith("$$POS5$$"))
+                    {
+                        try
+                        {
+                            Line5(line);
+                        }
+                        catch (NotImplementedException) { }
+                    }
                 }
             }
-        }
-        private void InitializeCreditNote(string[] lines)
-        {
-            foreach (string line in lines)
+            catch(Exception e)
             {
-                if (string.IsNullOrEmpty(line))
-                    continue;
-                if (line.StartsWith("$$POS$$"))
-                {
-                    Line0(line);
-                }
-                else if (line.StartsWith("$$POS1$$"))
-                {
-                    Line1(RemoveSymbol(line));
-                }
-                else if (line.StartsWith("$$POS2$$"))
-                {
-                    Line2(line);
-                }
-                else if (line.StartsWith("$$POS3$$"))
-                {
-                    Line3(RemoveSymbol(line));
-                }
-                else if (line.StartsWith("$$POS4$$"))
-                {
-                    Line4(line);
-                }
-                else if (line.StartsWith("$$POS5$$"))
-                {
-                    Line5(line);
-                }
+                throw e;
             }
         }
 
@@ -136,6 +165,6 @@ namespace DelNoteItems
             string str = line.Substring(0, 7) + line.Substring(8);
             return str;
         }
-        
+        #endregion Initialization
     }
 }

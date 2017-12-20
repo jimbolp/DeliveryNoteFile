@@ -8,6 +8,11 @@ namespace DeliveryNoteFiles
 {
     partial class Program
     {
+        /// <summary>
+        /// Create a new DeliveryNote from the object and then inserts the DeliveryNoteItems
+        /// </summary>
+        /// <param name="delNote"></param>
+        /// <returns></returns>
         private static bool InsertNewDeliveryNote(DeliveryNoteFile delNote)
         {
             bool transactionCompleted = false;

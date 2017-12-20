@@ -4,6 +4,7 @@ namespace DelNoteItems
 {
     public partial class Supplier : DelNoteItems
     {
+        #region Properties
         //$$SUPPLIER$$ Line properties
 
         //According to Mr. Rolf Raab, these are constant values for Bulgaria and I don't know what they represent and how to change them.
@@ -24,6 +25,7 @@ namespace DelNoteItems
         public string BranchLicenceNumber { get; set; }
         public string BranchNarcLicenceNumber { get; set; }
         public string BranchResponsible { get; set; }           //Branch Responsible Pharmacist 
+        #endregion Properties
 
         public Supplier(string[] lines, bool isCreditNote)
         {
